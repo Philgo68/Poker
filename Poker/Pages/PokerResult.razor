@@ -1,0 +1,301 @@
+﻿@page "/pokerresult"
+
+@inject SvgCards svgCards
+
+@using Poker.CFHandEvaluator;
+@using Poker.Models;
+@using Poker.Helpers;
+@using System.Threading;
+@using System.Diagnostics;
+
+<h1>Poker Result</h1>
+
+<form @onsubmit="Submit">
+    <div class="form-group">
+        <input class="form-control" placeholder="Hand 1" @bind="hand_1" />
+    </div>
+    <div class="form-group">
+        <input class="form-control" placeholder="Hand 2" @bind="hand_2" />
+    </div>
+    <div class="form-group">
+        <input class="form-control" placeholder="Board" @bind="board_string" />
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="number" placeholder="Hand Cnt" @bind="hand_cnt" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" @onclick="@(() => button = "Single")">One Card Hand</button>
+        <button type="submit" class="btn btn-primary" @onclick="@(() => button = "Texas")">Texas Hold'em</button>
+        <button type="submit" class="btn btn-primary" @onclick="@(() => button = "Taiwanese")">Taiwanese Poker</button>
+        <button type="submit" class="btn btn-primary" @onclick="@(() => button = "Deal")">Test Dealer</button>
+    </div>
+</form>
+<hr />
+
+<PokerHandComponent DisplayMask=@displayMask />
+
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Results</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@((MarkupString)result)</td>
+        </tr>
+        <tr>
+            <td>@((MarkupString)result2)</td>
+        </tr>
+    </tbody>
+</table>
+
+
+@code {
+  string hand_1, hand_2, board_string, button;
+  int? hand_cnt;
+  ulong displayMask;
+  private string result, result2;
+  private static Random _global_random = new Random();
+
+  protected async override Task OnInitializedAsync()
+  {
+      hand_1 = "As6d";
+      hand_cnt = 2;
+      await svgCards.LoadCardsAsync();
+  }
+
+
+  async Task Submit()
+  {
+      result = "Loading...";
+      result2 = null;
+
+      switch (button)
+      {
+          case "Single":
+              result = await Task.Run(() => SingleOdds());
+              break;
+          case "Texas":
+              (result, result2) = await Task.Run(() => Eval());
+              break;
+          case "Taiwanese":
+              (result, result2) = await Task.Run(() => StartTaiwanese());
+              break;
+          case "Deal":
+              (result, result2) = await Task.Run(() => StartDeckDeal());
+              break;
+          default:
+              result = $"Unknown Button: {button}";
+              break;
+      };
+      button = null;
+  }
+
+  protected (string, string) Eval()
+  {
+      try
+      {
+          displayMask = Hand.ParseHand(hand_1 ?? "");
+          var start = Stopwatch.GetTimestamp();
+          var one = $"{(Hand.WinOdds(hand_1 ?? "", board_string ?? "", hand_cnt ?? 1) * 100.0).ToString()}%";
+          var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
+          one += $"  {end}ms";
+
+          var hand = new HoldemHand(hand_1);
+          var board = new FiveCardHand(board_string);
+          start = Stopwatch.GetTimestamp();
+          var two = $"{(hand.PlayAgainst(hand_cnt ?? 1, board, 3)).ToString()}% over {hand.Wins + hand.Loses + hand.Ties} trials.";
+          end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
+          two += $"  {end}ms";
+          return (one, two);
+
+      }
+      catch (ArgumentException e)
+      {
+          return (e.Message, "");
+      }
+  }
+  protected string Eval2()
+  {
+      // initialize board
+      string board = "2d kh qh 3h qc";
+      // Create a hand with AKs plus board
+      Hand h1 = new Hand("ad kd", board);
+      // Create a hand with 23 unsuited plus board
+      Hand h2 = new Hand("2h 3d", board);
+
+      // Find stronger hand and print results
+      if (h1 > h2)
+      {
+          return $"{h1.Description} is better than {h2.Description}.";
+      }
+      else
+      {
+          return $"{h1.Description} is worse or equal to {h2.Description}.";
+      }
+  }
+
+  protected string SingleOdds()
+  {
+      try
+      {
+          var hand = new OneCardHand(hand_1);
+          var board = new FiveCardHand(board_string);
+          return $"{(hand.PlayAgainst(hand_cnt ?? 1, board, 3)).ToString()}% over {hand.Wins+hand.Loses+hand.Ties} trials.";
+      }
+      catch (ArgumentException e)
+      {
+          return e.Message;
+      }
+
+  }
+
+  protected (string, string) StartTaiwanese()
+  {
+      int cnt = 0;
+      var duration = 5;
+
+      // get starting cards
+      var handmask1 = Hand.ParseHand(hand_1 ?? "");
+      var handmask2 = Hand.ParseHand(hand_2 ?? "");
+
+      // Create deck the initial cards "dealt"
+      var deck = new StandardDeck(handmask1 | handmask2);
+
+      // Fill in the rest of the hand
+      handmask1 = deck.CompleteCards(7, handmask1, _global_random);
+      handmask2 = deck.CompleteCards(7, handmask2, _global_random);
+      //AhKsQsQhTh9h5s
+      //AsAhAcQhQc7s2d
+      //AsAhAcKhQsTs3c
+
+      // Tc, 7h, 7c, 6s, 6c, 2h, 2c vs Ac, Qh, Ts, Td, 9h, 5s, 4s
+
+      var taiwaneseHands = TaiwaneseHand.AllSetups(handmask1);
+      var taiwaneseHands2 = TaiwaneseHand.AllSetups(handmask2);
+
+      long end = Convert.ToInt64(Stopwatch.GetTimestamp() + (duration * Stopwatch.Frequency));
+      Action testboards = delegate
+      {
+          long now;
+          int seed;
+          lock (_global_random) seed = _global_random.Next();
+          var rand = new Random(seed);
+          do
+          {
+              cnt++;
+              var boardmask = deck.PeekCards(5, rand);
+              foreach (var hand in taiwaneseHands)
+              {
+                  hand.ScoreAgainst(boardmask);
+              }
+              foreach (var hand in taiwaneseHands2)
+              {
+                  hand.ScoreAgainst(boardmask);
+              }
+              now = Stopwatch.GetTimestamp();
+          } while (now < end);
+      };
+
+      var tasks = new List<Task>();
+      for (int ctr = 1; ctr <= 8; ctr++)
+          tasks.Add(Task.Factory.StartNew(testboards));
+      Task.WaitAll(tasks.ToArray());
+
+      Array.Sort(taiwaneseHands);
+      Array.Sort(taiwaneseHands2);
+
+      string result = $"{Hand.HandCards(handmask1)} and {Hand.HandCards(handmask2)} over {cnt} boards.";
+      string result2 = "";
+
+      for (var i = 0; i <= hand_cnt; i++)
+          result2 += $"Setup {i + 1}: {taiwaneseHands[i].Description}  ({taiwaneseHands[i].RunningScore})<br>";
+      result2 += "<br>";
+      //result2 += $"Score: {taiwaneseHands[0].Score}<br><br>";
+
+      for (var i = 0; i <= hand_cnt; i++)
+          result2 += $"Against {i + 1}: {taiwaneseHands2[i].Description}  ({taiwaneseHands2[i].RunningScore})<br>";
+      result2 += "<br>";
+      //result2 += $"Score: {taiwaneseHands2[0].Score}<br><br>";
+
+      cnt = 0;
+      end = Convert.ToInt64(Stopwatch.GetTimestamp() + (duration * Stopwatch.Frequency));
+      Action compareHands = delegate
+      {
+          long now;
+          int seed;
+          lock (_global_random) seed = _global_random.Next();
+          var rand = new Random(seed);
+          do
+          {
+              cnt++;
+              var boardmask = deck.PeekCards(5, rand);
+              for (var i = 0; i <= hand_cnt; i++)
+              {
+                  for (var j = 0; j <= hand_cnt; j++)
+                  {
+                      taiwaneseHands[i].PlayAgainst(taiwaneseHands2[j], boardmask);
+                  }
+              }
+              now = Stopwatch.GetTimestamp();
+          } while (now < end);
+      };
+
+      tasks.Clear();
+      for (int ctr = 1; ctr <= 8; ctr++)
+          tasks.Add(Task.Factory.StartNew(compareHands));
+      Task.WaitAll(tasks.ToArray());
+
+      for (var i = 0; i <= hand_cnt; i++)
+          result2 += $"Hand {i + 1}: {(taiwaneseHands[i].Percent * 100.0).ToString()}%<br>";
+      result2 += $"over {cnt} boards.";
+
+      return (result, result2);
+  }
+
+  protected (string, string) StartDeckDeal()
+  {
+      var deck = new StandardDeck();
+      ulong boardMask1 = 0x0UL;
+      ulong boardMask2 = 0x0UL;
+      ulong[] hands = new ulong[6];
+
+      var rand = _global_random;
+      var start = Stopwatch.GetTimestamp();
+
+      for (int i = 0; i < 1_000_000; i++)
+      {
+          deck.Reset();
+
+          for (int j = 0; j < 6; j++)
+          {
+              hands[j] = deck.DealCards(7, rand);
+          }
+          boardMask1 = deck.DealCards(5, rand);
+          boardMask2 = deck.DealCards(5, rand);
+      }
+      var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
+
+      //result = $"{end}ms to deal {cards} cards 10 million times." ;
+      result = $"{end}ms full table double board 1 million times.";
+      result2 = "Last result:<br>";
+
+      for (int j = 0; j < 6; j++)
+      {
+          result2 += Hand.HandCards(hands[j]) + "<br>";
+      }
+      result2 += "Board1: " + Hand.HandCards(boardMask1) + "<br>";
+      result2 += "Board2: " + Hand.HandCards(boardMask2) + "<br>";
+      result2 += "Dealt Cards: " + Hand.HandCards(deck.DealtCards) + "<br>";
+
+      return (result, result2);
+  }
+
+
+
+
+
+}

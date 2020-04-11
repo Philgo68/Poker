@@ -1,0 +1,23 @@
+﻿@inject SvgCards svgCards
+
+@using Poker.Helpers;
+
+@{
+    int i = 0;
+    var cards = Bits.IndividualBits(@DisplayMask);
+    <div class="svg-hand-wrapper cards-@(cards.Length)">
+        <div class="svg-hand-rotator cards-@(cards.Length)">
+            @foreach (var card in cards)
+            {
+                <div class="svg-card-wrapper card-@(i++)">
+                    @(svgCards.Faces[card])
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+  [Parameter]
+  public ulong DisplayMask { get; set; }
+}
