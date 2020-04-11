@@ -29,7 +29,8 @@ namespace Poker.Models
 
     public virtual string Name => "BaseHand";
     public virtual byte CardCount => 0;
-    public virtual string Description => Deck.CardDescriptions(CardsMask);
+    public virtual string CardDescriptions => Deck.CardDescriptions(CardsMask);
+    public virtual IEnumerable<int> CardNumbers => Deck.CardNumbers(CardsMask);
 
     public virtual (int, uint) Evaluate(ulong board, ulong filler = 0x0UL) => (0, 0);
 
@@ -220,8 +221,9 @@ namespace Poker.Models
         } while (Stopwatch.GetTimestamp() < end);
       };
 
+      Console.WriteLine(Environment.ProcessorCount);
       var tasks = new List<Task>();
-      for (int ctr = 1; ctr <= 1; ctr++)
+      for (int ctr = 1; ctr <= Environment.ProcessorCount; ctr++)
         tasks.Add(Task.Factory.StartNew(trial));
       Task.WaitAll(tasks.ToArray());
 

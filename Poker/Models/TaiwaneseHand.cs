@@ -14,7 +14,7 @@ namespace Poker.Models
   {
     public override string Name => "Taiwanese";
     public override byte CardCount => 7;
-    public override string Description => $"{TopHand.Description} / {MiddleHand.Description} / {BottomHand.Description}";
+    public override string CardDescriptions => $"{TopHand.CardDescriptions} / {MiddleHand.CardDescriptions} / {BottomHand.CardDescriptions}";
 
     public OneCardHand TopHand { get; set; }
     public HoldemHand MiddleHand { get; set; }

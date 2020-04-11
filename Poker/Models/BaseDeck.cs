@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 namespace Poker.Models
 {
-    public abstract class BaseDeck
-    {
-        public virtual string Name { get { return "BaseDeck"; } }
-        public virtual int Suits => 0; 
+	public abstract class BaseDeck
+	{
+		public virtual string Name { get { return "BaseDeck"; } }
+		public virtual int Suits => 0;
 		public virtual string[] SuitDescriptions => null;
 		public virtual string[] SuitDescriptionsLong => null;
 		public virtual int Ranks => 0;
@@ -102,6 +102,29 @@ namespace Poker.Models
 			Reset(dealtCards);
 		}
 
+		public virtual IEnumerable<int> CardNumbers(ulong cards)
+		{
+			uint allRanks = (uint)((1 << Ranks) - 1);
+
+			uint[] suitBits = new uint[Suits];
+			for (int suit = Suits - 1; suit >= 0; suit--)
+			{
+				suitBits[suit] = (uint)((cards >> (Ranks * suit)) & allRanks);
+			}
+			for (int rank = Ranks - 1; rank >= 0; rank--)
+			{
+				var cardmask = Bits.CardMasksTable[rank];
+				for (int suit = Suits - 1; suit >= 0; suit--)
+				{
+					if ((suitBits[suit] & cardmask) == cardmask)
+					{
+						yield return suit * Ranks + rank;
+					}
+				}
+			}
+		}
+
+
 		public virtual IEnumerable<string> Cards(ulong cards)
 		{
 			uint allRanks = (uint)((1 << Ranks) - 1);
@@ -131,7 +154,7 @@ namespace Poker.Models
 			{
 				result += $"{desc}, ";
 			}
-			return result.TrimEnd(new Char[] { ',', ' '});
+			return result.TrimEnd(new Char[] { ',', ' ' });
 		}
 		public virtual (int, uint) PokerEvaluate(ulong cards, int numberOfCards) => (0, 0);
 		public virtual (int, uint) PokerEvaluate(ulong cards)

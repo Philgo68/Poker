@@ -11,28 +11,43 @@
 <h1>Poker Result</h1>
 
 <form @onsubmit="Submit">
-    <div class="form-group">
-        <input class="form-control" placeholder="Hand 1" @bind="hand_1" />
-    </div>
-    <div class="form-group">
-        <input class="form-control" placeholder="Hand 2" @bind="hand_2" />
-    </div>
-    <div class="form-group">
-        <input class="form-control" placeholder="Board" @bind="board_string" />
-    </div>
-    <div class="form-group">
-        <input class="form-control" type="number" placeholder="Hand Cnt" @bind="hand_cnt" />
-    </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary" @onclick="@(() => button = "Single")">One Card Hand</button>
-        <button type="submit" class="btn btn-primary" @onclick="@(() => button = "Texas")">Texas Hold'em</button>
-        <button type="submit" class="btn btn-primary" @onclick="@(() => button = "Taiwanese")">Taiwanese Poker</button>
-        <button type="submit" class="btn btn-primary" @onclick="@(() => button = "Deal")">Test Dealer</button>
+    <div class="col-11">
+        <div class="form-group row align-items-center">
+            <label for="hand-1" class="col-2 h2 col-form-label">Hand 1:</label>
+            <input class="form-control col-4" name="hand-1" placeholder="Hand 1" @bind="hand_1" />
+            <div class="offest-2 col-4">
+                <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Single")">One Card Hand</button>
+            </div>
+        </div>
+        <div class="form-group row align-items-center">
+            <label for="hand-2" class="col-2 h2 col-form-label">Hand 2:</label>
+            <input class="form-control col-4" name="hand-2" placeholder="Hand 2" @bind="hand_2" />
+            <div class="offest-2 col-4">
+                <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Texas")">Texas Hold'em</button>
+            </div>
+        </div>
+        <div class="form-group row align-items-center">
+            <label for="board" class="col-2 h2 col-form-label">Board:</label>
+            <input class="form-control col-4" name="board" placeholder="Board" @bind="board_string" />
+            <div class="offest-2 col-4">
+                <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Taiwanese")">Taiwanese Poker</button>
+            </div>
+        </div>
+        <div class="form-group row align-items-center">
+            <label for="card-cnt" class="col-2 h2 col-form-label">Hand Cnt:</label>
+            <input class="form-control col-4" name="card-cnt" type="number" placeholder="Hand Cnt" @bind="hand_cnt" />
+            <div class="offest-2 col-4">
+                <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Deal")">Test Dealer</button>
+            </div>
+        </div>
     </div>
 </form>
 <hr />
 
-<PokerHandComponent DisplayMask=@displayMask />
+@foreach (var hand in displayHands)
+{
+    <PokerHandComponent Hand=@hand />
+}
 
 <hr />
 
@@ -56,7 +71,7 @@
 @code {
   string hand_1, hand_2, board_string, button;
   int? hand_cnt;
-  ulong displayMask;
+  List<BaseHand> displayHands = new List<BaseHand>();
   private string result, result2;
   private static Random _global_random = new Random();
 
@@ -94,28 +109,33 @@
       button = null;
   }
 
-  protected (string, string) Eval()
+  protected string Eval()
   {
       try
       {
-          displayMask = Hand.ParseHand(hand_1 ?? "");
-          var start = Stopwatch.GetTimestamp();
-          var one = $"{(Hand.WinOdds(hand_1 ?? "", board_string ?? "", hand_cnt ?? 1) * 100.0).ToString()}%";
-          var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
-          one += $"  {end}ms";
+          // old code
+          //var start = Stopwatch.GetTimestamp();
+          //var one = $"{(Hand.WinOdds(hand_1 ?? "", board_string ?? "", hand_cnt ?? 1) * 100.0).ToString()}%";
+          //var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
+          //one += $"  {end}ms";
 
+          // New objects
           var hand = new HoldemHand(hand_1);
           var board = new FiveCardHand(board_string);
-          start = Stopwatch.GetTimestamp();
-          var two = $"{(hand.PlayAgainst(hand_cnt ?? 1, board, 3)).ToString()}% over {hand.Wins + hand.Loses + hand.Ties} trials.";
-          end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
-          two += $"  {end}ms";
-          return (one, two);
+          var start = Stopwatch.GetTimestamp();
+          var handInfo = $"{(hand.PlayAgainst(hand_cnt ?? 1, board, 0.5)).ToString()}% over {hand.Wins + hand.Loses + hand.Ties} trials.";
+          var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
+          handInfo += $"  {end}ms";
+
+          displayHands.Clear();
+          displayHands.Add(hand);
+
+          return handInfo;
 
       }
       catch (ArgumentException e)
       {
-          return (e.Message, "");
+          return e.Message;
       }
   }
   protected string Eval2()
@@ -212,12 +232,12 @@
       string result2 = "";
 
       for (var i = 0; i <= hand_cnt; i++)
-          result2 += $"Setup {i + 1}: {taiwaneseHands[i].Description}  ({taiwaneseHands[i].RunningScore})<br>";
+          result2 += $"Setup {i + 1}: {taiwaneseHands[i].CardDescriptions}  ({taiwaneseHands[i].RunningScore})<br>";
       result2 += "<br>";
       //result2 += $"Score: {taiwaneseHands[0].Score}<br><br>";
 
       for (var i = 0; i <= hand_cnt; i++)
-          result2 += $"Against {i + 1}: {taiwaneseHands2[i].Description}  ({taiwaneseHands2[i].RunningScore})<br>";
+          result2 += $"Against {i + 1}: {taiwaneseHands2[i].CardDescriptions}  ({taiwaneseHands2[i].RunningScore})<br>";
       result2 += "<br>";
       //result2 += $"Score: {taiwaneseHands2[0].Score}<br><br>";
 
@@ -259,8 +279,8 @@
   protected (string, string) StartDeckDeal()
   {
       var deck = new StandardDeck();
-      ulong boardMask1 = 0x0UL;
-      ulong boardMask2 = 0x0UL;
+      var boardMask1 = 0x0UL;
+      var boardMask2 = 0x0UL;
       ulong[] hands = new ulong[6];
 
       var rand = _global_random;
@@ -270,7 +290,7 @@
       {
           deck.Reset();
 
-          for (int j = 0; j < 6; j++)
+          for (int j = 0; j < hand_cnt; j++)
           {
               hands[j] = deck.DealCards(7, rand);
           }
@@ -279,17 +299,25 @@
       }
       var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
 
-      //result = $"{end}ms to deal {cards} cards 10 million times." ;
-      result = $"{end}ms full table double board 1 million times.";
+      result = hand_cnt == 6 ? $"{end}ms full table double board Taiwanese 1 million times." : $"{end}ms to deal {hand_cnt+2} different hands 1 million times." ;
       result2 = "Last result:<br>";
 
-      for (int j = 0; j < 6; j++)
+      displayHands.Clear();
+      for (int j = 0; j < hand_cnt; j++)
       {
-          result2 += Hand.HandCards(hands[j]) + "<br>";
+          result2 += deck.CardDescriptions(hands[j]) + "<br>";
+          //displayHandMasks.Add(hands[j]);
       }
-      result2 += "Board1: " + Hand.HandCards(boardMask1) + "<br>";
-      result2 += "Board2: " + Hand.HandCards(boardMask2) + "<br>";
-      result2 += "Dealt Cards: " + Hand.HandCards(deck.DealtCards) + "<br>";
+
+      var board1 = new FiveCardHand(boardMask1);
+      var board2 = new FiveCardHand(boardMask2);
+
+      result2 += "Board1: " + board1.CardDescriptions + "<br>";
+      result2 += "Board2: " + board2.CardDescriptions + "<br>";
+      displayHands.Add(board1);
+      displayHands.Add(board2);
+      result2 += Hand.DescriptionFromMask(Hand.ParseHand(hand_1 ?? "") | boardMask1) + "<br>";
+      result2 += "Dealt Cards: " + deck.CardDescriptions(deck.DealtCards) + "<br>";
 
       return (result, result2);
   }
