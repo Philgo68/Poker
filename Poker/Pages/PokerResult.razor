@@ -94,7 +94,7 @@
               result = await Task.Run(() => SingleOdds());
               break;
           case "Texas":
-              (result, result2) = await Task.Run(() => Eval());
+              result = await Task.Run(() => Eval());
               break;
           case "Taiwanese":
               (result, result2) = await Task.Run(() => StartTaiwanese());
@@ -128,7 +128,15 @@
           handInfo += $"  {end}ms";
 
           displayHands.Clear();
+          displayHands.Add(new OneCardHand("As"));
           displayHands.Add(hand);
+          //displayHands.Add(new FiveCardHand("AsTc7h"));
+          //displayHands.Add(new FiveCardHand("AsTc8d7h"));
+          //displayHands.Add(new FiveCardHand("AsTc7h8dJd"));
+
+          displayHands.Add(new SevenCardHand("AsTc7h8dJd4d"));
+          displayHands.Add(new SevenCardHand("AsTc7h8dJd4dKc"));
+
 
           return handInfo;
 
@@ -306,7 +314,7 @@
       for (int j = 0; j < hand_cnt; j++)
       {
           result2 += deck.CardDescriptions(hands[j]) + "<br>";
-          //displayHandMasks.Add(hands[j]);
+          displayHands.Add(new SevenCardHand(hands[j]));
       }
 
       var board1 = new FiveCardHand(boardMask1);
@@ -314,8 +322,8 @@
 
       result2 += "Board1: " + board1.CardDescriptions + "<br>";
       result2 += "Board2: " + board2.CardDescriptions + "<br>";
-      displayHands.Add(board1);
-      displayHands.Add(board2);
+      //displayHands.Add(board1);
+      //displayHands.Add(board2);
       result2 += Hand.DescriptionFromMask(Hand.ParseHand(hand_1 ?? "") | boardMask1) + "<br>";
       result2 += "Dealt Cards: " + deck.CardDescriptions(deck.DealtCards) + "<br>";
 

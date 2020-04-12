@@ -5,7 +5,7 @@
 
 @{
     int i = 0;
-    var cards = Hand.CardCount;
+    var cards = Bits.BitCount(Hand.CardsMask);
     <div class="svg-hand-wrapper cards-@(cards)">
         <div class="svg-hand-rotator cards-@(cards)">
             @foreach (var card in Hand.CardNumbers)
