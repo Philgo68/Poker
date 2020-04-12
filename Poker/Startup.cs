@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Poker.Data;
 
 namespace Poker
 {
@@ -31,7 +30,6 @@ namespace Poker
     {
       var builder = services.AddRazorPages();
       services.AddServerSideBlazor();
-      services.AddSingleton<WeatherForecastService>();
       services.AddHttpClient();
       services.AddScoped<Helpers.SvgCards>();
     }

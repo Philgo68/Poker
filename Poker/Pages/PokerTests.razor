@@ -1,4 +1,4 @@
-﻿@page "/pokerresult"
+﻿@page "/pokertests"
 
 @inject SvgCards svgCards
 
@@ -7,7 +7,7 @@
 @using Poker.Helpers;
 @using System.Diagnostics;
 
-<h1>Poker Result</h1>
+<h1>Poker Tests</h1>
 
 <form @onsubmit="Submit">
     <div class="col-11">
@@ -117,19 +117,19 @@
       switch (button)
       {
           case "Single":
-              result = await Task.Run(() => PlayItOut(typeof(OneCardHand)));
+              result = await Task.FromResult(PlayItOut(typeof(OneCardHand)));
               break;
           case "Texas":
-              result = await Task.Run(() => PlayItOut(typeof(HoldemHand)));
+              result = await Task.FromResult(PlayItOut(typeof(HoldemHand)));
               break;
           case "Omaha":
-              result = await Task.Run(() => PlayItOut(typeof(OmahaHand)));
+              result = await Task.FromResult(PlayItOut(typeof(OmahaHand)));
               break;
           case "Taiwanese":
-              (result, result2) = await Task.Run(() => StartTaiwanese());
+              (result, result2) = await Task.FromResult(StartTaiwanese());
               break;
           case "Deal":
-              (result, result2) = await Task.Run(() => StartDeckDeal());
+              (result, result2) = await Task.FromResult(StartDeckDeal());
               break;
           default:
               result = $"Unknown Button: {button}";
