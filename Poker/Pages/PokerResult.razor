@@ -151,7 +151,7 @@
           hero = (BaseHand)Activator.CreateInstance(handType);
           hero.SetCards(hand_1);
 
-          foreach (var oh in hand_2.Split(","))
+          foreach (var oh in (hand_2 ?? "").Split(","))
           {
               var opp = (BaseHand)Activator.CreateInstance(handType);
               opp.SetCards(oh);
