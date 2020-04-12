@@ -5,7 +5,7 @@
 
 @{
     int i = 0;
-    var cards = Bits.BitCount(Hand.CardsMask);
+    var cards = ShowBlanks ? Hand.CardCount : Bits.BitCount(Hand.CardsMask);
     <div class="svg-hand-wrapper cards-@(cards)">
         <div class="svg-hand-rotator cards-@(cards)">
             @foreach (var card in Hand.CardNumbers)
@@ -14,11 +14,19 @@
                     @(svgCards.Faces[card])
                 </div>
             }
+            @while (i < cards)
+            {
+                <div class="svg-card-wrapper card-@(i++)">
+                    @(svgCards.BackRed)
+                </div>
+            }
         </div>
     </div>
 }
 
 @code {
-    [Parameter]
-    public BaseHand Hand { get; set; }
+  [Parameter]
+  public BaseHand Hand { get; set; }
+  [Parameter]
+  public bool ShowBlanks { get; set; }
 }

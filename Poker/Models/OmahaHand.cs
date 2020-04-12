@@ -11,6 +11,7 @@ namespace Poker.Models
     public override byte CardCount { get { return 4; } }
     public OmahaHand() : base() { }
     public OmahaHand(ulong cardsMask) : base(cardsMask) { }
+    public OmahaHand(string cards) : base(cards) { }
     public override (int, uint) Evaluate(ulong board, ulong filler = 0x0UL)
     {
       return base.OmahaEvaluate(board, filler);

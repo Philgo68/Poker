@@ -5,7 +5,6 @@
 @using Poker.CFHandEvaluator;
 @using Poker.Models;
 @using Poker.Helpers;
-@using System.Threading;
 @using System.Diagnostics;
 
 <h1>Poker Result</h1>
@@ -13,30 +12,35 @@
 <form @onsubmit="Submit">
     <div class="col-11">
         <div class="form-group row align-items-center">
-            <label for="hand-1" class="col-2 h2 col-form-label">Hand 1:</label>
-            <input class="form-control col-4" name="hand-1" placeholder="Hand 1" @bind="hand_1" />
+            <label for="hand-1" class="col-2 h2 col-form-label">Hero:</label>
+            <input class="form-control col-4" name="hand-1" @bind="hand_1" />
             <div class="offest-2 col-4">
                 <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Single")">One Card Hand</button>
             </div>
         </div>
         <div class="form-group row align-items-center">
-            <label for="hand-2" class="col-2 h2 col-form-label">Hand 2:</label>
-            <input class="form-control col-4" name="hand-2" placeholder="Hand 2" @bind="hand_2" />
+            <label for="hand-2" class="col-2 h2 col-form-label">Opponent(s):</label>
+            <input class="form-control col-4" name="hand-2" @bind="hand_2" />
             <div class="offest-2 col-4">
                 <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Texas")">Texas Hold'em</button>
             </div>
         </div>
         <div class="form-group row align-items-center">
+            <label for="card-cnt" class="col-2 h2 col-form-label">Hand Cnt:</label>
+            <input class="form-control col-4" name="card-cnt" type="number" @bind="hand_cnt" />
+            <div class="offest-2 col-4">
+                <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Omaha")">Omaha Hi</button>
+            </div>
+        </div>
+        <div class="form-group row align-items-center">
             <label for="board" class="col-2 h2 col-form-label">Board:</label>
-            <input class="form-control col-4" name="board" placeholder="Board" @bind="board_string" />
+            <input class="form-control col-4" name="board" @bind="board_string" />
             <div class="offest-2 col-4">
                 <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Taiwanese")">Taiwanese Poker</button>
             </div>
         </div>
         <div class="form-group row align-items-center">
-            <label for="card-cnt" class="col-2 h2 col-form-label">Hand Cnt:</label>
-            <input class="form-control col-4" name="card-cnt" type="number" placeholder="Hand Cnt" @bind="hand_cnt" />
-            <div class="offest-2 col-4">
+            <div class="col-4">
                 <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Deal")">Test Dealer</button>
             </div>
         </div>
@@ -44,9 +48,22 @@
 </form>
 <hr />
 
+@if (hero != null && board != null)
+{
+    <PokerHandComponent Hand=@hero ShowBlanks=@true />
+    <span>vs.</span>
+    @foreach (var hand in opponents)
+    {
+        <PokerHandComponent Hand=@hand ShowBlanks=@true />
+    }
+    <span>on</span>
+    <PokerHandComponent Hand=@board ShowBlanks=@true />
+}
+
+
 @foreach (var hand in displayHands)
 {
-    <PokerHandComponent Hand=@hand />
+    <PokerHandComponent Hand=@hand ShowBlanks=@true />
 }
 
 <hr />
@@ -71,7 +88,11 @@
 @code {
   string hand_1, hand_2, board_string, button;
   int? hand_cnt;
+  BaseHand hero;
+  List<BaseHand> opponents = new List<BaseHand>();
+  BaseHand board;
   List<BaseHand> displayHands = new List<BaseHand>();
+
   private string result, result2;
   private static Random _global_random = new Random();
 
@@ -88,13 +109,21 @@
       result = "Loading...";
       result2 = null;
 
+      hero = null;
+      board = null;
+      opponents.Clear();
+      displayHands.Clear();
+
       switch (button)
       {
           case "Single":
-              result = await Task.Run(() => SingleOdds());
+              result = await Task.Run(() => PlayItOut(typeof(OneCardHand)));
               break;
           case "Texas":
-              result = await Task.Run(() => Eval());
+              result = await Task.Run(() => PlayItOut(typeof(HoldemHand)));
+              break;
+          case "Omaha":
+              result = await Task.Run(() => PlayItOut(typeof(OmahaHand)));
               break;
           case "Taiwanese":
               (result, result2) = await Task.Run(() => StartTaiwanese());
@@ -109,44 +138,42 @@
       button = null;
   }
 
-  protected string Eval()
+  protected string PlayItOut(Type handType)
   {
       try
       {
-          // old code
+          // code to compare against original library in results and speed
           //var start = Stopwatch.GetTimestamp();
           //var one = $"{(Hand.WinOdds(hand_1 ?? "", board_string ?? "", hand_cnt ?? 1) * 100.0).ToString()}%";
           //var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
           //one += $"  {end}ms";
 
-          // New objects
-          var hand = new HoldemHand(hand_1);
-          var board = new FiveCardHand(board_string);
-          var start = Stopwatch.GetTimestamp();
-          var handInfo = $"{(hand.PlayAgainst(hand_cnt ?? 1, board, 0.5)).ToString()}% over {hand.Wins + hand.Loses + hand.Ties} trials.";
-          var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
-          handInfo += $"  {end}ms";
+          hero = (BaseHand)Activator.CreateInstance(handType);
+          hero.SetCards(hand_1);
 
-          displayHands.Clear();
-          displayHands.Add(new OneCardHand("As"));
-          displayHands.Add(hand);
-          //displayHands.Add(new FiveCardHand("AsTc7h"));
-          //displayHands.Add(new FiveCardHand("AsTc8d7h"));
-          //displayHands.Add(new FiveCardHand("AsTc7h8dJd"));
+          foreach (var oh in hand_2.Split(","))
+          {
+              var opp = (BaseHand)Activator.CreateInstance(handType);
+              opp.SetCards(oh);
+              opponents.Add(opp);
+          }
 
-          displayHands.Add(new SevenCardHand("AsTc7h8dJd4d"));
-          displayHands.Add(new SevenCardHand("AsTc7h8dJd4dKc"));
+          hand_cnt = Math.Max(hand_cnt ?? 1, opponents.Count);
+          for (var i = opponents.Count; i < hand_cnt; i++) { opponents.Add((BaseHand)Activator.CreateInstance(handType)); }
+
+          board = new FiveCardHand(board_string);
 
 
-          return handInfo;
-
+          return $"{(hero.PlayAgainst(opponents.ToArray(), board, 1)).ToString()}% against {hand_cnt ?? 1} opponents over {hero.Wins + hero.Loses + hero.Ties} trials.";
       }
       catch (ArgumentException e)
       {
           return e.Message;
       }
+
   }
-  protected string Eval2()
+
+  protected string HandDescriptionSample()
   {
       // initialize board
       string board = "2d kh qh 3h qc";
@@ -164,21 +191,6 @@
       {
           return $"{h1.Description} is worse or equal to {h2.Description}.";
       }
-  }
-
-  protected string SingleOdds()
-  {
-      try
-      {
-          var hand = new OneCardHand(hand_1);
-          var board = new FiveCardHand(board_string);
-          return $"{(hand.PlayAgainst(hand_cnt ?? 1, board, 3)).ToString()}% over {hand.Wins+hand.Loses+hand.Ties} trials.";
-      }
-      catch (ArgumentException e)
-      {
-          return e.Message;
-      }
-
   }
 
   protected (string, string) StartTaiwanese()
@@ -307,10 +319,9 @@
       }
       var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
 
-      result = hand_cnt == 6 ? $"{end}ms full table double board Taiwanese 1 million times." : $"{end}ms to deal {hand_cnt+2} different hands 1 million times." ;
+      result = hand_cnt == 6 ? $"{end}ms full table double board Taiwanese 1 million times." : $"{end}ms to deal {hand_cnt + 2} different hands 1 million times.";
       result2 = "Last result:<br>";
 
-      displayHands.Clear();
       for (int j = 0; j < hand_cnt; j++)
       {
           result2 += deck.CardDescriptions(hands[j]) + "<br>";
@@ -329,9 +340,5 @@
 
       return (result, result2);
   }
-
-
-
-
 
 }

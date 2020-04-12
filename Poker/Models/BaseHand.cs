@@ -68,12 +68,23 @@ namespace Poker.Models
 
     public BaseHand(ulong cardsMask) : this()
     {
-      if (Bits.BitCount(cardsMask) > CardCount) throw new ArgumentException($"A {Name} hand must have {CardCount} cards or less.");
-      CardsMask = cardsMask;
+      SetCards(cardsMask);
     }
 
     public BaseHand(string cards) : this(CFHandEvaluator.Hand.ParseHand(cards ?? ""))
     {
+    }
+
+    public void SetCards(ulong cardsMask)
+    {
+      CardsMask = cardsMask;
+      if (Bits.BitCount(cardsMask) > CardCount) throw new ArgumentException($"A {Name} hand must have {CardCount} cards or less.");
+    }
+
+    public void SetCards(string cards) 
+    {
+      CardsMask = CFHandEvaluator.Hand.ParseHand(cards ?? "");
+      if (Bits.BitCount(CardsMask) > CardCount) throw new ArgumentException($"A {Name} hand must have {CardCount} cards or less.");
     }
 
     public void StartTest()
@@ -233,15 +244,19 @@ namespace Poker.Models
 
       return this.Percent;
     }
-
-    public double PlayAgainst(int numOpponents, BaseHand board, double duration)
+        public double PlayAgainst(BaseHand oppHand, int numOpponents, BaseHand board, double duration)
     {
       var opponents = new BaseHand[numOpponents];
       for (var i = 0; i < numOpponents; i++)
       {
-        opponents[i] = (BaseHand)Activator.CreateInstance(this.GetType());
+        opponents[i] = (i > 0 || oppHand == null) ? (BaseHand)Activator.CreateInstance(this.GetType()) : oppHand;
       }
       return PlayAgainst(opponents, board, duration);
+    }
+
+    public double PlayAgainst(int numOpponents, BaseHand board, double duration)
+    {
+      return PlayAgainst(null, numOpponents, board, duration);
     }
 
   }
