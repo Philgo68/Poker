@@ -7,15 +7,18 @@
     @if (Hand.GetType() == typeof(TaiwaneseHand))
     {
         var hand = (TaiwaneseHand)Hand;
-        <PokerHandComponent Hand=@hand.TopHand ShowBlanks=@ShowBlanks />
-        <PokerHandComponent Hand=@hand.MiddleHand ShowBlanks=@ShowBlanks />
-        <PokerHandComponent Hand=@hand.BottomHand ShowBlanks=@ShowBlanks />
+        <div class="svg-stacked-hand">
+            <PokerHandComponent Hand=@hand.TopHand ShowBlanks=@ShowBlanks />
+            <PokerHandComponent Hand=@hand.MiddleHand ShowBlanks=@ShowBlanks />
+            <PokerHandComponent Hand=@hand.BottomHand ShowBlanks=@ShowBlanks />
+        </div>
     }
     else
     {
         int i = 0;
         var cards = ShowBlanks ? Hand.CardCount : Bits.BitCount(Hand.CardsMask);
-        <div class="svg-hand-wrapper cards-@(cards)">
+        var klass = Hand.CommunityCards ? "community-cards" : "";
+        <div class="svg-hand-wrapper cards-@(cards) @(klass) ">
             <div class="svg-hand-rotator cards-@(cards)">
                 @foreach (var card in Hand.CardNumbers)
                 {
@@ -35,8 +38,8 @@
 }
 
 @code {
-    [Parameter]
-    public BaseHand Hand { get; set; }
-    [Parameter]
-    public bool ShowBlanks { get; set; }
+  [Parameter]
+  public BaseHand Hand { get; set; }
+  [Parameter]
+  public bool ShowBlanks { get; set; }
 }

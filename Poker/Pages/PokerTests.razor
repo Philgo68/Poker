@@ -48,23 +48,25 @@
 </form>
 <hr />
 
-@if (hero != null && board != null)
-{
-    <PokerHandComponent Hand=@hero ShowBlanks=@true />
-    <span>vs.</span>
-    @foreach (var hand in opponents)
+<div class="row align-items-center">
+    @if (hero != null && board != null)
+    {
+        <PokerHandComponent Hand=@hero ShowBlanks=@true />
+        <div class="d-inline-block m-2">vs.</div>
+        @foreach (var hand in opponents)
+        {
+            <PokerHandComponent Hand=@hand ShowBlanks=@true />
+        }
+        <div class="d-inline-block m-2">on</div>
+        <PokerHandComponent Hand=@board ShowBlanks=@true />
+    }
+
+
+    @foreach (var hand in displayHands)
     {
         <PokerHandComponent Hand=@hand ShowBlanks=@true />
     }
-    <span>on</span>
-    <PokerHandComponent Hand=@board ShowBlanks=@true />
-}
-
-
-@foreach (var hand in displayHands)
-{
-    <PokerHandComponent Hand=@hand ShowBlanks=@true />
-}
+</div>
 
 <hr />
 
@@ -162,10 +164,11 @@
           for (var i = opponents.Count; i < hand_cnt; i++) { opponents.Add((BaseHand)Activator.CreateInstance(handType)); }
 
           board = new FiveCardHand(board_string);
+          board.CommunityCards = true;
 
-          int cnt = hero.PlayAgainst(opponents.ToArray(), board, 5*60);
+          long cnt = hero.PlayAgainst(opponents.ToArray(), board, 5);
 
-          return $"{hero.Percent}% against {opponents.Count} opponents over {cnt} trials.<br>Wins: {hero.Wins}  Loses: {hero.Loses}  Ties: {hero.Ties}.";
+          return $"{hero.Percent}% against {opponents.Count} opponents over {cnt} trials.<br>Wins: {hero.Wins:n0}  Loses: {hero.Loses:n0}  Ties: {hero.Ties:n0}.";
       }
       catch (ArgumentException e)
       {
@@ -196,8 +199,8 @@
 
   protected (string, string) StartTaiwanese()
   {
-      int cnt = 0;
-      var duration = 5.0;
+      long cnt = 0;
+      var duration = 1.0;
 
       //AhKsQsQhTh9h5s
       //AsAhAcQhQc7s2d
@@ -221,17 +224,18 @@
       opp.CompleteCards(deck, _global_random);
 
       board = new FiveCardHand(board_string);
+      board.CommunityCards = true;
 
       // Layout the hands
       cnt += tHero.LayoutHand(duration / 5);
       cnt += opp.LayoutHand(duration / 5);
 
-      string result = $"{tHero.CardDescriptions} and {opp.CardDescriptions} over {cnt/2} boards.";
+      string result = $"{tHero.CardDescriptions} and {opp.CardDescriptions} over {cnt/2:n0} boards.";
       string result2 = "";
 
       cnt = hero.PlayAgainst(opponents.ToArray(), board, duration / (5/3) );
 
-      result2 = $"{hero.Percent}% against {opponents.Count} opponents over {cnt} trials.";
+      result2 = $"{hero.Percent}% against {opponents.Count} opponents over {cnt:n0} trials.";
 
       return (result, result2);
   }
