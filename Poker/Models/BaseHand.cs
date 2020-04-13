@@ -16,15 +16,15 @@ namespace Poker.Models
   {
     public ulong CardsMask { get; set; }
     public BaseDeck Deck { get; set; }
-    public int Wins { get; set; }
-    public int Loses { get; set; }
-    public int Ties { get; set; }
-    public virtual double Percent => 100 * Math.Round((Wins + Ties / 2.0) / (Wins + Ties + Loses), 6);
+    public long Wins { get; set; }
+    public long Loses { get; set; }
+    public long Ties { get; set; }
+    public virtual decimal Percent => 100.0m * Math.Round((Wins + Ties / 2.0m) / (Wins + Ties + Loses), 6);
     public virtual int CompareTo(object obj)
     {
       return -Percent.CompareTo(((BaseHand)obj).Percent);
     }
-
+    public bool CommunityCards { get; set; }
     public virtual string Name => "BaseHand";
     public virtual byte CardCount => 0;
     public virtual string CardDescriptions => Deck.CardDescriptions(CardsMask);
@@ -83,7 +83,7 @@ namespace Poker.Models
       deck.CompleteCards(this, rand);
     }
 
-    public virtual int LayoutHand(double duration = 0.1) 
+    public virtual long LayoutHand(double duration = 0.1) 
     {
       return 0;
     }
@@ -114,7 +114,7 @@ namespace Poker.Models
       }
     }
 
-    public virtual int PlayAgainst(BaseHand[] opponents, BaseHand board, double duration)
+    public virtual long PlayAgainst(BaseHand[] opponents, BaseHand board, double duration)
     {
       var dealtCards = CardsMask | board.CardsMask;
 
@@ -134,9 +134,9 @@ namespace Poker.Models
       int heroNeeds = this.CardsNeeded;
       ulong heroMask = this.CardsMask;
 
-      int wins = 0;
-      int loses = 0;
-      int ties = 0;
+      long wins = 0;
+      long loses = 0;
+      long ties = 0;
       long end = Convert.ToInt64(Stopwatch.GetTimestamp() + (duration * Stopwatch.Frequency));
       Action trial = delegate
       {
@@ -186,7 +186,7 @@ namespace Poker.Models
 
       return wins + ties + loses;
     }
-    public int PlayAgainst(BaseHand oppHand, int numOpponents, BaseHand board, double duration)
+    public long PlayAgainst(BaseHand oppHand, int numOpponents, BaseHand board, double duration)
     {
       var opponents = new BaseHand[numOpponents];
       for (var i = 0; i < numOpponents; i++)
@@ -196,7 +196,7 @@ namespace Poker.Models
       return PlayAgainst(opponents, board, duration);
     }
 
-    public int PlayAgainst(int numOpponents, BaseHand board, double duration)
+    public long PlayAgainst(int numOpponents, BaseHand board, double duration)
     {
       return PlayAgainst(null, numOpponents, board, duration);
     }

@@ -76,9 +76,9 @@ namespace Poker.Models
       }
     }
 
-    public override int LayoutHand(double duration = 0.1)
+    public override long LayoutHand(double duration = 0.1)
     {
-      int cnt = 0;
+      long cnt = 0;
       if (!HandsLaidOut)
       {
         var rand = new Random();
