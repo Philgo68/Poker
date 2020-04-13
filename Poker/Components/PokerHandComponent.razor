@@ -4,29 +4,39 @@
 @inject SvgCards svgCards
 
 @{
-    int i = 0;
-    var cards = ShowBlanks ? Hand.CardCount : Bits.BitCount(Hand.CardsMask);
-    <div class="svg-hand-wrapper cards-@(cards)">
-        <div class="svg-hand-rotator cards-@(cards)">
-            @foreach (var card in Hand.CardNumbers)
-            {
-                <div class="svg-card-wrapper card-@(i++)">
-                    @(svgCards.Faces[card])
-                </div>
-            }
-            @while (i < cards)
-            {
-                <div class="svg-card-wrapper card-@(i++)">
-                    @(svgCards.BackRed)
-                </div>
-            }
+    @if (Hand.GetType() == typeof(TaiwaneseHand))
+    {
+        var hand = (TaiwaneseHand)Hand;
+        <PokerHandComponent Hand=@hand.TopHand ShowBlanks=@ShowBlanks />
+        <PokerHandComponent Hand=@hand.MiddleHand ShowBlanks=@ShowBlanks />
+        <PokerHandComponent Hand=@hand.BottomHand ShowBlanks=@ShowBlanks />
+    }
+    else
+    {
+        int i = 0;
+        var cards = ShowBlanks ? Hand.CardCount : Bits.BitCount(Hand.CardsMask);
+        <div class="svg-hand-wrapper cards-@(cards)">
+            <div class="svg-hand-rotator cards-@(cards)">
+                @foreach (var card in Hand.CardNumbers)
+                {
+                    <div class="svg-card-wrapper card-@(i++)">
+                        @(svgCards.Faces[card])
+                    </div>
+                }
+                @while (i < cards)
+                {
+                    <div class="svg-card-wrapper card-@(i++)">
+                        @(svgCards.BackRed)
+                    </div>
+                }
+            </div>
         </div>
-    </div>
+    }
 }
 
 @code {
-  [Parameter]
-  public BaseHand Hand { get; set; }
-  [Parameter]
-  public bool ShowBlanks { get; set; }
+    [Parameter]
+    public BaseHand Hand { get; set; }
+    [Parameter]
+    public bool ShowBlanks { get; set; }
 }

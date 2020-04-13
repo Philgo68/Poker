@@ -163,8 +163,9 @@
 
           board = new FiveCardHand(board_string);
 
+          int cnt = hero.PlayAgainst(opponents.ToArray(), board, 5*60);
 
-          return $"{(hero.PlayAgainst(opponents.ToArray(), board, 1)).ToString()}% against {hand_cnt ?? 1} opponents over {hero.Wins + hero.Loses + hero.Ties} trials.";
+          return $"{hero.Percent}% against {opponents.Count} opponents over {cnt} trials.<br>Wins: {hero.Wins}  Loses: {hero.Loses}  Ties: {hero.Ties}.";
       }
       catch (ArgumentException e)
       {
@@ -196,102 +197,41 @@
   protected (string, string) StartTaiwanese()
   {
       int cnt = 0;
-      var duration = 5;
+      var duration = 5.0;
 
-      // get starting cards
-      var handmask1 = Hand.ParseHand(hand_1 ?? "");
-      var handmask2 = Hand.ParseHand(hand_2 ?? "");
-
-      // Create deck the initial cards "dealt"
-      var deck = new StandardDeck(handmask1 | handmask2);
-
-      // Fill in the rest of the hand
-      handmask1 = deck.CompleteCards(7, handmask1, _global_random);
-      handmask2 = deck.CompleteCards(7, handmask2, _global_random);
       //AhKsQsQhTh9h5s
       //AsAhAcQhQc7s2d
       //AsAhAcKhQsTs3c
+      // Tc7h7c6s6c2h2c  vs AcQhTsTd9h5s4s
+      // ThAsAhKsKh7d6d  vs Td8h8dJs7s4d3s     Th / As, Ah / Ks, Kh, 7d, 6d  and  Td / 8h, 8d / Js, 7s, 4d, 3s
 
-      // Tc, 7h, 7c, 6s, 6c, 2h, 2c vs Ac, Qh, Ts, Td, 9h, 5s, 4s
+      hero = new TaiwaneseHand();
+      var tHero = hero;
+      tHero.SetCards(hand_1);
 
-      var taiwaneseHands = TaiwaneseHand.AllSetups(handmask1);
-      var taiwaneseHands2 = TaiwaneseHand.AllSetups(handmask2);
+      var opp = new TaiwaneseHand();
+      opp.SetCards(hand_2);
+      opponents.Add(opp);
 
-      long end = Convert.ToInt64(Stopwatch.GetTimestamp() + (duration * Stopwatch.Frequency));
-      Action testboards = delegate
-      {
-          long now;
-          int seed;
-          lock (_global_random) seed = _global_random.Next();
-          var rand = new Random(seed);
-          do
-          {
-              cnt++;
-              var boardmask = deck.PeekCards(5, rand);
-              foreach (var hand in taiwaneseHands)
-              {
-                  hand.ScoreAgainst(boardmask);
-              }
-              foreach (var hand in taiwaneseHands2)
-              {
-                  hand.ScoreAgainst(boardmask);
-              }
-              now = Stopwatch.GetTimestamp();
-          } while (now < end);
-      };
+      // Create deck the initial cards "dealt"
+      var deck = new StandardDeck(tHero.CardsMask | opp.CardsMask);
 
-      var tasks = new List<Task>();
-      for (int ctr = 1; ctr <= 8; ctr++)
-          tasks.Add(Task.Factory.StartNew(testboards));
-      Task.WaitAll(tasks.ToArray());
+      // Fill in the blanks in the hand(s)
+      tHero.CompleteCards(deck, _global_random);
+      opp.CompleteCards(deck, _global_random);
 
-      Array.Sort(taiwaneseHands);
-      Array.Sort(taiwaneseHands2);
+      board = new FiveCardHand(board_string);
 
-      string result = $"{Hand.HandCards(handmask1)} and {Hand.HandCards(handmask2)} over {cnt} boards.";
+      // Layout the hands
+      cnt += tHero.LayoutHand(duration / 5);
+      cnt += opp.LayoutHand(duration / 5);
+
+      string result = $"{tHero.CardDescriptions} and {opp.CardDescriptions} over {cnt/2} boards.";
       string result2 = "";
 
-      for (var i = 0; i <= hand_cnt; i++)
-          result2 += $"Setup {i + 1}: {taiwaneseHands[i].CardDescriptions}  ({taiwaneseHands[i].RunningScore})<br>";
-      result2 += "<br>";
-      //result2 += $"Score: {taiwaneseHands[0].Score}<br><br>";
+      cnt = hero.PlayAgainst(opponents.ToArray(), board, duration / (5/3) );
 
-      for (var i = 0; i <= hand_cnt; i++)
-          result2 += $"Against {i + 1}: {taiwaneseHands2[i].CardDescriptions}  ({taiwaneseHands2[i].RunningScore})<br>";
-      result2 += "<br>";
-      //result2 += $"Score: {taiwaneseHands2[0].Score}<br><br>";
-
-      cnt = 0;
-      end = Convert.ToInt64(Stopwatch.GetTimestamp() + (duration * Stopwatch.Frequency));
-      Action compareHands = delegate
-      {
-          long now;
-          int seed;
-          lock (_global_random) seed = _global_random.Next();
-          var rand = new Random(seed);
-          do
-          {
-              cnt++;
-              var boardmask = deck.PeekCards(5, rand);
-              for (var i = 0; i <= hand_cnt; i++)
-              {
-                  for (var j = 0; j <= hand_cnt; j++)
-                  {
-                      taiwaneseHands[i].PlayAgainst(taiwaneseHands2[j], boardmask);
-                  }
-              }
-              now = Stopwatch.GetTimestamp();
-          } while (now < end);
-      };
-
-      tasks.Clear();
-      for (int ctr = 1; ctr <= 8; ctr++)
-          tasks.Add(Task.Factory.StartNew(compareHands));
-      Task.WaitAll(tasks.ToArray());
-
-      for (var i = 0; i <= hand_cnt; i++)
-          result2 += $"Hand {i + 1}: {(taiwaneseHands[i].Percent * 100.0).ToString()}%<br>";
-      result2 += $"over {cnt} boards.";
+      result2 = $"{hero.Percent}% against {opponents.Count} opponents over {cnt} trials.";
 
       return (result, result2);
   }

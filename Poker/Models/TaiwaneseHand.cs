@@ -3,36 +3,120 @@ using Microsoft.AspNetCore.SignalR.Protocol;
 using Poker.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using YYClass;
 
 namespace Poker.Models
 {
   public class TaiwaneseHand : BaseHand
   {
+    private OneCardHand topHand;
+    private HoldemHand middleHand;
+    private OmahaHand bottomHand;
+    private bool HandsLaidOut => (TopHand != null && MiddleHand != null && BottomHand != null);
+
     public override string Name => "Taiwanese";
     public override byte CardCount => 7;
-    public override string CardDescriptions => $"{TopHand.CardDescriptions} / {MiddleHand.CardDescriptions} / {BottomHand.CardDescriptions}";
-
-    public OneCardHand TopHand { get; set; }
-    public HoldemHand MiddleHand { get; set; }
-    public OmahaHand BottomHand { get; set; }
+    public override string CardDescriptions => $"{TopHand?.CardDescriptions ?? "x"} / {MiddleHand?.CardDescriptions ?? "xx"} / {BottomHand?.CardDescriptions ?? "xxxx"}";
+    public int RunningScore { get; set; }
+    public OneCardHand TopHand { get => topHand; set { topHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
+    public HoldemHand MiddleHand { get => middleHand; set { middleHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
+    public OmahaHand BottomHand { get => bottomHand; set { bottomHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
 
     public override int CompareTo(object obj)
     {
       return -RunningScore.CompareTo(((TaiwaneseHand)obj).RunningScore);
     }
 
-    public TaiwaneseHand() : base() {}
-
-    public TaiwaneseHand(OneCardHand topCardMask, HoldemHand middleHandMask, OmahaHand bottomHandMask) : this()
+    public TaiwaneseHand() : base() 
     {
-      TopHand = topCardMask;
-      MiddleHand = middleHandMask;
-      BottomHand = bottomHandMask;
+      RunningScore = 0;
     }
+
+    public TaiwaneseHand(string cards) : base()
+    {
+      var hhs = (cards ?? "").Split(",");
+      if (hhs.Length == 1) SetCards(hhs[0]);
+      if (hhs.Length >= 2)
+      {
+        TopHand.SetCards(hhs[0]);
+        MiddleHand.SetCards(hhs[1]);
+      }
+      if (hhs.Length >= 3) BottomHand.SetCards(hhs[2]);
+    }
+
+    public TaiwaneseHand(OneCardHand topHand, HoldemHand middleHand, OmahaHand bottomHand) : this()
+    {
+      TopHand = topHand;
+      MiddleHand = middleHand;
+      BottomHand = bottomHand;
+    }
+    public override void Reset()
+    {
+      base.Reset();
+      RunningScore = 0;
+    }
+    public override void CompleteCards(BaseDeck deck, Random rand = null)
+    {
+      if (!HandsLaidOut)
+      {
+        // Fill in the 7 dealt cards
+        deck.CompleteCards(this, rand);
+      }
+      else
+      {
+        // Complete each sub-hand individually
+        deck.CompleteCards(this.TopHand, rand);
+        deck.CompleteCards(this.MiddleHand, rand);
+        deck.CompleteCards(this.BottomHand, rand);
+      }
+    }
+
+    public override int LayoutHand(double duration = 0.1)
+    {
+      int cnt = 0;
+      if (!HandsLaidOut)
+      {
+        var rand = new Random();
+        long end = Convert.ToInt64(Stopwatch.GetTimestamp() + (duration * Stopwatch.Frequency));
+        var possibleLayouts = AllLayouts();
+        Action testboards = delegate
+        {
+          long now;
+          int seed;
+          lock (rand) seed = rand.Next();
+          var threadRand = new Random(seed);
+          // Layout is done with no knowledge of board or opponents cards, so just eliminate my cards from the deck
+          var deck = new StandardDeck(CardsMask);
+          do
+          {
+            cnt++;
+            var boardmask = deck.PeekCards(5, threadRand);
+            foreach (var hand in possibleLayouts)
+            {
+              hand.ScoreOnBoard(boardmask);
+            }
+            now = Stopwatch.GetTimestamp();
+          } while (now < end);
+        };
+
+        var tasks = new List<Task>();
+        for (int ctr = 1; ctr <= Environment.ProcessorCount; ctr++)
+          tasks.Add(Task.Factory.StartNew(testboards));
+        Task.WaitAll(tasks.ToArray());
+
+        Array.Sort(possibleLayouts);
+        TopHand = possibleLayouts[0].TopHand;
+        MiddleHand = possibleLayouts[0].MiddleHand;
+        BottomHand = possibleLayouts[0].BottomHand;
+      }
+      return cnt;
+    }
+
 
     public int PointTopHand(int handType)
     {
@@ -97,47 +181,150 @@ namespace Poker.Models
       return PointBottomHand(handType);
     }
 
-    public void ScoreAgainst(ulong boardmask)
+    public void ScoreOnBoard(ulong boardmask)
     {
       RunningScore += ScoreTopHand(boardmask) + ScoreMiddleHand(boardmask) + ScoreBottomHand(boardmask);
     }
 
-    public void PlayAgainst(TaiwaneseHand[] otherHands, ulong boardmask)
+    public override int PlayAgainst(ulong heroFiller, ulong[] opsMasks, ulong boardMask)
     {
-      if (otherHands.Length == 1)
-      {
-        PlayAgainst(otherHands[0], boardmask);
-        return;
-      }
+      int winCnt = 0;
 
-      // Play top hands
-      (var myType, var myRank) = TopHand.Evaluate(boardmask);
-      (var bestType, var bestRank) = (myType, myRank);
-      var tiedHands = 0;
-      foreach (var otherHand in otherHands)
+      int wins = 0, loses = 0;
+
+      // Top hands
+      (int heroType, uint hero) = TopHand.Evaluate(CardsMask | heroFiller, boardMask);
+
+      // Must check them all to get the best opponent hand
+      var rankTies = 0;
+      var typeTies = 0;
+      (int villianType, uint villain) = TopHand.Evaluate(opsMasks[0], boardMask);
+      for (var i = 1; i < opsMasks.Length; i++)
       {
-        (var type, var rank) = otherHand.Evaluate(boardmask);
-        if (rank > bestRank)
+        (int checkType, uint check) = TopHand.Evaluate(opsMasks[i], boardMask);
+        if (check > villain)
         {
-          (bestType, bestRank) = (type, rank);
-          tiedHands = 0;
-        } else if (rank == bestRank)
-        {
-          tiedHands++;
+          rankTies = 0;
+          if (checkType > villianType) typeTies = 0;
+          (villianType, villain) = (checkType, check);
         }
+        else if (check == villain)
+        {
+          rankTies++;
+          typeTies++;
+        }
+        else if (checkType == villianType) typeTies++;
       }
 
+      switch (hero.CompareTo(villain))
+      {
+        case 1:
+          wins += 1 * opsMasks.Length;  // one from all the beaten players
+          wins += PointTopHand(heroType) * (opsMasks.Length - ((heroType > villianType) ? 0 : typeTies));  // Bonus from all players (subtracting all those with the same type of hand
+          winCnt++;
+          break;
+        case -1:
+          loses += 1 + ((villianType > heroType) ? PointTopHand(villianType) : 0); // one to the villain's pot plus the villain's bonus if it's a better type
+          winCnt--;
+          break;
+        default:
+          break;
+      }
 
-      // scoop bonus of 3 if you win them all
+      // Middle hands
+      (heroType, hero) = MiddleHand.Evaluate(CardsMask | heroFiller, boardMask);
+
+      // Must check them all to get the best opponent hand
+      rankTies = 0;
+      typeTies = 0;
+      (villianType, villain) = MiddleHand.Evaluate(opsMasks[0], boardMask);
+      for (var i = 1; i < opsMasks.Length; i++)
+      {
+        (int checkType, uint check) = MiddleHand.Evaluate(opsMasks[i], boardMask);
+        if (check > villain)
+        {
+          rankTies = 0;
+          if (checkType > villianType) typeTies = 0;
+          (villianType, villain) = (checkType, check);
+        }
+        else if (check == villain)
+        {
+          rankTies++;
+          typeTies++;
+        }
+        else if (checkType == villianType) typeTies++;
+      }
+
+      switch (hero.CompareTo(villain))
+      {
+        case 1:
+          wins += 2 * opsMasks.Length;  // 2 from all the beaten players
+          wins += PointMiddleHand(heroType) * (opsMasks.Length - ((heroType > villianType) ? 0 : typeTies));  // Bonus from all players (subtracting all those with the same type of hand
+          winCnt++;
+          break;
+        case -1:
+          loses += 2 + ((villianType > heroType) ? PointMiddleHand(villianType) : 0); // 2 to the villain's pot plus the villain's bonus if it's a better type
+          winCnt--;
+          break;
+        default:
+          break;
+      }
+
+      // Bottom hands
+      (heroType, hero) = BottomHand.Evaluate(CardsMask | heroFiller, boardMask);
+
+      // Must check them all to get the best opponent hand
+      rankTies = 0;
+      typeTies = 0;
+      (villianType, villain) = BottomHand.Evaluate(opsMasks[0], boardMask);
+      for (var i = 1; i < opsMasks.Length; i++)
+      {
+        (int checkType, uint check) = BottomHand.Evaluate(opsMasks[i], boardMask);
+        if (check > villain)
+        {
+          rankTies = 0;
+          if (checkType > villianType) typeTies = 0;
+          (villianType, villain) = (checkType, check);
+        }
+        else if (check == villain)
+        {
+          rankTies++;
+          typeTies++;
+        }
+        else if (checkType == villianType) typeTies++;
+      }
+
+      switch (hero.CompareTo(villain))
+      {
+        case 1:
+          wins += 3 * opsMasks.Length;  // 3 from all the beaten players
+          wins += PointBottomHand(heroType) * (opsMasks.Length - ((heroType > villianType) ? 0 : typeTies));  // Bonus from al players (subtracting all those with the same type of hand
+          winCnt++;
+          break;
+        case -1:
+          loses += 3 + ((villianType > heroType) ? PointBottomHand(villianType) : 0); // 3 to the villain's pot plus the villain's bonus if it's a better type
+          winCnt--;
+          break;
+        default:
+          break;
+      }
+
+      if (winCnt == 3) 
+        wins += 3 * opsMasks.Length;  // 3 from all the beaten players
+      
+      // return net gain
+      return wins - loses;
     }
 
-    public void PlayAgainst(TaiwaneseHand otherHand, ulong boardmask)
+    public int PlayAgainstOld(TaiwaneseHand otherHand, BaseHand board, double duration)
     {
       // Play top hands
       int winCnt = 0;
+      var boardmask = board.CardsMask;
+
       (var myType, var myRank) = TopHand.Evaluate(boardmask);
       (var oType, var oRank) = otherHand.TopHand.Evaluate(boardmask);
-      switch (myRank.CompareTo(oRank)) 
+      switch (myRank.CompareTo(oRank))
       {
         case 1:
           Wins += 1 + ((myType == oType) ? 0 : PointTopHand(myType));
@@ -183,13 +370,14 @@ namespace Poker.Models
           break;
       };
 
+      return 0;
 
     }
 
-    public static TaiwaneseHand[] AllSetups(ulong cardsMask)
+    public TaiwaneseHand[] AllLayouts()
     {
       TaiwaneseHand[] hands = new TaiwaneseHand[105];
-      var cards = Bits.IndividualMasks(cardsMask);
+      var cards = Bits.IndividualMasks(this.CardsMask);
       int i = 0;
       for (int _c1 = 6; _c1 >= 0; _c1--)
       {

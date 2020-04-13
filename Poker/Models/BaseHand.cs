@@ -15,9 +15,7 @@ namespace Poker.Models
   public class BaseHand : IComparable
   {
     public ulong CardsMask { get; set; }
-    private ulong? initialMask { get; set; }
     public BaseDeck Deck { get; set; }
-    public int RunningScore { get; set; }
     public int Wins { get; set; }
     public int Loses { get; set; }
     public int Ties { get; set; }
@@ -31,39 +29,31 @@ namespace Poker.Models
     public virtual byte CardCount => 0;
     public virtual string CardDescriptions => Deck.CardDescriptions(CardsMask);
     public virtual IEnumerable<int> CardNumbers => Deck.CardNumbers(CardsMask);
-
-    public virtual (int, uint) Evaluate(ulong board, ulong filler = 0x0UL) => (0, 0);
-
-    public void Reset()
+    public virtual int CardsNeeded => CardCount - Bits.BitCount(CardsMask);
+    public virtual (int, uint) Evaluate(ulong board)
     {
-      RunningScore = 0;
+      return Evaluate(CardsMask, board);
+    }
+    
+    public virtual (int, uint) Evaluate(ulong hero, ulong board)
+    {
+      // Default to Poker Evaluation of the Hand
+      return Deck.PokerEvaluate(hero, board);
+    }
+
+    public virtual void Reset()
+    {
       Wins = 0;
       Loses = 0;
       Ties = 0;
     }
-
-    public virtual (int, uint) PokerEvaluate(ulong board, ulong filler = 0x0UL)
-    {
-      return Deck.PokerEvaluate(CardsMask | filler, board);
-    }
-
-    public virtual (int, uint) OmahaEvaluate(ulong board, ulong filler = 0x0UL)
-    {
-      return Deck.OmahaEvaluate(CardsMask | filler, board);
-    }
-
 
     public BaseHand()
     {
       Deck = new StandardDeck();
-      RunningScore = 0;
       Wins = 0;
       Loses = 0;
       Ties = 0;
-
-      initialMask ??= CardsMask;
-      CardsMask = initialMask.Value;
-      initialMask = null;
     }
 
     public BaseHand(ulong cardsMask) : this()
@@ -71,119 +61,77 @@ namespace Poker.Models
       SetCards(cardsMask);
     }
 
-    public BaseHand(string cards) : this(CFHandEvaluator.Hand.ParseHand(cards ?? ""))
+    public BaseHand(string cards) : this()
     {
+      SetCards(cards);
     }
 
-    public void SetCards(ulong cardsMask)
+    public virtual void SetCards(ulong cardsMask)
     {
       CardsMask = cardsMask;
       if (Bits.BitCount(cardsMask) > CardCount) throw new ArgumentException($"A {Name} hand must have {CardCount} cards or less.");
     }
 
-    public void SetCards(string cards) 
+    public virtual void SetCards(string cards)
     {
       CardsMask = CFHandEvaluator.Hand.ParseHand(cards ?? "");
       if (Bits.BitCount(CardsMask) > CardCount) throw new ArgumentException($"A {Name} hand must have {CardCount} cards or less.");
     }
 
-    public void StartTest()
+    public virtual void CompleteCards(BaseDeck deck, Random rand = null)
     {
-      initialMask ??= CardsMask;
-      CardsMask = initialMask.Value;
+      deck.CompleteCards(this, rand);
     }
 
-    public double PlayAgainstOld(BaseHand[] opponents, BaseHand board, double duration)
+    public virtual int LayoutHand(double duration = 0.1) 
     {
-      var dealtCards = CardsMask | board.CardsMask;
-      foreach (var hand in opponents) { dealtCards |= hand.CardsMask; }
+      return 0;
+    }
 
-      var _global_random = new Random();
-
-      var threadHeroHand = new ThreadLocal<BaseHand>(() => { return (BaseHand)this.MemberwiseClone(); }, true);
-      var threadBoard = new ThreadLocal<BaseHand>(() => { return (BaseHand)board.MemberwiseClone(); });
-
-      int cnt = 0;
-
-      long end = Convert.ToInt64(Stopwatch.GetTimestamp() + (duration * Stopwatch.Frequency));
-      long now;
-      Action trial = delegate
+    public virtual int PlayAgainst(ulong heroFiller, ulong[] opsMasks, ulong boardMask)
+    {
+      var tied = false;
+      uint villain = 0;
+      (_, uint hero) = this.Evaluate(CardsMask | heroFiller, boardMask);
+      for (var i = 0; i < opsMasks.Length; i++)
       {
-        int seed;
-        lock (_global_random) seed = _global_random.Next();
-        var rand = new Random(seed);
+        (_, villain) = this.Evaluate(opsMasks[i], boardMask);
 
-        var heroHand = threadHeroHand.Value;
-        var board = threadBoard.Value;
-
-        var deck = new StandardDeck(dealtCards);
-        do
-        {
-          uint hero = 0, villain = 0;
-          bool tied = false;
-
-          deck.TestCards(heroHand, rand);
-          deck.TestCards(board, rand);
-          foreach (var oh in opponents)
-          {
-            var extraCards = deck.DealCards(oh.CardCount - Bits.BitCount(oh.CardsMask));
-
-            (_, hero) = this.Evaluate(board.CardsMask);
-            (_, villain) = oh.Evaluate(board.CardsMask | extraCards);
-            if (villain > hero) { break; }
-            if (villain == hero) { tied = true; }
-          }
-          if (villain > hero)
-          {
-            heroHand.Loses++;
-          }
-          else if (tied)
-          {
-            heroHand.Ties++;
-          }
-          else
-          {
-            heroHand.Wins++;
-          }
-          cnt++;
-          deck.Reset(dealtCards);
-          now = Stopwatch.GetTimestamp();
-        } while (now < end);
-      };
-
-      var tasks = new List<Task>();
-      for (int ctr = 1; ctr <= 1; ctr++)
-        tasks.Add(Task.Factory.StartNew(trial));
-      Task.WaitAll(tasks.ToArray());
-
-      foreach (var hand in threadHeroHand.Values)
-      {
-        this.Wins += hand.Wins;
-        this.Ties += hand.Ties;
-        this.Loses += hand.Loses;
+        if (villain > hero) { break; }
+        if (villain == hero) { tied = true; }
       }
-
-      return this.Percent;
+      if (villain > hero)
+      {
+        return -1;
+      }
+      else if (tied)
+      {
+        return 0;
+      }
+      else
+      {
+        return 1;
+      }
     }
 
-
-    public double PlayAgainst(BaseHand[] opponents, BaseHand board, double duration)
+    public virtual int PlayAgainst(BaseHand[] opponents, BaseHand board, double duration)
     {
       var dealtCards = CardsMask | board.CardsMask;
 
       int oppCnt = opponents.Length;
-      int[] opsNeed = new int[oppCnt];
+      int[] opsNeeds = new int[oppCnt];
+
       for (var i = 0; i < oppCnt; i++)
       {
         dealtCards |= opponents[i].CardsMask;
-        opsNeed[i] = opponents[i].CardCount - Bits.BitCount(opponents[i].CardsMask);
+        opsNeeds[i] = opponents[i].CardsNeeded;
       }
 
       var _global_random = new Random();
 
-      int boardNeeds = board.CardCount - Bits.BitCount(board.CardsMask);
+      int boardNeeds = board.CardsNeeded;
       ulong boardMask = board.CardsMask;
-      int heroNeeds = this.CardCount - Bits.BitCount(this.CardsMask);
+      int heroNeeds = this.CardsNeeded;
       ulong heroMask = this.CardsMask;
 
       int wins = 0;
@@ -196,43 +144,37 @@ namespace Poker.Models
         lock (_global_random) seed = _global_random.Next();
         var rand = new Random(seed);
         var deck = new StandardDeck(dealtCards);
-        uint hero = 0, villain = 0;
-        ulong opFiller = 0x0UL;
-        bool tied;
         ulong heroFiller;
         ulong boardFiller;
+        ulong[] opsMasks = new ulong[oppCnt];
         do
         {
-          tied = false;
+          // Get the random cards
           heroFiller = deck.DealCards(heroNeeds, rand);
           boardFiller = deck.DealCards(boardNeeds, rand);
           for (var i = 0; i < oppCnt; i++)
           {
-            opFiller = deck.DealCards(opsNeed[i], rand);
+            opsMasks[i] = deck.DealCards(opsNeeds[i], rand) | opponents[i].CardsMask;
+          }
 
-            (_, hero) = this.Evaluate(boardMask | boardFiller, heroFiller);
-            (_, villain) = opponents[i].Evaluate(boardMask | boardFiller, opFiller);
-
-            if (villain > hero) { break; }
-            if (villain == hero) { tied = true; }
-          }
-          if (villain > hero)
+          // Play the hand out
+          var result = this.PlayAgainst(heroFiller, opsMasks, boardMask | boardFiller); 
+          switch (result.CompareTo(0))
           {
-            loses++;
-          }
-          else if (tied)
-          {
-            ties++;
-          }
-          else
-          {
-            wins++;
+            case -1:
+              loses -= result;
+              break;
+            case 0:
+              ties++;
+              break;
+            default:
+              wins += result; 
+              break;
           }
           deck.Reset(dealtCards);
         } while (Stopwatch.GetTimestamp() < end);
       };
 
-      Console.WriteLine(Environment.ProcessorCount);
       var tasks = new List<Task>();
       for (int ctr = 1; ctr <= Environment.ProcessorCount; ctr++)
         tasks.Add(Task.Factory.StartNew(trial));
@@ -242,9 +184,9 @@ namespace Poker.Models
       this.Ties = ties;
       this.Loses = loses;
 
-      return this.Percent;
+      return wins + ties + loses;
     }
-        public double PlayAgainst(BaseHand oppHand, int numOpponents, BaseHand board, double duration)
+    public int PlayAgainst(BaseHand oppHand, int numOpponents, BaseHand board, double duration)
     {
       var opponents = new BaseHand[numOpponents];
       for (var i = 0; i < numOpponents; i++)
@@ -254,7 +196,7 @@ namespace Poker.Models
       return PlayAgainst(opponents, board, duration);
     }
 
-    public double PlayAgainst(int numOpponents, BaseHand board, double duration)
+    public int PlayAgainst(int numOpponents, BaseHand board, double duration)
     {
       return PlayAgainst(null, numOpponents, board, duration);
     }

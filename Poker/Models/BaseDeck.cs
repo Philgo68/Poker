@@ -83,12 +83,7 @@ namespace Poker.Models
 		}
 		public virtual void CompleteCards(BaseHand hand, Random rand = null)
 		{
-			hand.CardsMask |= DealCards(hand.CardCount - Bits.BitCount(hand.CardsMask), rand);
-		}
-		public virtual void TestCards(BaseHand hand, Random rand = null)
-		{
-			hand.StartTest();
-			hand.CardsMask |= DealCards(hand.CardCount - Bits.BitCount(hand.CardsMask), rand);
+			hand.CardsMask |= DealCards(hand.CardsNeeded, rand);
 		}
 
 		public virtual void Reset(ulong dealtCards = 0x0UL)

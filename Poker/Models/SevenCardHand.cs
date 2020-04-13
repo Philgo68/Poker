@@ -12,10 +12,5 @@ namespace Poker.Models
     public SevenCardHand() : base() { }
     public SevenCardHand(ulong cardsMask) : base(cardsMask) { }
     public SevenCardHand(string cards) : base(cards) { }
-
-    public override (int, uint) Evaluate(ulong board, ulong filler = 0x0UL)
-    {
-      return base.PokerEvaluate(board, filler);
-    }
   }
 }

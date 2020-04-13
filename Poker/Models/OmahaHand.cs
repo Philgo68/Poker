@@ -12,9 +12,9 @@ namespace Poker.Models
     public OmahaHand() : base() { }
     public OmahaHand(ulong cardsMask) : base(cardsMask) { }
     public OmahaHand(string cards) : base(cards) { }
-    public override (int, uint) Evaluate(ulong board, ulong filler = 0x0UL)
+    public override (int, uint) Evaluate(ulong hero, ulong board)
     {
-      return base.OmahaEvaluate(board, filler);
+      return Deck.OmahaEvaluate(hero, board);
     }
   }
 }
