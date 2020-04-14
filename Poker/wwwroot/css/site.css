@@ -171,7 +171,7 @@ app {
 }
 
 .community-cards.svg-hand-wrapper.cards-5 {
-    padding: 0em calc(12*var(--card-reveal)) 0em 0em;
+    padding: 0em calc(8*var(--card-reveal)) 0em 0em;
 }
 
 .svg-card-wrapper {
@@ -211,8 +211,8 @@ app {
 /* Override translations for 5 card community cards layouts */
 .community-cards.svg-hand-wrapper.cards-5 .svg-card-wrapper.card-1 .playing-card { transform: translateX(calc(2*var(--card-reveal))); }
 .community-cards.svg-hand-wrapper.cards-5 .svg-card-wrapper.card-2 .playing-card { transform: translateX(calc(4*var(--card-reveal))); }
-.community-cards.svg-hand-wrapper.cards-5 .svg-card-wrapper.card-3 .playing-card { transform: translateX(calc(8*var(--card-reveal))); }
-.community-cards.svg-hand-wrapper.cards-5 .svg-card-wrapper.card-4 .playing-card { transform: translateX(calc(12*var(--card-reveal))); }
+.community-cards.svg-hand-wrapper.cards-5 .svg-card-wrapper.card-3 .playing-card { transform: translateX(calc(6*var(--card-reveal))); }
+.community-cards.svg-hand-wrapper.cards-5 .svg-card-wrapper.card-4 .playing-card { transform: translateX(calc(8*var(--card-reveal))); }
 .community-cards.svg-hand-wrapper.cards-5 .svg-hand-rotator { transform: none; }
 
 

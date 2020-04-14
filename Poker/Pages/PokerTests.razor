@@ -200,7 +200,7 @@
   protected (string, string) StartTaiwanese()
   {
       long cnt = 0;
-      var duration = 1.0;
+      var duration = 5.0;
 
       //AhKsQsQhTh9h5s
       //AsAhAcQhQc7s2d
@@ -208,8 +208,11 @@
       // Tc7h7c6s6c2h2c  vs AcQhTsTd9h5s4s
       // ThAsAhKsKh7d6d  vs Td8h8dJs7s4d3s     Th / As, Ah / Ks, Kh, 7d, 6d  and  Td / 8h, 8d / Js, 7s, 4d, 3s
 
-      hero = new TaiwaneseHand();
-      var tHero = hero;
+      //5d / 8s, 8h / As, 7c, 6c, 2d  vs Ts / 7s, 6d / Ks, 3s, 3d, 3c  on adqdjd9s9d
+
+
+     hero = new TaiwaneseHand();
+      TaiwaneseHand tHero = (TaiwaneseHand)hero;
       tHero.SetCards(hand_1);
 
       var opp = new TaiwaneseHand();
@@ -224,6 +227,7 @@
       opp.CompleteCards(deck, _global_random);
 
       board = new FiveCardHand(board_string);
+      board.CompleteCards(deck, _global_random);
       board.CommunityCards = true;
 
       // Layout the hands
@@ -233,9 +237,12 @@
       string result = $"{tHero.CardDescriptions} and {opp.CardDescriptions} over {cnt/2:n0} boards.";
       string result2 = "";
 
-      cnt = hero.PlayAgainst(opponents.ToArray(), board, duration / (5/3) );
+      //cnt = hero.PlayAgainst(opponents.ToArray(), board, duration / (5/3) );
+      //result2 = $"{hero.Percent}% against {opponents.Count} opponents over {cnt:n0} trials.";
 
-      result2 = $"{hero.Percent}% against {opponents.Count} opponents over {cnt:n0} trials.";
+      cnt = hero.PlayAgainst(opponents.ToArray(), board);
+      result2 = $"Hero {cnt} points.";
+
 
       return (result, result2);
   }

@@ -88,14 +88,14 @@ namespace Poker.Models
       return 0;
     }
 
-    public virtual int PlayAgainst(ulong heroFiller, ulong[] opsMasks, ulong boardMask)
+    public virtual int PlayAgainst(ulong heroFiller, BaseHand[] opponents, ulong[] opsFillers, ulong boardMask)
     {
       var tied = false;
       uint villain = 0;
       (_, uint hero) = this.Evaluate(CardsMask | heroFiller, boardMask);
-      for (var i = 0; i < opsMasks.Length; i++)
+      for (var i = 0; i < opsFillers.Length; i++)
       {
-        (_, villain) = this.Evaluate(opsMasks[i], boardMask);
+        (_, villain) = this.Evaluate(opponents[i].CardsMask | opsFillers[i], boardMask);
 
         if (villain > hero) { break; }
         if (villain == hero) { tied = true; }
@@ -112,6 +112,32 @@ namespace Poker.Models
       {
         return 1;
       }
+    }
+
+    public virtual int PlayAgainst(BaseHand[] opponents, BaseHand board)
+    {
+      var dealtCards = CardsMask | board.CardsMask;
+      for (var i = 0; i < opponents.Length; i++)
+      {
+        dealtCards |= opponents[i].CardsMask;
+      }
+
+      var rand = new Random();
+      var deck = new StandardDeck(dealtCards);
+      ulong heroFiller;
+      ulong boardFiller;
+      ulong[] opsFillers = new ulong[opponents.Length];
+
+      // Get the random cards
+      heroFiller = deck.DealCards(this.CardsNeeded, rand);
+      boardFiller = deck.DealCards(board.CardsNeeded, rand);
+      for (var i = 0; i < opponents.Length; i++)
+      {
+        opsFillers[i] = deck.DealCards(opponents[i].CardsNeeded, rand);
+      }
+
+      // Play the hand out
+      return this.PlayAgainst(heroFiller, opponents, opsFillers, board.CardsMask | boardFiller);
     }
 
     public virtual long PlayAgainst(BaseHand[] opponents, BaseHand board, double duration)
@@ -146,7 +172,7 @@ namespace Poker.Models
         var deck = new StandardDeck(dealtCards);
         ulong heroFiller;
         ulong boardFiller;
-        ulong[] opsMasks = new ulong[oppCnt];
+        ulong[] opsFillers = new ulong[oppCnt];
         do
         {
           // Get the random cards
@@ -154,11 +180,11 @@ namespace Poker.Models
           boardFiller = deck.DealCards(boardNeeds, rand);
           for (var i = 0; i < oppCnt; i++)
           {
-            opsMasks[i] = deck.DealCards(opsNeeds[i], rand) | opponents[i].CardsMask;
+            opsFillers[i] = deck.DealCards(opsNeeds[i], rand);
           }
 
           // Play the hand out
-          var result = this.PlayAgainst(heroFiller, opsMasks, boardMask | boardFiller); 
+          var result = this.PlayAgainst(heroFiller, opponents, opsFillers, boardMask | boardFiller); 
           switch (result.CompareTo(0))
           {
             case -1:

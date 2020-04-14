@@ -57,21 +57,21 @@ namespace Poker.Models
           if (Bits.straightTable[ss] != 0)
             return ((int)HandTypes.StraightFlush, HANDTYPE_VALUE_STRAIGHTFLUSH + (uint)(Bits.straightTable[ss] << TOP_CARD_SHIFT));
           else
-            retval = HANDTYPE_VALUE_FLUSH + Bits.topFiveCardsTable[ss];
+            (rettype, retval) = ((int)HandTypes.Flush, HANDTYPE_VALUE_FLUSH + Bits.topFiveCardsTable[ss]);
         }
         else if (Bits.nBitsTable[sc] >= 5)
         {
           if (Bits.straightTable[sc] != 0)
             return ((int)HandTypes.StraightFlush, HANDTYPE_VALUE_STRAIGHTFLUSH + (uint)(Bits.straightTable[sc] << TOP_CARD_SHIFT));
           else
-            retval = HANDTYPE_VALUE_FLUSH + Bits.topFiveCardsTable[sc];
+            (rettype, retval) = ((int)HandTypes.Flush, HANDTYPE_VALUE_FLUSH + Bits.topFiveCardsTable[sc]);
         }
         else if (Bits.nBitsTable[sd] >= 5)
         {
           if (Bits.straightTable[sd] != 0)
             return ((int)HandTypes.StraightFlush, HANDTYPE_VALUE_STRAIGHTFLUSH + (uint)(Bits.straightTable[sd] << TOP_CARD_SHIFT));
           else
-            retval = HANDTYPE_VALUE_FLUSH + Bits.topFiveCardsTable[sd];
+            (rettype, retval) = ((int)HandTypes.Flush, HANDTYPE_VALUE_FLUSH + Bits.topFiveCardsTable[sd]);
         }
         else if (Bits.nBitsTable[sh] >= 5)
         {
@@ -203,28 +203,199 @@ namespace Poker.Models
 
     public override (int, uint) OmahaEvaluate(ulong hand, ulong board)
     {
-      var cards = Bits.IndividualMasks(hand);
-      (var bestType, var bestRank) = PokerEvaluate(board | cards[0] | cards[1]);
+      var handcards = Bits.IndividualMasks(hand);
+      var boardcards = Bits.IndividualMasks(board);
+      int bestType, nextType;
+      uint bestRank, nextRank;
 
-      (var nextType, var nextRank) = PokerEvaluate(board | cards[0] | cards[2]);
-      bestType = Math.Max(bestType, nextType);
-      bestRank = Math.Max(bestRank, nextRank);
+      (bestType, bestRank) = PokerEvaluate(handcards[0] | handcards[1] | boardcards[0] | boardcards[1] | boardcards[2]);
 
-      (nextType, nextRank) = PokerEvaluate(board | cards[0] | cards[3]);
-      bestType = Math.Max(bestType, nextType);
-      bestRank = Math.Max(bestRank, nextRank);
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[1] | boardcards[0] | boardcards[1] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
 
-      (nextType, nextRank) = PokerEvaluate(board | cards[1] | cards[2]);
-      bestType = Math.Max(bestType, nextType);
-      bestRank = Math.Max(bestRank, nextRank);
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[1] | boardcards[0] | boardcards[2] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
 
-      (nextType, nextRank) = PokerEvaluate(board | cards[1] | cards[3]);
-      bestType = Math.Max(bestType, nextType);
-      bestRank = Math.Max(bestRank, nextRank);
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[1] | boardcards[1] | boardcards[2] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
 
-      (nextType, nextRank) = PokerEvaluate(board | cards[2] | cards[3]);
-      bestType = Math.Max(bestType, nextType);
-      bestRank = Math.Max(bestRank, nextRank);
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[1] | boardcards[0] | boardcards[1] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[1] | boardcards[0] | boardcards[2] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[1] | boardcards[1] | boardcards[2] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[1] | boardcards[0] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[1] | boardcards[1] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[1] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[2] | boardcards[0] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[2] | boardcards[1] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[3] | boardcards[0] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[3] | boardcards[1] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[0] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[2] | boardcards[0] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[2] | boardcards[1] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[3] | boardcards[0] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[3] | boardcards[1] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[1] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+
+
+      (nextType, nextRank) = PokerEvaluate(handcards[2] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[2] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[2] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[2] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[2] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[2] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[2] | handcards[3] | boardcards[0] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[2] | handcards[3] | boardcards[1] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[2] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
+      (nextType, nextRank) = PokerEvaluate(handcards[2] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
 
       return (bestType, bestRank);
     }
