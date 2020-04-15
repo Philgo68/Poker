@@ -227,21 +227,22 @@
       opp.CompleteCards(deck, _global_random);
 
       board = new FiveCardHand(board_string);
-      board.CompleteCards(deck, _global_random);
+      //board.CompleteCards(deck, _global_random);
       board.CommunityCards = true;
 
       // Layout the hands
-      cnt += tHero.LayoutHand(duration / 5);
-      cnt += opp.LayoutHand(duration / 5);
+      cnt += tHero.LayoutHand(duration / 3);
+      cnt += opp.LayoutHand(duration / 3);
 
       string result = $"{tHero.CardDescriptions} and {opp.CardDescriptions} over {cnt/2:n0} boards.";
       string result2 = "";
 
-      //cnt = hero.PlayAgainst(opponents.ToArray(), board, duration / (5/3) );
-      //result2 = $"{hero.Percent}% against {opponents.Count} opponents over {cnt:n0} trials.";
+      cnt = hero.PlayAgainst(opponents.ToArray(), board, duration / 3 );
+      result2 = $"{hero.Percent}% against {opponents.Count} opponents over {cnt:n0} trials.";
 
-      cnt = hero.PlayAgainst(opponents.ToArray(), board);
-      result2 = $"Hero {cnt} points.";
+      // To play once
+      //cnt = hero.PlayAgainst(opponents.ToArray(), board);
+      //result2 = $"Hero {cnt} points.";
 
 
       return (result, result2);
