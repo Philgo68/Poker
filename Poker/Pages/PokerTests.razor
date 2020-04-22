@@ -2,9 +2,6 @@
 
 @inject SvgCards svgCards
 
-@using Poker.CFHandEvaluator;
-@using Poker.Models;
-@using Poker.Helpers;
 @using System.Diagnostics;
 
 <h1>Poker Tests</h1>
@@ -26,7 +23,7 @@
             </div>
         </div>
         <div class="form-group row align-items-center">
-            <label for="card-cnt" class="col-2 h2 col-form-label">Hand Cnt:</label>
+            <label for="card-cnt" class="col-2 h2 col-form-label">Opponent Cnt:</label>
             <input class="form-control col-4" name="card-cnt" type="number" @bind="hand_cnt" />
             <div class="offest-2 col-4">
                 <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Omaha")">Omaha Hi</button>
@@ -43,28 +40,46 @@
             <div class="col-4">
                 <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Deal")">Test Dealer</button>
             </div>
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Test")">Test Something</button>
+            </div>
         </div>
     </div>
 </form>
 <hr />
 
 <div class="row align-items-center">
-    @if (hero != null && board != null)
+    @if (table != null)
     {
-        <PokerHandComponent Hand=@hero ShowBlanks=@true />
+        <PokerHandComponent Hand=@table.Hero().Hand Deck=@table.Deck ShowBlanks=@true />
         <div class="d-inline-block m-2">vs.</div>
-        @foreach (var hand in opponents)
+        @foreach (var seat in @table.Opponents())
         {
-            <PokerHandComponent Hand=@hand ShowBlanks=@true />
+            <PokerHandComponent Hand=@seat.Hand Deck=@table.Deck ShowBlanks=@true />
         }
         <div class="d-inline-block m-2">on</div>
-        <PokerHandComponent Hand=@board ShowBlanks=@true />
+        <PokerHandComponent Hand=@board Deck=@table.Deck ShowBlanks=@true />
     }
 
-
-    @foreach (var hand in displayHands)
+    @if (deck != null)
     {
-        <PokerHandComponent Hand=@hand ShowBlanks=@true />
+        @if (hero != null && board != null)
+        {
+            <PokerHandComponent Hand=@hero Deck=@deck ShowBlanks=@true />
+            <div class="d-inline-block m-2">vs.</div>
+            @foreach (var hand in opponents)
+            {
+                <PokerHandComponent Hand=@hand Deck=@deck ShowBlanks=@true />
+            }
+            <div class="d-inline-block m-2">on</div>
+            <PokerHandComponent Hand=@board Deck=@deck ShowBlanks=@true />
+        }
+
+
+        @foreach (var hand in displayHands)
+        {
+            <PokerHandComponent Hand=@hand Deck=@deck ShowBlanks=@true />
+        }
     }
 </div>
 
@@ -90,10 +105,12 @@
 @code {
   string hand_1, hand_2, board_string, button;
   int? hand_cnt;
-  BaseHand hero;
-  List<BaseHand> opponents = new List<BaseHand>();
-  BaseHand board;
-  List<BaseHand> displayHands = new List<BaseHand>();
+  IHand hero = null;
+  List<IHand> opponents = new List<IHand>();
+  IHand board = null;
+  List<IHand> displayHands = new List<IHand>();
+  BaseTable table = null;
+  IDeck deck = null;
 
   private string result, result2;
   private static Random _global_random = new Random();
@@ -133,6 +150,9 @@
           case "Deal":
               (result, result2) = await Task.FromResult(StartDeckDeal());
               break;
+          case "Test":
+              result = await Task.FromResult(TestSomething());
+              break;
           default:
               result = $"Unknown Button: {button}";
               break;
@@ -141,6 +161,50 @@
   }
 
   protected string PlayItOut(Type handType)
+  {
+      try
+      {
+          var game = new TexasHoldem();
+          table = new BaseTable(game);
+
+          var heroHand = game.GetHand();
+          heroHand.SetCards(hand_1);
+          var heroSeat = table.AddHand(heroHand);
+
+          var setOpp = 0;
+          foreach (var oh in (hand_2 ?? "").Split(","))
+          {
+              var oppHand = game.GetHand();
+              oppHand.SetCards(oh);
+              table.AddHand(oppHand);
+              setOpp++;
+          }
+
+          hand_cnt = Math.Max(hand_cnt ?? 1, opponents.Count);
+          for (var i = setOpp; i < hand_cnt; i++)
+          {
+              table.AddHand(game.GetHand());
+          }
+
+          board = game.GetBoard();
+          board.SetCards(board_string);
+          board.CommunityCards = true;
+          table.SetBoard(board);
+
+          // Play for 2 seconds
+          long cnt = table.PlayHandTrials(2.0);
+
+          return $"{heroHand.Percent}% against {opponents.Count} opponents over {cnt:n0} trials.<br>Wins: {heroHand.Wins:n0}  Loses: {heroHand.Loses:n0}  Ties: {heroHand.Ties:n0}.";
+      }
+      catch (ArgumentException e)
+      {
+          return e.Message;
+      }
+
+  }
+
+
+  protected string PlayItOutOld(Type handType)
   {
       try
       {
@@ -166,9 +230,10 @@
           board = new FiveCardHand(board_string);
           board.CommunityCards = true;
 
-          long cnt = hero.PlayAgainst(opponents.ToArray(), board, 5);
+          // Play for 2 seconds
+          long cnt = 17; // hero.PlayAgainst(opponents.ToArray(), board, 2);
 
-          return $"{hero.Percent}% against {opponents.Count} opponents over {cnt} trials.<br>Wins: {hero.Wins:n0}  Loses: {hero.Loses:n0}  Ties: {hero.Ties:n0}.";
+          return $"{hero.Percent}% against {opponents.Count} opponents over {cnt:n0} trials.<br>Wins: {hero.Wins:n0}  Loses: {hero.Loses:n0}  Ties: {hero.Ties:n0}.";
       }
       catch (ArgumentException e)
       {
@@ -182,9 +247,9 @@
       // initialize board
       string board = "2d kh qh 3h qc";
       // Create a hand with AKs plus board
-      Hand h1 = new Hand("ad kd", board);
+      Poker.CFHandEvaluator.Hand h1 = new Poker.CFHandEvaluator.Hand("ad kd", board);
       // Create a hand with 23 unsuited plus board
-      Hand h2 = new Hand("2h 3d", board);
+      Poker.CFHandEvaluator.Hand h2 = new Poker.CFHandEvaluator.Hand("2h 3d", board);
 
       // Find stronger hand and print results
       if (h1 > h2)
@@ -211,7 +276,7 @@
       //5d / 8s, 8h / As, 7c, 6c, 2d  vs Ts / 7s, 6d / Ks, 3s, 3d, 3c  on adqdjd9s9d
 
 
-     hero = new TaiwaneseHand();
+      hero = new TaiwaneseHand();
       TaiwaneseHand tHero = (TaiwaneseHand)hero;
       tHero.SetCards(hand_1);
 
@@ -237,7 +302,7 @@
       string result = $"{tHero.CardDescriptions} and {opp.CardDescriptions} over {cnt/2:n0} boards.";
       string result2 = "";
 
-      cnt = hero.PlayAgainst(opponents.ToArray(), board, duration / 3 );
+      cnt = 19; // hero.PlayAgainst(opponents.ToArray(), board, duration / 3 );
       result2 = $"{hero.Percent}% against {opponents.Count} opponents over {cnt:n0} trials.";
 
       // To play once
@@ -287,10 +352,46 @@
       result2 += "Board2: " + board2.CardDescriptions + "<br>";
       //displayHands.Add(board1);
       //displayHands.Add(board2);
-      result2 += Hand.DescriptionFromMask(Hand.ParseHand(hand_1 ?? "") | boardMask1) + "<br>";
+      result2 += Poker.CFHandEvaluator.Hand.DescriptionFromMask(Poker.CFHandEvaluator.Hand.ParseHand(hand_1 ?? "") | boardMask1) + "<br>";
       result2 += "Dealt Cards: " + deck.CardDescriptions(deck.DealtCards) + "<br>";
 
       return (result, result2);
   }
+
+  protected string TestSomething()
+  {
+      try
+      {
+          // Setup
+          var deck = new StandardDeck();
+          var mask = deck.PeekCards(7, _global_random);
+
+          var start = Stopwatch.GetTimestamp();
+          for (var i = 0; i < 10_000_000; i++)
+          {
+              // Test Here
+              var cardsOne = Bits.IndividualMasks(mask);
+              //var cardsTwo = Bits.IndividualMasksTwo(mask);
+
+              // Compare with Asserts  
+              //Debug.Assert(cardsOne.Length == cardsTwo.Length, "Don't match");
+              //for (var j = 0; j < cardsOne.Length; j++)
+              //    Debug.Assert(cardsOne[j] == cardsTwo[j], "Don't match");
+          }
+
+          // Visualize some cards
+          hero = new SevenCardHand(mask);
+          board = new FiveCardHand();
+
+          var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
+          return $"{mask} tested 10 million times in {end:n4} ms";
+      }
+      catch (ArgumentException e)
+      {
+          return e.Message;
+      }
+
+  }
+
 
 }

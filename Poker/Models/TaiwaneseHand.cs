@@ -20,7 +20,7 @@ namespace Poker.Models
     private bool HandsLaidOut => (TopHand != null && MiddleHand != null && BottomHand != null);
 
     public override string Name => "Taiwanese";
-    public override byte CardCount => 7;
+    public override int CardCount => 7;
     public override string CardDescriptions => $"{TopHand?.CardDescriptions ?? "x"} / {MiddleHand?.CardDescriptions ?? "xx"} / {BottomHand?.CardDescriptions ?? "xxxx"}";
     public int RunningScore { get; set; }
     public OneCardHand TopHand { get => topHand; set { topHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }

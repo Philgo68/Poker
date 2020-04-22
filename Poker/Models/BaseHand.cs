@@ -9,12 +9,49 @@ using System.Threading;
 using System.Threading.Tasks;
 using Poker.CFHandEvaluator;
 using Poker.Helpers;
+using Poker.Interfaces;
 
 namespace Poker.Models
 {
-  public class BaseHand : IComparable
+  public class BaseHand : IHand
   {
-    public ulong CardsMask { get; set; }
+    private int cardCount;
+    private int cardsNeeded;
+    private ulong cardsMask;
+
+    public BaseHand(int _cardCount = 5)
+    {
+      cardCount = _cardCount;
+      cardsNeeded = _cardCount;
+      Wins = 0;
+      Loses = 0;
+      Ties = 0;
+      CommunityCards = false;
+    }
+
+    public BaseHand(ulong _cardsMask, int _cardCount = 5) : this(_cardCount)
+    {
+      SetCards(_cardsMask);
+    }
+
+    public BaseHand(string cards, int _cardCount = 5) : this(_cardCount)
+    {
+      SetCards(cards);
+    }
+
+    public virtual int CardsNeeded => cardsNeeded;
+    public ulong CardsMask { 
+      get => cardsMask;
+      set
+      {
+        cardsMask = value;
+        cardsNeeded = cardCount - Bits.BitCount(value);
+      }
+    }
+    [ThreadStatic]
+    private ulong fillerMask;
+    ulong IHand.FillerMask { get => fillerMask; set => fillerMask = value; }
+
     public BaseDeck Deck { get; set; }
     public long Wins { get; set; }
     public long Loses { get; set; }
@@ -26,15 +63,15 @@ namespace Poker.Models
     }
     public bool CommunityCards { get; set; }
     public virtual string Name => "BaseHand";
-    public virtual byte CardCount => 0;
+    public virtual int CardCount => cardCount;
     public virtual string CardDescriptions => Deck.CardDescriptions(CardsMask);
     public virtual IEnumerable<int> CardNumbers => Deck.CardNumbers(CardsMask);
-    public virtual int CardsNeeded => CardCount - Bits.BitCount(CardsMask);
+
     public virtual (int, uint) Evaluate(ulong board)
     {
       return Evaluate(CardsMask, board);
     }
-    
+
     public virtual (int, uint) Evaluate(ulong hero, ulong board)
     {
       // Default to Poker Evaluation of the Hand
@@ -48,23 +85,7 @@ namespace Poker.Models
       Ties = 0;
     }
 
-    public BaseHand()
-    {
-      Deck = new StandardDeck();
-      Wins = 0;
-      Loses = 0;
-      Ties = 0;
-    }
 
-    public BaseHand(ulong cardsMask) : this()
-    {
-      SetCards(cardsMask);
-    }
-
-    public BaseHand(string cards) : this()
-    {
-      SetCards(cards);
-    }
 
     public virtual void SetCards(ulong cardsMask)
     {
@@ -78,12 +99,24 @@ namespace Poker.Models
       if (Bits.BitCount(CardsMask) > CardCount) throw new ArgumentException($"A {Name} hand must have {CardCount} cards or less.");
     }
 
+    public virtual void AddCards(ulong cardsMask)
+    {
+      CardsMask |= cardsMask;
+      if (Bits.BitCount(cardsMask) > CardCount) throw new ArgumentException($"A {Name} hand must have {CardCount} cards or less.");
+    }
+
+    public virtual void AddCards(string cards)
+    {
+      CardsMask |= CFHandEvaluator.Hand.ParseHand(cards ?? "");
+      if (Bits.BitCount(CardsMask) > CardCount) throw new ArgumentException($"A {Name} hand must have {CardCount} cards or less.");
+    }
+
     public virtual void CompleteCards(BaseDeck deck, Random rand = null)
     {
       deck.CompleteCards(this, rand);
     }
 
-    public virtual long LayoutHand(double duration = 0.1) 
+    public virtual long LayoutHand(double duration = 0.1)
     {
       return 0;
     }
@@ -184,7 +217,7 @@ namespace Poker.Models
           }
 
           // Play the hand out
-          var result = this.PlayAgainst(heroFiller, opponents, opsFillers, boardMask | boardFiller); 
+          var result = this.PlayAgainst(heroFiller, opponents, opsFillers, boardMask | boardFiller);
           switch (result.CompareTo(0))
           {
             case -1:
@@ -194,7 +227,7 @@ namespace Poker.Models
               ties++;
               break;
             default:
-              wins += result; 
+              wins += result;
               break;
           }
           deck.Reset(dealtCards);

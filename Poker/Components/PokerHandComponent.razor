@@ -1,17 +1,14 @@
-﻿@using Poker.Models;
-@using Poker.Helpers;
-
-@inject SvgCards svgCards
+﻿@inject SvgCards svgCards
 
 @{
-    @if (Hand.GetType() == typeof(TaiwaneseHand))
+    var tHand = Hand as TaiwaneseHand;
+    if (tHand != null)
     {
-        var hand = (TaiwaneseHand)Hand;
-        <div class="svg-stacked-hand">
-            <PokerHandComponent Hand=@hand.TopHand ShowBlanks=@ShowBlanks />
-            <PokerHandComponent Hand=@hand.MiddleHand ShowBlanks=@ShowBlanks />
-            <PokerHandComponent Hand=@hand.BottomHand ShowBlanks=@ShowBlanks />
-        </div>
+    <div class="svg-stacked-hand">
+        <PokerHandComponent Hand=@tHand.TopHand Deck=@Deck ShowBlanks=@ShowBlanks />
+        <PokerHandComponent Hand=@tHand.MiddleHand Deck=@Deck ShowBlanks=@ShowBlanks />
+        <PokerHandComponent Hand=@tHand.BottomHand Deck=@Deck ShowBlanks=@ShowBlanks />
+    </div>
     }
     else
     {
@@ -20,7 +17,7 @@
         var klass = Hand.CommunityCards ? "community-cards" : "";
         <div class="svg-hand-wrapper cards-@(cards) @(klass) ">
             <div class="svg-hand-rotator cards-@(cards)">
-                @foreach (var card in Hand.CardNumbers)
+                @foreach (var card in Deck.CardNumbers(Hand.CardsMask))
                 {
                     <div class="svg-card-wrapper card-@(i++)">
                         @(svgCards.Faces[card])
@@ -39,7 +36,9 @@
 
 @code {
   [Parameter]
-  public BaseHand Hand { get; set; }
+  public IHand Hand { get; set; }
+  [Parameter]
+  public IDeck Deck { get; set; }
   [Parameter]
   public bool ShowBlanks { get; set; }
 }

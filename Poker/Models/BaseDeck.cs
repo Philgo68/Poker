@@ -2,10 +2,11 @@
 using Poker.Helpers;
 using System;
 using System.Collections.Generic;
+using Poker.Interfaces;
 
 namespace Poker.Models
 {
-	public abstract class BaseDeck
+	public abstract class BaseDeck : IDeck
 	{
 		public virtual string Name { get { return "BaseDeck"; } }
 		public virtual int Suits => 0;
@@ -99,6 +100,7 @@ namespace Poker.Models
 
 		public virtual IEnumerable<int> CardNumbers(ulong cards)
 		{
+			// Retrieved this way to get Ace down to 2, Spades down to Clubs
 			uint allRanks = (uint)((1 << Ranks) - 1);
 
 			uint[] suitBits = new uint[Suits];
@@ -108,7 +110,7 @@ namespace Poker.Models
 			}
 			for (int rank = Ranks - 1; rank >= 0; rank--)
 			{
-				var cardmask = Bits.CardMasksTable[rank];
+				var cardmask = 0x1UL << rank;
 				for (int suit = Suits - 1; suit >= 0; suit--)
 				{
 					if ((suitBits[suit] & cardmask) == cardmask)
@@ -131,7 +133,7 @@ namespace Poker.Models
 			}
 			for (int rank = Ranks - 1; rank >= 0; rank--)
 			{
-				var cardmask = Bits.CardMasksTable[rank];
+				var cardmask = 0x1UL << rank;
 				for (int suit = Suits - 1; suit >= 0; suit--)
 				{
 					if ((suitBits[suit] & cardmask) == cardmask)
@@ -166,5 +168,9 @@ namespace Poker.Models
 		}
 		public virtual (int, uint) OmahaEvaluate(ulong hand, ulong board) => (0, 0);
 
+		public void CompleteCards(IHand hand, Random rand = null)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

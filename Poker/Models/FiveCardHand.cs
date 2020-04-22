@@ -9,7 +9,7 @@ namespace Poker.Models
   {
     //    public string Name { get; private set; } = "Raul";
     public override string Name => "Five Card";
-    public override byte CardCount => 5;
+    public override int CardCount => 5;
     public FiveCardHand() : base() { }
     public FiveCardHand(ulong cardsMask) : base(cardsMask) { }
     public FiveCardHand(string cards) : base(cards) { }
