@@ -13,96 +13,49 @@ namespace Poker.Helpers
 {
 	public class Bits
 	{
-		public static ulong MaskValue(ulong bitField, int bitNumber)
-		{
-			ulong maskValue = 0x1UL;
-			int i = 0;
-			while (i <= bitNumber)
-			{
-				if ((bitField & maskValue) == 0) i++;
-				maskValue <<= 1;
-			}
-			maskValue >>= 1;
-
-			return maskValue;
-		}
 		public static ulong[] IndividualMasks(ulong bitField)
 		{
-			var count = BitCount(bitField);
-			var maskValues = new ulong[count];
+			var maskValues = new ulong[BitCount(bitField)];
 			int i = 0;
-			ulong l = 1;
-			while (i < count)
+			while (bitField > 0)
 			{
-				if ((bitField & l) == l) maskValues[i++] = l;
-				l <<= 1;
+				var newBitField = bitField & (bitField - 1);
+				maskValues[i++] = bitField - newBitField;
+				bitField = newBitField;
 			}
 
 			return maskValues;
 		}
 
-		public static int[] IndividualBits(ulong bitField)
-		{
-			var count = BitCount(bitField);
-			var bitValues = new int[count];
-			int i = 0;
-			ulong l = 1;
-			int c = 0;
-			while (i < count)
-			{
-				if ((bitField & l) == l) bitValues[i++] = c;
-				l <<= 1;
-				c++;
-			}
-
-			return bitValues;
-		}
-
 		/// <summary>
-		/// Fast Bitcounting method (adapted from snippets.org)
+		/// Fast Bitcounting method (https://en.wikipedia.org/wiki/Hamming_weight)
 		/// </summary>
 		/// <param name="bitField">ulong to count</param>
 		/// <returns>number of set bits in ulong</returns>
 		public static int BitCount(ulong bitField)
 		{
-			return
-					BitCountTable[(int)(bitField & 0x00000000000000FFUL)] +
-					BitCountTable[(int)((bitField & 0x000000000000FF00UL) >> 8)] +
-					BitCountTable[(int)((bitField & 0x0000000000FF0000UL) >> 16)] +
-					BitCountTable[(int)((bitField & 0x00000000FF000000UL) >> 24)] +
-					BitCountTable[(int)((bitField & 0x000000FF00000000UL) >> 32)] +
-					BitCountTable[(int)((bitField & 0x0000FF0000000000UL) >> 40)] +
-					BitCountTable[(int)((bitField & 0x00FF000000000000UL) >> 48)] +
-					BitCountTable[(int)((bitField & 0xFF00000000000000UL) >> 56)];
+			const ulong m1 = 0x5555555555555555UL;
+			const ulong m2 = 0x3333333333333333UL;
+			const ulong m4 = 0x0f0f0f0f0f0f0f0fUL;
+			const ulong h01 = 0x0101010101010101UL;
+
+			bitField -= (bitField >> 1) & m1;
+			bitField = (bitField & m2) + ((bitField >> 2) & m2);
+			bitField = (bitField + (bitField >> 4)) & m4;
+			bitField = (bitField * h01) >> 56;
+			return (int)bitField;
 		}
 
+		public static int BitCountHand(ulong bitField)
+		{
+			int count;
+			for (count = 0; bitField > 0; count++)
+				bitField &= bitField - 1;
+			return count;
+		}
 
 		#region Lookup Tables
-		/// <summary>
-		/// Bit count table from snippets.org
-		/// </summary>
-		private static readonly byte[] BitCountTable =
-		{
-						0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,  /* 0   - 15  */
-			1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,  /* 16  - 31  */
-			1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,  /* 32  - 47  */
-			2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,  /* 48  - 63  */
-			1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,  /* 64  - 79  */
-			2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,  /* 80  - 95  */
-			2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,  /* 96  - 111 */
-			3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,  /* 112 - 127 */
-			1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,  /* 128 - 143 */
-			2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,  /* 144 - 159 */
-			2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,  /* 160 - 175 */
-			3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,  /* 176 - 191 */
-			2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,  /* 192 - 207 */
-			3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,  /* 208 - 223 */
-			3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,  /* 224 - 239 */
-			4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8   /* 240 - 255 */
-		};
-
 		// A table representing the bit count for a 13 bit integer.
-		/// <exclude/>
 		public static readonly ushort[] nBitsTable =
 		{
 			0x00 ,
@@ -8300,7 +8253,6 @@ namespace Poker.Helpers
 		};
 
 		// This table returns a straights starting card (0 if not a straight)
-		/// <exclude/>
 		public static readonly ushort[] straightTable =
 		{
 			0x00 ,
@@ -16497,7 +16449,6 @@ namespace Poker.Helpers
 			0x0c
 		};
 
-		/// <exclude/>
 		public static readonly uint[] topFiveCardsTable =
 		{
 			0x00000000 ,
@@ -24694,7 +24645,6 @@ namespace Poker.Helpers
 				0x000cba98
 			};
 
-		/// <exclude/>
 		public static readonly ushort[] topCardTable =
 		{
 			0x00 ,
@@ -32891,122 +32841,8 @@ namespace Poker.Helpers
 			0x0c
 		};
 
-		/// <summary>
-		/// This table is equivalent to 1UL left shifted by the index.
-		/// The lookup is faster than the left shift operator.
-		/// </summary>
-		public static readonly ulong[] CardMasksTable =
-		{
-			0x1,
-			0x2,
-			0x4,
-			0x8,
-			0x10,
-			0x20,
-			0x40,
-			0x80,
-			0x100,
-			0x200,
-			0x400,
-			0x800,
-			0x1000,
-			0x2000,
-			0x4000,
-			0x8000,
-			0x10000,
-			0x20000,
-			0x40000,
-			0x80000,
-			0x100000,
-			0x200000,
-			0x400000,
-			0x800000,
-			0x1000000,
-			0x2000000,
-			0x4000000,
-			0x8000000,
-			0x10000000,
-			0x20000000,
-			0x40000000,
-			0x80000000,
-			0x100000000,
-			0x200000000,
-			0x400000000,
-			0x800000000,
-			0x1000000000,
-			0x2000000000,
-			0x4000000000,
-			0x8000000000,
-			0x10000000000,
-			0x20000000000,
-			0x40000000000,
-			0x80000000000,
-			0x100000000000,
-			0x200000000000,
-			0x400000000000,
-			0x800000000000,
-			0x1000000000000,
-			0x2000000000000,
-			0x4000000000000,
-			0x8000000000000,
-		};
-		#endregion
-
-		#region Card Table
-		// converts card number into the equivalent text string.
-		/// <exclude/>
-		public static readonly string[] CardTable =
-{
-			"2c", "3c", "4c", "5c", "6c", "7c", "8c", "9c", "Tc", "Jc", "Qc", "Kc", "Ac",
-			"2d", "3d", "4d", "5d", "6d", "7d", "8d", "9d", "Td", "Jd", "Qd", "Kd", "Ad",
-			"2h", "3h", "4h", "5h", "6h", "7h", "8h", "9h", "Th", "Jh", "Qh", "Kh", "Ah",
-			"2s", "3s", "4s", "5s", "6s", "7s", "8s", "9s", "Ts", "Js", "Qs", "Ks", "As",
-		};
-
-		// Converts card number into the card rank text string
-		/// <exclude/>
-		private static readonly string[] ranktbl =
-		{
-			"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace",
-			"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace",
-			"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace",
-			"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"
-		};
-
-		// Converts card number into the card suit text string
-		/// <exclude/>
-		private static readonly string[] suittbl =
-		{
-			"Clubs", "Clubs", "Clubs", "Clubs", "Clubs", "Clubs", "Clubs", "Clubs", "Clubs", "Clubs", "Clubs", "Clubs", "Clubs",
-			"Diamonds", "Diamonds", "Diamonds", "Diamonds", "Diamonds", "Diamonds", "Diamonds", "Diamonds", "Diamonds", "Diamonds", "Diamonds", "Diamonds", "Diamonds",
-			"Hearts", "Hearts", "Hearts", "Hearts", "Hearts", "Hearts", "Hearts", "Hearts", "Hearts", "Hearts", "Hearts", "Hearts", "Hearts",
-			"Spades", "Spades", "Spades", "Spades", "Spades", "Spades", "Spades", "Spades", "Spades", "Spades", "Spades", "Spades", "Spades",
-		};
-
-		// Converts card number into the card rank char
-		/// <exclude/>
-		private static readonly char[] rankchar =
-		{
-			'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A',
-			'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A',
-			'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A',
-			'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A',
-		};
-
-		// Converts card number into the card suit text string
-		/// <exclude/>
-		private static readonly char[] suitchar =
-		{
-			'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c',
-			'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd',
-			'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h', 'h',
-			's', 's', 's', 's', 's', 's', 's', 's', 's', 's', 's', 's', 's',
-		};
 		#endregion
 
 	}
-
-
-
 }
 
