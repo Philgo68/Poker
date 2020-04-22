@@ -6,6 +6,7 @@ using Poker.Interfaces;
 using System.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Poker.Models
 {
@@ -92,16 +93,16 @@ namespace Poker.Models
 			board = _board;
 		}
 
-		private int TestHero()
+		private int TestHero(List<IHand> fillers, IHand boardFiller )
 		{
-			var boardMask = board.CardsMask | board.FillerMask;
+			var boardMask = board.CardsMask | boardFiller.CardsMask;
 			var tied = false;
 			uint villain = 0;
 
-			(_, uint hero) = game.Evaluate(seats[0].Hand.CardsMask | seats[0].Hand.FillerMask, boardMask);
+			(_, uint hero) = game.Evaluate(seats[0].Hand.CardsMask | fillers[0].CardsMask, boardMask);
 			for (var i = 1; i < seats.Count; i++)
 			{
-				(_, villain) = game.Evaluate(seats[i].Hand.CardsMask | seats[i].Hand.FillerMask, boardMask);
+				(_, villain) = game.Evaluate(seats[i].Hand.CardsMask | fillers[i].CardsMask, boardMask);
 
 				if (villain > hero) { break; }
 				if (villain == hero) { tied = true; }
@@ -147,32 +148,53 @@ namespace Poker.Models
 				int seed;
 				lock (_global_random) seed = _global_random.Next();
 				var rand = new Random(seed);
+
+				long _wins = 0;
+				long _loses = 0;
+				long _ties = 0;
+
 				var deck = game.GetDeck(dealtCards);
+
+				// Setup Filler Hands
+				var board = new BaseHand(this.board.CardsNeeded);
+				var fillers = new List<IHand>();
+				foreach (var seat in seats)
+				{
+					fillers.Add(new BaseHand(seat.Hand.CardsNeeded));
+				}
+
 				do
 				{
 					// Get the random cards
-					board.FillerMask = deck.DealCards(board.CardsNeeded, rand);
-					foreach (var seat in seats)
+					board.CardsMask = deck.DealCards(board.CardCount, rand);
+					foreach (var hand in fillers)
 					{
-						seat.Hand.FillerMask = deck.DealCards(seat.Hand.CardsNeeded, rand);
+						hand.CardsMask = deck.DealCards(hand.CardCount, rand);
 					}
 
 					// Play the hand out
-					var result = this.TestHero();
+					var result = this.TestHero(fillers, board);
 					switch (result.CompareTo(0))
 					{
 						case -1:
-							loses -= result;
+							_loses -= result;
 							break;
 						case 0:
-							ties++;
+							_ties++;
 							break;
 						default:
-							wins += result;
+							_wins += result;
 							break;
 					}
 					deck.Reset(dealtCards);
+
 				} while (Stopwatch.GetTimestamp() < end);
+
+				// Save results
+				Interlocked.Add(ref loses, _loses);
+				Interlocked.Add(ref ties, _ties);
+				Interlocked.Add(ref wins, _wins);
+
 			};
 
 			var tasks = new List<Task>();

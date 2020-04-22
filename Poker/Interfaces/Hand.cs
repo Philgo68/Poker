@@ -16,7 +16,6 @@ namespace Poker.Interfaces
   {
     public virtual string Name => "BaseHand";
     public ulong CardsMask { get; set; }
-    public ulong FillerMask { get; set; }
     public long Wins { get; set; }
     public long Loses { get; set; }
     public long Ties { get; set; }

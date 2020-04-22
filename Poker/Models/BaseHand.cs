@@ -48,9 +48,6 @@ namespace Poker.Models
         cardsNeeded = cardCount - Bits.BitCount(value);
       }
     }
-    [ThreadStatic]
-    private ulong fillerMask;
-    ulong IHand.FillerMask { get => fillerMask; set => fillerMask = value; }
 
     public BaseDeck Deck { get; set; }
     public long Wins { get; set; }
