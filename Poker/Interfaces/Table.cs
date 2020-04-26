@@ -16,7 +16,7 @@ namespace Poker.Interfaces
 
 		public void PlayHand();
 
-		public long PlayHandTrials(double duration);
+		public long PlayHandTrials(double duration, long iterations);
 		public Seat AddHand(IHand hand, IPlayer player = null);
 		public void SetBoard(IHand board);
 		

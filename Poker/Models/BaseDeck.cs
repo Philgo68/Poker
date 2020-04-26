@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using Poker.Interfaces;
 
+//    public string Name { get; private set; } = "BaseDeck";
+
 namespace Poker.Models
 {
 	public abstract class BaseDeck : IDeck
 	{
-		public virtual string Name { get { return "BaseDeck"; } }
+		public virtual string Name { get; private set; } = "BaseDeck";
 		public virtual int Suits => 0;
 		public virtual string[] SuitDescriptions => null;
 		public virtual string[] SuitDescriptionsLong => null;

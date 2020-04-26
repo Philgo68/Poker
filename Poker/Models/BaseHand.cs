@@ -15,7 +15,7 @@ namespace Poker.Models
 {
   public class BaseHand : IHand
   {
-    private int cardCount;
+    private readonly int cardCount;
     private int cardsNeeded;
     private ulong cardsMask;
 

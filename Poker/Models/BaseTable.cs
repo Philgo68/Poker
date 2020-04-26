@@ -132,7 +132,7 @@ namespace Poker.Models
 			deck.Reset(dealtCards);
 		}
 
-		public long PlayHandTrials(double duration)
+		public long PlayHandTrials(double duration = 0.0, long iterations = 0L)
 		{
 			InitializeDeckFromTable();
 			var dealtCards = deck.DealtCards;
@@ -142,12 +142,23 @@ namespace Poker.Models
 			long wins = 0;
 			long loses = 0;
 			long ties = 0;
-			long end = Convert.ToInt64(Stopwatch.GetTimestamp() + (duration * Stopwatch.Frequency));
-			Action trial = delegate
+
+			var threadCnt = Environment.ProcessorCount;
+			threadCnt = 4;
+
+			Action<object?> trial = delegate(object? state)
 			{
-				int seed;
-				lock (_global_random) seed = _global_random.Next();
-				var rand = new Random(seed);
+				Random rand = null;
+
+				int threadNum = ((int?)state).Value;
+				Console.WriteLine(threadNum);
+
+				if ((duration > 0) || (iterations > 0))
+				{
+					int seed;
+					lock (_global_random) seed = _global_random.Next();
+					rand = new Random(seed);
+				} 
 
 				long _wins = 0;
 				long _loses = 0;
@@ -157,23 +168,17 @@ namespace Poker.Models
 
 				// Setup Filler Hands
 				var board = new BaseHand(this.board.CardsNeeded);
-				var fillers = new List<IHand>();
+				var fillers = new Fillers();
 				foreach (var seat in seats)
 				{
 					fillers.Add(new BaseHand(seat.Hand.CardsNeeded));
 				}
 
-				do
+				// For each completed set of hands
+				foreach (var completeFillers in fillers.CompletedHands(deck, board, threadNum, threadCnt, rand, duration, iterations))
 				{
-					// Get the random cards
-					board.CardsMask = deck.DealCards(board.CardCount, rand);
-					foreach (var hand in fillers)
-					{
-						hand.CardsMask = deck.DealCards(hand.CardCount, rand);
-					}
-
 					// Play the hand out
-					var result = this.TestHero(fillers, board);
+					var result = this.TestHero(completeFillers, board);
 					switch (result.CompareTo(0))
 					{
 						case -1:
@@ -186,20 +191,17 @@ namespace Poker.Models
 							_wins += result;
 							break;
 					}
-					deck.Reset(dealtCards);
-
-				} while (Stopwatch.GetTimestamp() < end);
+				}
 
 				// Save results
 				Interlocked.Add(ref loses, _loses);
 				Interlocked.Add(ref ties, _ties);
 				Interlocked.Add(ref wins, _wins);
-
 			};
 
 			var tasks = new List<Task>();
-			for (int ctr = 1; ctr <= Environment.ProcessorCount; ctr++)
-				tasks.Add(Task.Factory.StartNew(trial));
+			for (int ctr = 1; ctr <= threadCnt; ctr++)
+				tasks.Add(Task.Factory.StartNew(trial, ctr));
 			Task.WaitAll(tasks.ToArray());
 
 			seats[0].Hand.Wins = wins;
@@ -208,12 +210,5 @@ namespace Poker.Models
 
 			return wins + ties + loses;
 		}
-
-
-
-
-
-
-
 	}
 }

@@ -25,7 +25,7 @@ namespace Poker.Models
 		}
 		public virtual (int, uint) Evaluate(IHand hand, IHand board)
 		{
-			return Evaluate(hand.CardsMask | board.CardsMask);
+			return Evaluate(hand.CardsMask, board.CardsMask);
 		}
 		public virtual (int, uint) Evaluate(ulong hand, ulong board)
 		{
