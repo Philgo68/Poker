@@ -98,11 +98,21 @@ namespace Poker.Models
 			var boardMask = board.CardsMask | boardFiller.CardsMask;
 			var tied = false;
 			uint villain = 0;
+			uint hero = 0;
 
-			(_, uint hero) = game.Evaluate(seats[0].Hand.CardsMask | fillers[0].CardsMask, boardMask);
+			if (fillers[0].Changed || boardFiller.Changed) {
+				fillers[0].LastEvaluation = game.Evaluate(seats[0].Hand.CardsMask | fillers[0].CardsMask, boardMask);
+				fillers[0].Changed = false;
+			}
+			(_, hero) = fillers[0].LastEvaluation;
 			for (var i = 1; i < seats.Count; i++)
 			{
-				(_, villain) = game.Evaluate(seats[i].Hand.CardsMask | fillers[i].CardsMask, boardMask);
+				if (fillers[i].Changed || boardFiller.Changed)
+				{
+					fillers[i].LastEvaluation = game.Evaluate(seats[i].Hand.CardsMask | fillers[i].CardsMask, boardMask);
+					fillers[i].Changed = false;
+				}
+				(_, villain) = fillers[i].LastEvaluation;
 
 				if (villain > hero) { break; }
 				if (villain == hero) { tied = true; }
@@ -144,9 +154,9 @@ namespace Poker.Models
 			long ties = 0;
 
 			var threadCnt = Environment.ProcessorCount;
-			threadCnt = 4;
+			iterations /= threadCnt;
 
-			Action<object?> trial = delegate(object? state)
+			Action<object> trial = delegate(object state)
 			{
 				Random rand = null;
 

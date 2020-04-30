@@ -137,10 +137,16 @@
       result = "Loading...";
       result2 = null;
 
+      table = null;
+      deck = null;
+
       hero = null;
       board = null;
       opponents.Clear();
       displayHands.Clear();
+
+      StateHasChanged();
+      await Task.Delay(1);
 
       switch (button)
       {
@@ -200,8 +206,10 @@
           board.CommunityCards = true;
           table.SetBoard(board);
 
-          var start = Stopwatch.GetTimestamp();
+          StateHasChanged();
+
           // Play for x seconds or iterations
+          var start = Stopwatch.GetTimestamp();
           long cnt = table.PlayHandTrials(seconds, iterations);
           var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
 

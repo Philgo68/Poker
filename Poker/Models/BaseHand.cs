@@ -26,6 +26,7 @@ namespace Poker.Models
       Wins = 0;
       Loses = 0;
       Ties = 0;
+      Changed = false;
       CommunityCards = false;
     }
 
@@ -53,7 +54,9 @@ namespace Poker.Models
     public long Wins { get; set; }
     public long Loses { get; set; }
     public long Ties { get; set; }
-    public virtual decimal Percent => 100.0m * Math.Round((Wins + Ties / 2.0m) / (Wins + Ties + Loses), 6);
+    public bool Changed { get; set; }
+    public (int, uint) LastEvaluation { get; set; }
+    public virtual decimal Percent => 100.0m * Math.Round((Wins + Ties / 2.0m) / (Wins + Ties + Loses), 10);
     public virtual int CompareTo(object obj)
     {
       return -Percent.CompareTo(((BaseHand)obj).Percent);

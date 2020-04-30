@@ -19,6 +19,8 @@ namespace Poker.Interfaces
     public long Wins { get; set; }
     public long Loses { get; set; }
     public long Ties { get; set; }
+    public bool Changed { get; set; }
+    public (int, uint) LastEvaluation { get; set; }
     public bool CommunityCards { get; set; }
     public decimal Percent { get; }
     public int CardCount { get; }
