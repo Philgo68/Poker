@@ -27,26 +27,24 @@ namespace Poker.Models
 		}
 	}
 
-	public class BaseTable : ITable
+	public class BaseTable : IHandHolder
 	{
-		private IGame game;
-		private int totalSeats;
-
-		private IHand board;
-		private List<Seat> seats;
-
 		private IDeck deck;
 
 		public BaseTable(IGame _game, int _totalSeats = 9)
 		{
 			game = _game;
 			totalSeats = _totalSeats;
-			seats = new List<Seat>();
+			seats = new Seat[totalSeats];
 			board = null;
 			deck = game.GetDeck();
 		}
 
 		public string Name => "BaseTable";
+		public int totalSeats { get; private set; }
+		public Seat[] seats { get; private set; }
+		public IHand board { get; private set; }
+		public IGame game { get; private set; }
 
 		public IDeck Deck => deck;
 
@@ -57,14 +55,14 @@ namespace Poker.Models
 			Reset(dealtCards);
 		}
 
-		public Seat AddHand(IHand hand, IPlayer player = null)
+		public Seat OccupySeat(IHand hand, IPlayer player = null)
 		{
 			// Find a seat for them
-			if (seats.Count == totalSeats)
-				return null;
-			var newSeat = new Seat(hand, player);
-			seats.Add(newSeat);
-			return newSeat;
+			var seatIndex = Array.IndexOf(seats, null);
+			if (seatIndex == -1)	return null;
+
+			seats[seatIndex] = new Seat(hand, player);
+			return seats[seatIndex];
 		}
 
 		public Seat Hero()
@@ -74,10 +72,16 @@ namespace Poker.Models
 
 		public IEnumerable<Seat> Opponents()
 		{
-			for (var i = 1; i < seats.Count; i++)
+			for (var i = 1; i < totalSeats; i++)
 			{
-				yield return seats[i];
+				if (seats[i] != null)
+					yield return seats[i];
 			}
+		}
+
+		public void SetBoard(IHand _board)
+		{
+			board = _board;
 		}
 
 		public void Reset(ulong dealtCards)
@@ -85,15 +89,26 @@ namespace Poker.Models
 			deck.Reset(dealtCards);
 		}
 
-
-		public void PlayHand() { }
-
-		public void SetBoard(IHand _board)
+		public void CompleteCards()
 		{
-			board = _board;
+			var _global_random = new Random();
+			for (var i = 0; i < totalSeats; i++)
+			{
+				if (seats[i] != null && seats[i].Hand != null)
+					deck.CompleteCards(seats[i].Hand, _global_random);
+			}
 		}
 
-		private int TestHero(List<IHand> fillers, IHand boardFiller )
+		public void LayoutHands()
+		{
+			for (var i = 0; i < totalSeats; i++)
+			{
+				if (seats[i] != null && seats[i].Hand != null)
+					seats[i].Hand.LayoutHand();
+			}
+		}
+
+		private int TestHero(IHand[] fillers, IHand boardFiller )
 		{
 			var boardMask = board.CardsMask | boardFiller.CardsMask;
 			var tied = false;
@@ -105,17 +120,20 @@ namespace Poker.Models
 				fillers[0].Changed = false;
 			}
 			(_, hero) = fillers[0].LastEvaluation;
-			for (var i = 1; i < seats.Count; i++)
+			for (var i = 1; i < totalSeats; i++)
 			{
-				if (fillers[i].Changed || boardFiller.Changed)
+				if (seats[i] != null) 
 				{
-					fillers[i].LastEvaluation = game.Evaluate(seats[i].Hand.CardsMask | fillers[i].CardsMask, boardMask);
-					fillers[i].Changed = false;
-				}
-				(_, villain) = fillers[i].LastEvaluation;
+					if (fillers[i].Changed || boardFiller.Changed)
+					{
+						fillers[i].LastEvaluation = game.Evaluate(seats[i].Hand.CardsMask | fillers[i].CardsMask, boardMask);
+						fillers[i].Changed = false;
+					}
+					(_, villain) = fillers[i].LastEvaluation;
 
-				if (villain > hero) { break; }
-				if (villain == hero) { tied = true; }
+					if (villain > hero) { break; }
+					if (villain == hero) { tied = true; }
+				}
 			}
 			if (villain > hero)
 			{
@@ -134,7 +152,7 @@ namespace Poker.Models
 		private void InitializeDeckFromTable()
 		{
 			var dealtCards = board.CardsMask;
-			foreach (var seat in seats)
+			foreach (var seat in seats.Where(s => s != null && s.Hand != null))
 			{
 				dealtCards |= seat.Hand.CardsMask;
 			}
@@ -153,7 +171,7 @@ namespace Poker.Models
 			long loses = 0;
 			long ties = 0;
 
-			var threadCnt = Environment.ProcessorCount;
+			var threadCnt = Environment.ProcessorCount / 2;
 			iterations /= threadCnt;
 
 			Action<object> trial = delegate(object state)
@@ -181,14 +199,14 @@ namespace Poker.Models
 				var fillers = new Fillers();
 				foreach (var seat in seats)
 				{
-					fillers.Add(new BaseHand(seat.Hand.CardsNeeded));
+					fillers.Add(new BaseHand((seat == null || seat.Hand == null) ? 0 : seat.Hand.CardsNeeded));
 				}
 
 				// For each completed set of hands
 				foreach (var completeFillers in fillers.CompletedHands(deck, board, threadNum, threadCnt, rand, duration, iterations))
 				{
 					// Play the hand out
-					var result = this.TestHero(completeFillers, board);
+					var result = this.TestHero(completeFillers.ToArray(), board);
 					switch (result.CompareTo(0))
 					{
 						case -1:

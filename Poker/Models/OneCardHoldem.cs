@@ -24,10 +24,5 @@ namespace Poker.Models
 			return new BaseHand(1);
 		}
 
-		public override IHand GetBoard()
-		{
-			return new BaseHand(5);
-		}
-
 	}
 }

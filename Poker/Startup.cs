@@ -47,9 +47,17 @@ namespace Poker
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
       }
+      app.UseStaticFiles();
+
+      var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
+      // Add new mappings
+      provider.Mappings[".glb"] = "application/octet-stream";
+      app.UseStaticFiles(new StaticFileOptions
+      {
+        ContentTypeProvider = provider
+      });
 
       app.UseHttpsRedirection();
-      app.UseStaticFiles();
 
       app.UseRouting();
 

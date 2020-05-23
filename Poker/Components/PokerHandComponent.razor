@@ -1,36 +1,40 @@
 ﻿@inject SvgCards svgCards
 
 @{
-    var tHand = Hand as TaiwaneseHand;
-    if (tHand != null)
-    {
+  var tHand = Hand as TaiwaneseHand;
+  if (tHand != null)
+  {
     <div class="svg-stacked-hand">
         <PokerHandComponent Hand=@tHand.TopHand Deck=@Deck ShowBlanks=@ShowBlanks />
         <PokerHandComponent Hand=@tHand.MiddleHand Deck=@Deck ShowBlanks=@ShowBlanks />
         <PokerHandComponent Hand=@tHand.BottomHand Deck=@Deck ShowBlanks=@ShowBlanks />
     </div>
-    }
-    else
-    {
-        int i = 0;
-        var cards = ShowBlanks ? Hand.CardCount : Bits.BitCount(Hand.CardsMask);
-        var klass = Hand.CommunityCards ? "community-cards" : "";
-        <div class="svg-hand-wrapper cards-@(cards) @(klass) ">
-            <div class="svg-hand-rotator cards-@(cards)">
-                @foreach (var card in Deck.CardNumbers(Hand.CardsMask))
-                {
-                    <div class="svg-card-wrapper card-@(i++)">
-                        @(svgCards.Faces[card])
-                    </div>
-                }
-                @while (i < cards)
-                {
-                    <div class="svg-card-wrapper card-@(i++)">
-                        @(svgCards.BackRed)
-                    </div>
-                }
+  }
+  else
+  {
+      <div class="holecards">
+        @{ 
+          int i = 0;
+          var cards = ShowBlanks ? Hand.CardCount : Bits.BitCount(Hand.CardsMask);
+          var klass = Hand.CommunityCards ? "community-cards" : "";
+            <div class="svg-hand-wrapper cards-@(cards) @(klass) ">
+                <div class="svg-hand-rotator cards-@(cards)">
+                    @foreach (var card in Deck.CardNumbers(Hand.CardsMask))
+                    {
+                        <div class="svg-card-wrapper card-@(i++)">
+                            @(svgCards.Faces[card])
+                        </div>
+                    }
+                    @while (i < cards)
+                    {
+                        <div class="svg-card-wrapper card-@(i++)">
+                            @(svgCards.BackRed)
+                        </div>
+                    }
+                </div>
             </div>
-        </div>
+          }
+      </div>
     }
 }
 

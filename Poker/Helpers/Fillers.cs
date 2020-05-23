@@ -10,37 +10,45 @@ namespace Poker.Helpers
 {
   public class Fillers : List<IHand>
   {
-    public IEnumerable<List<IHand>> CompletedHands(IDeck deck, IHand board, int threadNum, int threadCnt, Random rand, double duration, long iterations)
+    public IEnumerable<List<IHand>> CompletedHands(IDeck deck, IHand board, int threadNum, int threadCnt, Random rand, double duration, long iterations = 0)
     {
+      // detemine the amount of possible work and prep for dealing all combinations
+      var cardsLeft = deck.RemainingInDeck;
+      var shuffleCnt = 1;
+      var totalIterations = 1;
+
+      var newHand = new List<bool>();
+      var hands = new List<IHand>();
+
+      board.CardsMask = 0;
+      for (var i = 1; i <= board.CardCount; i++)
+      {
+        totalIterations = (totalIterations * cardsLeft--) / shuffleCnt++;
+        newHand.Add(i == 1);
+        hands.Add(board);
+      }
+
+      foreach (var hand in this)
+      {
+        hand.CardsMask = 0;
+        shuffleCnt = 1;
+        for (var i = 1; i <= hand.CardCount; i++)
+        {
+          totalIterations = (totalIterations * cardsLeft--) / shuffleCnt++;
+          newHand.Add(i == 1);
+          hands.Add(hand);
+        }
+      }
+
       // deal out all combinations
-     if (duration == 0 && iterations == 0)
+     if (duration == 0 && (iterations == 0 || (iterations * threadCnt) > totalIterations))
       {
         var start = 0x1UL << (deck.CardCount - 1);
         var levelZeroStart = start >> (threadNum - 1); 
 
-        var newHand = new List<bool>();
-        var hands = new List<IHand>();
-
-        board.CardsMask = 0;
-        for (var i = 1; i <= board.CardCount; i++)
-        {
-          newHand.Add(i == 1);
-          hands.Add(board);
-        }
-
-        foreach (var hand in this)
-        {
-          hand.CardsMask = 0;
-          for (var i = 1; i <= hand.CardCount; i++)
-          {
-            newHand.Add(i == 1);
-            hands.Add(hand);
-          }
-        }
-
         var returnCards = new ulong[newHand.Count];
-        var level = 0;
 
+        var level = 0;
         do
         {
           // If we are just coming into this level, start at the start or the card after the previous level
@@ -118,70 +126,6 @@ namespace Poker.Helpers
           yield return this;
         } while ((Stopwatch.GetTimestamp()) < end);
       }
-    }
-
-    public IEnumerable<List<IHand>> CompletedHands(IDeck deck, IHand board)
-    {
-      var start = 0x1UL << deck.CardCount - 1;
-      var newHand = new List<bool>();
-      for (var i = 1; i <= board.CardCount; i++)
-        newHand.Add(i == 1);
-
-      foreach (var hand in this)
-        for (var i = 1; i <= hand.CardCount; i++)
-          newHand.Add(i == 1);
-
-      var returnCards = new ulong[newHand.Count];
-      var level = 0;
-
-      do
-      {
-        // If we are just coming into this level, start at the start or the card after the previous level
-        if (returnCards[level] == 0)
-          returnCards[level] = newHand[level] ? start : returnCards[level - 1] >> 1;
-        else
-        {
-          // undeal the last card
-          deck.DealtCards -= returnCards[level];
-          returnCards[level] >>= 1;
-        }
-
-        // skip if it's already been dealt
-        while ((returnCards[level] > 0) && ((returnCards[level] & deck.DealtCards) > 0))
-          returnCards[level] >>= 1;
-
-        // If we've past the end of this level, go back a level
-        if (returnCards[level] == 0)
-          level--;
-        // otherwise use this card and move on
-        else
-        {
-          // deal this card
-          deck.DealtCards += returnCards[level];
-          // goto next level
-          level++;
-        }
-
-        // if we are the whole way in, so return the cards
-        if (level == newHand.Count)
-        {
-          // load up the cards and send them back
-          var cc = 0;
-          board.CardsMask = 0;
-          for (var i = 1; i <= board.CardCount; i++)
-            board.CardsMask |= returnCards[cc++];
-
-          foreach (var hand in this)
-          {
-            hand.CardsMask = 0;
-            for (var i = 1; i <= hand.CardCount; i++)
-              hand.CardsMask |= returnCards[cc++];
-          }
-
-          yield return this;
-          level--;
-        }
-      } while (level >= 0);  // (returnCards[0] > 0);
     }
   }
 }

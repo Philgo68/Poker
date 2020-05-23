@@ -17,7 +17,13 @@ namespace Poker.Models
 		public abstract IDeck GetDeck(ulong dealtCards = 0x0UL);
 
 		public abstract IHand GetHand();
-		public abstract IHand GetBoard();
+		public virtual IHand GetBoard()
+		{
+			return new BaseHand(5)
+			{
+				CommunityCards = true
+			};
+		}
 
 		public virtual (int, uint) Evaluate(IHand hand)
 		{

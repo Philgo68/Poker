@@ -17,6 +17,7 @@ namespace Poker.Interfaces
 		public int CardCount { get; }
 		public ulong AllCardsMask { get; }
 		public ulong DealtCards { get; set; }
+		public int RemainingInDeck { get; }
 
 		public ulong PeekCards(int numberOfCards, Random rand = null);
 

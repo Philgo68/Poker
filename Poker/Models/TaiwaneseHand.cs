@@ -21,7 +21,9 @@ namespace Poker.Models
     private bool HandsLaidOut => (TopHand != null && MiddleHand != null && BottomHand != null);
 
     public override string Name => "Taiwanese";
-    public override int CardCount => 7;
+    public TaiwaneseHand() : base(7)
+    {
+    }
     public int RunningScore { get; set; }
     public IHand TopHand { get => topHand; set { topHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
     public IHand MiddleHand { get => middleHand; set { middleHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
@@ -32,17 +34,12 @@ namespace Poker.Models
       return -RunningScore.CompareTo(((TaiwaneseHand)obj).RunningScore);
     }
 
-    public TaiwaneseHand() : base() 
-    {
-      RunningScore = 0;
-    }
-
     public TaiwaneseHand(ulong cardsMask) : this()
     {
       SetCards(cardsMask);
     }
 
-    public TaiwaneseHand(string cards) : base()
+    public TaiwaneseHand(string cards) : this()
     {
       SetCards(cards);
     }
@@ -175,19 +172,19 @@ namespace Poker.Models
 
     public int ScoreTopHand(ulong boardmask)
     {
-      (var handType, _) = PokerGame.EvaluateHand(TopHand.CardsMask | boardmask);
+      (var handType, _) = TexasHoldem.EvaluateHand(TopHand.CardsMask | boardmask);
       return PointTopHand(handType);
     }
 
     public int ScoreMiddleHand(ulong boardmask)
     {
-      (var handType, _) = PokerGame.EvaluateHand(MiddleHand.CardsMask | boardmask);
+      (var handType, _) = TexasHoldem.EvaluateHand(MiddleHand.CardsMask | boardmask);
       return PointMiddleHand(handType);
     }
 
     public int ScoreBottomHand(ulong boardmask)
     {
-      (var handType, _) = PokerGame.EvaluateHand(BottomHand.CardsMask | boardmask);
+      (var handType, _) = Omaha.EvaluateHand(BottomHand.CardsMask, boardmask);
       return PointBottomHand(handType);
     }
 
@@ -333,115 +330,115 @@ namespace Poker.Models
       return new TaiwaneseHand[105]
       {
         new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[1] | cards[2], 2), new BaseHand(cards[3] | cards[4] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[2] | cards[4] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[2] | cards[3] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[2] | cards[4] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[2] | cards[3] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[3] | cards[4], 2), new BaseHand(cards[2] | cards[2] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[3] | cards[5], 2), new BaseHand(cards[2] | cards[2] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[3] | cards[6], 2), new BaseHand(cards[2] | cards[2] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[4] | cards[5], 2), new BaseHand(cards[2] | cards[2] | cards[3] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[4] | cards[6], 2), new BaseHand(cards[2] | cards[2] | cards[3] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[5] | cards[6], 2), new BaseHand(cards[2] | cards[2] | cards[3] | cards[4], 4)),
-                                                
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[0] | cards[2], 2), new BaseHand(cards[3] | cards[4] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[0] | cards[3], 2), new BaseHand(cards[2] | cards[4] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[0] | cards[4], 2), new BaseHand(cards[2] | cards[3] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[0] | cards[5], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[0] | cards[6], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[0] | cards[4] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[0] | cards[3] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[0] | cards[3] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[0] | cards[3] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[3] | cards[4], 2), new BaseHand(cards[0] | cards[2] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[3] | cards[5], 2), new BaseHand(cards[0] | cards[2] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[3] | cards[6], 2), new BaseHand(cards[0] | cards[2] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[4] | cards[5], 2), new BaseHand(cards[0] | cards[2] | cards[3] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[4] | cards[6], 2), new BaseHand(cards[0] | cards[2] | cards[3] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[5] | cards[6], 2), new BaseHand(cards[0] | cards[2] | cards[3] | cards[4], 4)),
-                                                
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[2] | cards[0], 2), new BaseHand(cards[3] | cards[4] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[0] | cards[4] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[0] | cards[3] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[0] | cards[3] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[0] | cards[3] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[0] | cards[3], 2), new BaseHand(cards[2] | cards[4] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[0] | cards[4], 2), new BaseHand(cards[2] | cards[3] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[0] | cards[5], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[0] | cards[6], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[3] | cards[4], 2), new BaseHand(cards[2] | cards[0] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[3] | cards[5], 2), new BaseHand(cards[2] | cards[0] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[3] | cards[6], 2), new BaseHand(cards[2] | cards[0] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[4] | cards[5], 2), new BaseHand(cards[2] | cards[0] | cards[3] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[4] | cards[6], 2), new BaseHand(cards[2] | cards[0] | cards[3] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[5] | cards[6], 2), new BaseHand(cards[2] | cards[0] | cards[3] | cards[4], 4)),
-                                                
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[2] | cards[2], 2), new BaseHand(cards[0] | cards[4] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[2] | cards[0], 2), new BaseHand(cards[2] | cards[4] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[2] | cards[0] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[2] | cards[0] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[2] | cards[0] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[2] | cards[0], 2), new BaseHand(cards[2] | cards[4] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[2] | cards[0] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[2] | cards[0] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[2] | cards[0] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[0] | cards[4], 2), new BaseHand(cards[2] | cards[2] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[0] | cards[5], 2), new BaseHand(cards[2] | cards[2] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[0] | cards[6], 2), new BaseHand(cards[2] | cards[2] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[4] | cards[5], 2), new BaseHand(cards[2] | cards[2] | cards[0] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[4] | cards[6], 2), new BaseHand(cards[2] | cards[2] | cards[0] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[5] | cards[6], 2), new BaseHand(cards[2] | cards[2] | cards[0] | cards[4], 4)),
-                                                
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[2] | cards[2], 2), new BaseHand(cards[3] | cards[0] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[2] | cards[0] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[2] | cards[0], 2), new BaseHand(cards[2] | cards[3] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[2] | cards[3] | cards[0] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[2] | cards[3] | cards[0] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[2] | cards[0] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[2] | cards[0], 2), new BaseHand(cards[2] | cards[3] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[2] | cards[3] | cards[0] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[2] | cards[3] | cards[0] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[3] | cards[0], 2), new BaseHand(cards[2] | cards[2] | cards[5] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[3] | cards[5], 2), new BaseHand(cards[2] | cards[2] | cards[0] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[3] | cards[6], 2), new BaseHand(cards[2] | cards[2] | cards[0] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[0] | cards[5], 2), new BaseHand(cards[2] | cards[2] | cards[3] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[0] | cards[6], 2), new BaseHand(cards[2] | cards[2] | cards[3] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[5] | cards[6], 2), new BaseHand(cards[2] | cards[2] | cards[3] | cards[0], 4)),
-                                                
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[2] | cards[2], 2), new BaseHand(cards[3] | cards[4] | cards[0] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[2] | cards[4] | cards[0] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[2] | cards[3] | cards[0] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[2] | cards[0], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[0], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[2] | cards[4] | cards[0] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[2] | cards[3] | cards[0] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[2] | cards[0], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[3] | cards[4], 2), new BaseHand(cards[2] | cards[2] | cards[0] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[3] | cards[0], 2), new BaseHand(cards[2] | cards[2] | cards[4] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[3] | cards[6], 2), new BaseHand(cards[2] | cards[2] | cards[4] | cards[0], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[4] | cards[0], 2), new BaseHand(cards[2] | cards[2] | cards[3] | cards[6], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[4] | cards[6], 2), new BaseHand(cards[2] | cards[2] | cards[3] | cards[0], 4)),
-        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[0] | cards[6], 2), new BaseHand(cards[2] | cards[2] | cards[3] | cards[4], 4)),
-                                                 
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[2] | cards[2], 2), new BaseHand(cards[3] | cards[4] | cards[5] | cards[0], 4)),
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[2] | cards[4] | cards[5] | cards[0], 4)),
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[2] | cards[3] | cards[5] | cards[0], 4)),
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[0], 4)),
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[2] | cards[0], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[2] | cards[4] | cards[5] | cards[0], 4)),
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[2] | cards[3] | cards[5] | cards[0], 4)),
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[0], 4)),
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[2] | cards[0], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[3] | cards[4], 2), new BaseHand(cards[2] | cards[2] | cards[5] | cards[0], 4)),
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[3] | cards[5], 2), new BaseHand(cards[2] | cards[2] | cards[4] | cards[0], 4)),
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[3] | cards[0], 2), new BaseHand(cards[2] | cards[2] | cards[4] | cards[5], 4)),
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[4] | cards[5], 2), new BaseHand(cards[2] | cards[2] | cards[3] | cards[0], 4)),
-        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[4] | cards[0], 2), new BaseHand(cards[2] | cards[2] | cards[3] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[1] | cards[3], 2), new BaseHand(cards[2] | cards[4] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[1] | cards[4], 2), new BaseHand(cards[2] | cards[3] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[1] | cards[5], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[1] | cards[6], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[1] | cards[4] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[1] | cards[3] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[1] | cards[3] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[1] | cards[3] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[3] | cards[4], 2), new BaseHand(cards[1] | cards[2] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[3] | cards[5], 2), new BaseHand(cards[1] | cards[2] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[3] | cards[6], 2), new BaseHand(cards[1] | cards[2] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[4] | cards[5], 2), new BaseHand(cards[1] | cards[2] | cards[3] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[4] | cards[6], 2), new BaseHand(cards[1] | cards[2] | cards[3] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[0], 1), new BaseHand(cards[5] | cards[6], 2), new BaseHand(cards[1] | cards[2] | cards[3] | cards[4], 4)),
+
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[0] | cards[2], 2), new BaseHand(cards[3] | cards[4] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[0] | cards[3], 2), new BaseHand(cards[2] | cards[4] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[0] | cards[4], 2), new BaseHand(cards[2] | cards[3] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[0] | cards[5], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[0] | cards[6], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[0] | cards[4] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[0] | cards[3] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[0] | cards[3] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[0] | cards[3] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[3] | cards[4], 2), new BaseHand(cards[0] | cards[2] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[3] | cards[5], 2), new BaseHand(cards[0] | cards[2] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[3] | cards[6], 2), new BaseHand(cards[0] | cards[2] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[4] | cards[5], 2), new BaseHand(cards[0] | cards[2] | cards[3] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[4] | cards[6], 2), new BaseHand(cards[0] | cards[2] | cards[3] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[1], 1), new BaseHand(cards[5] | cards[6], 2), new BaseHand(cards[0] | cards[2] | cards[3] | cards[4], 4)),
+
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[1] | cards[0], 2), new BaseHand(cards[3] | cards[4] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[1] | cards[3], 2), new BaseHand(cards[0] | cards[4] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[1] | cards[4], 2), new BaseHand(cards[0] | cards[3] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[1] | cards[5], 2), new BaseHand(cards[0] | cards[3] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[1] | cards[6], 2), new BaseHand(cards[0] | cards[3] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[0] | cards[3], 2), new BaseHand(cards[1] | cards[4] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[0] | cards[4], 2), new BaseHand(cards[1] | cards[3] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[0] | cards[5], 2), new BaseHand(cards[1] | cards[3] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[0] | cards[6], 2), new BaseHand(cards[1] | cards[3] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[3] | cards[4], 2), new BaseHand(cards[1] | cards[0] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[3] | cards[5], 2), new BaseHand(cards[1] | cards[0] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[3] | cards[6], 2), new BaseHand(cards[1] | cards[0] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[4] | cards[5], 2), new BaseHand(cards[1] | cards[0] | cards[3] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[4] | cards[6], 2), new BaseHand(cards[1] | cards[0] | cards[3] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[2], 1), new BaseHand(cards[5] | cards[6], 2), new BaseHand(cards[1] | cards[0] | cards[3] | cards[4], 4)),
+
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[1] | cards[2], 2), new BaseHand(cards[0] | cards[4] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[1] | cards[0], 2), new BaseHand(cards[2] | cards[4] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[1] | cards[4], 2), new BaseHand(cards[2] | cards[0] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[1] | cards[5], 2), new BaseHand(cards[2] | cards[0] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[1] | cards[6], 2), new BaseHand(cards[2] | cards[0] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[2] | cards[0], 2), new BaseHand(cards[1] | cards[4] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[1] | cards[0] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[1] | cards[0] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[1] | cards[0] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[0] | cards[4], 2), new BaseHand(cards[1] | cards[2] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[0] | cards[5], 2), new BaseHand(cards[1] | cards[2] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[0] | cards[6], 2), new BaseHand(cards[1] | cards[2] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[4] | cards[5], 2), new BaseHand(cards[1] | cards[2] | cards[0] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[4] | cards[6], 2), new BaseHand(cards[1] | cards[2] | cards[0] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[3], 1), new BaseHand(cards[5] | cards[6], 2), new BaseHand(cards[1] | cards[2] | cards[0] | cards[4], 4)),
+
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[1] | cards[2], 2), new BaseHand(cards[3] | cards[0] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[1] | cards[3], 2), new BaseHand(cards[2] | cards[0] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[1] | cards[0], 2), new BaseHand(cards[2] | cards[3] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[1] | cards[5], 2), new BaseHand(cards[2] | cards[3] | cards[0] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[1] | cards[6], 2), new BaseHand(cards[2] | cards[3] | cards[0] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[1] | cards[0] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[2] | cards[0], 2), new BaseHand(cards[1] | cards[3] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[1] | cards[3] | cards[0] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[1] | cards[3] | cards[0] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[3] | cards[0], 2), new BaseHand(cards[1] | cards[2] | cards[5] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[3] | cards[5], 2), new BaseHand(cards[1] | cards[2] | cards[0] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[3] | cards[6], 2), new BaseHand(cards[1] | cards[2] | cards[0] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[0] | cards[5], 2), new BaseHand(cards[1] | cards[2] | cards[3] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[0] | cards[6], 2), new BaseHand(cards[1] | cards[2] | cards[3] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[4], 1), new BaseHand(cards[5] | cards[6], 2), new BaseHand(cards[1] | cards[2] | cards[3] | cards[0], 4)),
+
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[1] | cards[2], 2), new BaseHand(cards[3] | cards[4] | cards[0] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[1] | cards[3], 2), new BaseHand(cards[2] | cards[4] | cards[0] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[1] | cards[4], 2), new BaseHand(cards[2] | cards[3] | cards[0] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[1] | cards[0], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[1] | cards[6], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[1] | cards[4] | cards[0] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[1] | cards[3] | cards[0] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[2] | cards[0], 2), new BaseHand(cards[1] | cards[3] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[2] | cards[6], 2), new BaseHand(cards[1] | cards[3] | cards[4] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[3] | cards[4], 2), new BaseHand(cards[1] | cards[2] | cards[0] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[3] | cards[0], 2), new BaseHand(cards[1] | cards[2] | cards[4] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[3] | cards[6], 2), new BaseHand(cards[1] | cards[2] | cards[4] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[4] | cards[0], 2), new BaseHand(cards[1] | cards[2] | cards[3] | cards[6], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[4] | cards[6], 2), new BaseHand(cards[1] | cards[2] | cards[3] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[5], 1), new BaseHand(cards[0] | cards[6], 2), new BaseHand(cards[1] | cards[2] | cards[3] | cards[4], 4)),
+
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[1] | cards[2], 2), new BaseHand(cards[3] | cards[4] | cards[5] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[1] | cards[3], 2), new BaseHand(cards[2] | cards[4] | cards[5] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[1] | cards[4], 2), new BaseHand(cards[2] | cards[3] | cards[5] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[1] | cards[5], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[1] | cards[0], 2), new BaseHand(cards[2] | cards[3] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[2] | cards[3], 2), new BaseHand(cards[1] | cards[4] | cards[5] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[2] | cards[4], 2), new BaseHand(cards[1] | cards[3] | cards[5] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[2] | cards[5], 2), new BaseHand(cards[1] | cards[3] | cards[4] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[2] | cards[0], 2), new BaseHand(cards[1] | cards[3] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[3] | cards[4], 2), new BaseHand(cards[1] | cards[2] | cards[5] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[3] | cards[5], 2), new BaseHand(cards[1] | cards[2] | cards[4] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[3] | cards[0], 2), new BaseHand(cards[1] | cards[2] | cards[4] | cards[5], 4)),
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[4] | cards[5], 2), new BaseHand(cards[1] | cards[2] | cards[3] | cards[0], 4)),
+        new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[4] | cards[0], 2), new BaseHand(cards[1] | cards[2] | cards[3] | cards[5], 4)),
         new TaiwaneseHand(new BaseHand(cards[6], 1), new BaseHand(cards[5] | cards[0], 2), new BaseHand(cards[1] | cards[2] | cards[3] | cards[4], 4)),
       };
     }

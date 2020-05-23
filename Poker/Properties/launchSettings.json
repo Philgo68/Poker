@@ -15,7 +15,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "pokertests",
+      "launchUrl": "pokertable",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

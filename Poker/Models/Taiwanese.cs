@@ -6,13 +6,13 @@ using System.Collections.Generic;
 
 namespace Poker.Models
 {
-	public class Omaha : PokerGame
+	public class Taiwanese : PokerGame
 	{
-		public Omaha()
+		public Taiwanese()
 		{
 		}
 
-		public override string Name { get { return "Omaha"; } }
+		public override string Name { get { return "Taiwanese"; } }
 
 		public override IDeck GetDeck(ulong dealtCards = 0)
 		{
@@ -21,24 +21,24 @@ namespace Poker.Models
 
 		public override IHand GetHand()
 		{
-			return new BaseHand(4);
+			return new TaiwaneseHand();
 		}
 
     public override (int, uint) Evaluate(ulong cards)
     {
-      throw new ArgumentException("Omaha Evaluation must include a hand and a board.");
+      throw new ArgumentException("Taiwanese Evaluation must include a hand and a board.");
     }
     public override (int, uint) Evaluate(IHand hand)
     {
-      throw new ArgumentException("Omaha Evaluation must include a hand and a board.");
+      throw new ArgumentException("Taiwanese Evaluation must include a hand and a board.");
     }
 
     public override (int, uint) Evaluate(ulong hand, ulong board)
 		{
-			return EvaluateHand(hand, board);
+      return EvaluateTaiwaneseHand(hand, board);
 		}
 
-    public static (int, uint) EvaluateHand(ulong hand, ulong board)
+    public static (int, uint) EvaluateTaiwaneseHand(ulong hand, ulong board)
     {
       var handcards = Bits.IndividualMasks(hand);
       var boardcards = Bits.IndividualMasks(board);

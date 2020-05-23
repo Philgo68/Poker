@@ -4,9 +4,11 @@
 
 @using System.Diagnostics;
 
+<link href="css/TableStyle.css" rel="stylesheet" />
+
 <h1>Poker Tests</h1>
 
-<form @onsubmit="Submit">
+<form @onsubmit="TestsSubmit">
     <div class="col-11">
         <div class="form-group row align-items-center">
             <label for="hand-1" class="col-2 h2 col-form-label">Hero:</label>
@@ -37,9 +39,9 @@
             </div>
         </div>
         <div class="form-group row align-items-center">
-            <label for="seconds" class="col-1 h2 col-form-label">Seconds:</label>
+            <label for="seconds" class="col-2 h2 col-form-label">Seconds:</label>
             <input class="form-control col-1" name="seconds" @bind="seconds" />
-            <label for="iterations" class="col-1 h2 col-form-label">Iterations:</label>
+            <label for="iterations" class="col-2 h2 col-form-label">Iterations (MM):</label>
             <input class="form-control col-1" name="iterations" @bind="iterations" />
         </div>
         <div class="form-group row align-items-center">
@@ -57,357 +59,369 @@
 <div class="row align-items-center">
     @if (table != null)
     {
-        <PokerHandComponent Hand=@table.Hero().Hand Deck=@table.Deck ShowBlanks=@true />
+        <div class="poker-hand">
+            <PokerHandComponent Hand=@table.Hero().Hand Deck=@table.Deck ShowBlanks=@true />
+        </div>
         <div class="d-inline-block m-2">vs.</div>
         @foreach (var seat in @table.Opponents())
         {
-            <PokerHandComponent Hand=@seat.Hand Deck=@table.Deck ShowBlanks=@true />
+            <div class="poker-hand">
+                <PokerHandComponent Hand=@seat.Hand Deck=@table.Deck ShowBlanks=@true />
+            </div>
         }
         <div class="d-inline-block m-2">on</div>
-        <PokerHandComponent Hand=@board Deck=@table.Deck ShowBlanks=@true />
+        <div class="poker-hand">
+            <PokerHandComponent Hand=@board Deck=@table.Deck ShowBlanks=@true />
+        </div>
     }
 
     @if (deck != null)
     {
         @if (hero != null && board != null)
         {
-            <PokerHandComponent Hand=@hero Deck=@deck ShowBlanks=@true />
+            <div class="poker-hand">
+                <PokerHandComponent Hand=@hero Deck=@deck ShowBlanks=@true />
+            </div>
             <div class="d-inline-block m-2">vs.</div>
             @foreach (var hand in opponents)
             {
-                <PokerHandComponent Hand=@hand Deck=@deck ShowBlanks=@true />
+                <div class="poker-hand">
+                    <PokerHandComponent Hand=@hand Deck=@deck ShowBlanks=@true />
+                </div>
             }
             <div class="d-inline-block m-2">on</div>
-            <PokerHandComponent Hand=@board Deck=@deck ShowBlanks=@true />
-        }
+            <div class="poker-hand">
+                <PokerHandComponent Hand=@board Deck=@deck ShowBlanks=@true />
+                </div>
+                }
 
 
-        @foreach (var hand in displayHands)
+                @foreach (var hand in displayHands)
+                {
+                    <PokerHandComponent Hand=@hand Deck=@deck ShowBlanks=@true />
+                }
+                }
+            </div>
+
+            <hr />
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Results</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@((MarkupString)result)</td>
+                    </tr>
+                    <tr>
+                        <td>@((MarkupString)result2)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            @code {
+                string hand_1, hand_2, board_string, button;
+                int? hand_cnt;
+                IHand hero = null;
+                List<IHand> opponents = new List<IHand>();
+                IHand board = null;
+                List<IHand> displayHands = new List<IHand>();
+                BaseTable table = null;
+                IDeck deck = null;
+                double seconds;
+                long iterations;
+
+            private string result, result2;
+        private static Random _global_random = new Random();
+
+        protected async override Task OnInitializedAsync()
         {
-            <PokerHandComponent Hand=@hand Deck=@deck ShowBlanks=@true />
+            hand_1 = "As6d";
+            hand_2 = "Ac3d;Ah4d";
+            hand_cnt = 2;
+            iterations = 2;
+            await svgCards.LoadCardsAsync();
         }
-    }
-</div>
-
-<hr />
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Results</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>@((MarkupString)result)</td>
-        </tr>
-        <tr>
-            <td>@((MarkupString)result2)</td>
-        </tr>
-    </tbody>
-</table>
 
 
-@code {
-  string hand_1, hand_2, board_string, button;
-  int? hand_cnt;
-  IHand hero = null;
-  List<IHand> opponents = new List<IHand>();
-  IHand board = null;
-  List<IHand> displayHands = new List<IHand>();
-  BaseTable table = null;
-  IDeck deck = null;
-  double seconds;
-  long iterations;
+        async Task TestsSubmit()
+        {
+            result = "Loading...";
+            result2 = null;
 
-  private string result, result2;
-  private static Random _global_random = new Random();
+            table = null;
+            deck = null;
 
-  protected async override Task OnInitializedAsync()
-  {
-      hand_1 = "As6d";
-      hand_2 = "Ac3d;Ah4d";
-      hand_cnt = 2;
-      await svgCards.LoadCardsAsync();
-  }
+            hero = null;
+            board = null;
+            opponents.Clear();
+            displayHands.Clear();
 
+            StateHasChanged();
+            await Task.Delay(1);
 
-  async Task Submit()
-  {
-      result = "Loading...";
-      result2 = null;
+            switch (button)
+            {
+                case "Single":
+                    result = await Task.FromResult(PlayItOut(new OneCardHoldem()));
+                    break;
+                case "Texas":
+                    result = await Task.FromResult(PlayItOut(new TexasHoldem()));
+                    break;
+                case "Omaha":
+                    result = await Task.FromResult(PlayItOut(new Omaha()));
+                    break;
+                case "Taiwanese":
+                    (result, result2) = await Task.FromResult(StartTaiwanese());
+                    break;
+                case "Deal":
+                    (result, result2) = await Task.FromResult(StartDeckDeal());
+                    break;
+                case "Test":
+                    result = await Task.FromResult(TestSomething());
+                    break;
+                default:
+                    result = $"Unknown Button: {button}";
+                    break;
+            };
+            button = null;
+        }
 
-      table = null;
-      deck = null;
+        protected string PlayItOut(IGame game)
+        {
+            try
+            {
+                table = new BaseTable(game);
 
-      hero = null;
-      board = null;
-      opponents.Clear();
-      displayHands.Clear();
+                var heroHand = game.GetHand();
+                heroHand.SetCards(hand_1);
+                var heroSeat = table.OccupySeat(heroHand);
 
-      StateHasChanged();
-      await Task.Delay(1);
+                var setOpp = 0;
+                foreach (var oh in (hand_2 ?? "").Split(";"))
+                {
+                    var oppHand = game.GetHand();
+                    oppHand.SetCards(oh);
+                    table.OccupySeat(oppHand);
+                    setOpp++;
+                }
 
-      switch (button)
-      {
-          case "Single":
-              result = await Task.FromResult(PlayItOut(new OneCardHoldem()));
-              break;
-          case "Texas":
-              result = await Task.FromResult(PlayItOut(new TexasHoldem()));
-              break;
-          case "Omaha":
-              result = await Task.FromResult(PlayItOut(new Omaha()));
-              break;
-          case "Taiwanese":
-              (result, result2) = await Task.FromResult(StartTaiwanese());
-              break;
-          case "Deal":
-              (result, result2) = await Task.FromResult(StartDeckDeal());
-              break;
-          case "Test":
-              result = await Task.FromResult(TestSomething());
-              break;
-          default:
-              result = $"Unknown Button: {button}";
-              break;
-      };
-      button = null;
-  }
+                hand_cnt = Math.Max(hand_cnt ?? 1, setOpp);
+                for (var i = setOpp; i < hand_cnt; i++)
+                {
+                    table.OccupySeat(game.GetHand());
+                    setOpp++;
+                }
 
-  protected string PlayItOut(IGame game)
-  {
-      try
-      {
-          table = new BaseTable(game);
+                board = game.GetBoard();
+                board.SetCards(board_string);
+                table.SetBoard(board);
 
-          var heroHand = game.GetHand();
-          heroHand.SetCards(hand_1);
-          var heroSeat = table.AddHand(heroHand);
+                StateHasChanged();
 
-          var setOpp = 0;
-          foreach (var oh in (hand_2 ?? "").Split(";"))
-          {
-              var oppHand = game.GetHand();
-              oppHand.SetCards(oh);
-              table.AddHand(oppHand);
-              setOpp++;
-          }
+                // Play for x seconds or iterations
+                var start = Stopwatch.GetTimestamp();
+                long cnt = table.PlayHandTrials(seconds, iterations * 1_000_000);
+                var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
 
-          hand_cnt = Math.Max(hand_cnt ?? 1, setOpp);
-          for (var i = setOpp; i < hand_cnt; i++)
-          {
-              table.AddHand(game.GetHand());
-              setOpp++;
-          }
+                return $"{heroHand.Percent}% against {setOpp} opponents over {cnt:n0} trials in {end}ms.<br>Wins: {heroHand.Wins:n0}  Loses: {heroHand.Loses:n0}  Ties: {heroHand.Ties:n0}.";
+            }
+            catch (ArgumentException e)
+            {
+                return e.Message;
+            }
 
-          board = game.GetBoard();
-          board.SetCards(board_string);
-          board.CommunityCards = true;
-          table.SetBoard(board);
+        }
 
-          StateHasChanged();
+        protected string HandDescriptionSample()
+        {
+            // initialize board
+            string board = "2d kh qh 3h qc";
+            // Create a hand with AKs plus board
+            Poker.CFHandEvaluator.Hand h1 = new Poker.CFHandEvaluator.Hand("ad kd", board);
+            // Create a hand with 23 unsuited plus board
+            Poker.CFHandEvaluator.Hand h2 = new Poker.CFHandEvaluator.Hand("2h 3d", board);
 
-          // Play for x seconds or iterations
-          var start = Stopwatch.GetTimestamp();
-          long cnt = table.PlayHandTrials(seconds, iterations);
-          var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
+            // Find stronger hand and print results
+            if (h1 > h2)
+            {
+                return $"{h1.Description} is better than {h2.Description}.";
+            }
+            else
+            {
+                return $"{h1.Description} is worse or equal to {h2.Description}.";
+            }
+        }
 
-          return $"{heroHand.Percent}% against {setOpp} opponents over {cnt:n0} trials in {end}ms.<br>Wins: {heroHand.Wins:n0}  Loses: {heroHand.Loses:n0}  Ties: {heroHand.Ties:n0}.";
-      }
-      catch (ArgumentException e)
-      {
-          return e.Message;
-      }
+        protected (string, string) StartTaiwanese()
+        {
+            long cnt = 0;
+            var duration = 5.0;
 
-  }
+            //AhKsQsQhTh9h5s
+            //AsAhAcQhQc7s2d
+            //AsAhAcKhQsTs3c
+            // Tc7h7c6s6c2h2c  vs AcQhTsTd9h5s4s
+            // ThAsAhKsKh7d6d  vs Td8h8dJs7s4d3s     Th / As, Ah / Ks, Kh, 7d, 6d  and  Td / 8h, 8d / Js, 7s, 4d, 3s
 
-  protected string HandDescriptionSample()
-  {
-      // initialize board
-      string board = "2d kh qh 3h qc";
-      // Create a hand with AKs plus board
-      Poker.CFHandEvaluator.Hand h1 = new Poker.CFHandEvaluator.Hand("ad kd", board);
-      // Create a hand with 23 unsuited plus board
-      Poker.CFHandEvaluator.Hand h2 = new Poker.CFHandEvaluator.Hand("2h 3d", board);
-
-      // Find stronger hand and print results
-      if (h1 > h2)
-      {
-          return $"{h1.Description} is better than {h2.Description}.";
-      }
-      else
-      {
-          return $"{h1.Description} is worse or equal to {h2.Description}.";
-      }
-  }
-
-  protected (string, string) StartTaiwanese()
-  {
-      long cnt = 0;
-      var duration = 5.0;
-
-      //AhKsQsQhTh9h5s
-      //AsAhAcQhQc7s2d
-      //AsAhAcKhQsTs3c
-      // Tc7h7c6s6c2h2c  vs AcQhTsTd9h5s4s
-      // ThAsAhKsKh7d6d  vs Td8h8dJs7s4d3s     Th / As, Ah / Ks, Kh, 7d, 6d  and  Td / 8h, 8d / Js, 7s, 4d, 3s
-
-      //5d / 8s, 8h / As, 7c, 6c, 2d  vs Ts / 7s, 6d / Ks, 3s, 3d, 3c  on adqdjd9s9d
+            //5d / 8s, 8h / As, 7c, 6c, 2d  vs Ts / 7s, 6d / Ks, 3s, 3d, 3c  on adqdjd9s9d
 
 
-      hero = new TaiwaneseHand();
-      TaiwaneseHand tHero = (TaiwaneseHand)hero;
-      tHero.SetCards(hand_1);
+            hero = new TaiwaneseHand();
+            TaiwaneseHand tHero = (TaiwaneseHand)hero;
+            tHero.SetCards(hand_1);
 
-      var opp = new TaiwaneseHand();
-      opp.SetCards(hand_2);
-      opponents.Add(opp);
+            var opp = new TaiwaneseHand();
+            opp.SetCards(hand_2);
+            opponents.Add(opp);
 
-      // Create deck the initial cards "dealt"
-      var deck = new StandardDeck(tHero.CardsMask | opp.CardsMask);
+            // Create deck the initial cards "dealt"
+            var deck = new StandardDeck(tHero.CardsMask | opp.CardsMask);
 
-      // Fill in the blanks in the hand(s)
-      tHero.CompleteCards(deck, _global_random);
-      opp.CompleteCards(deck, _global_random);
+            // Fill in the blanks in the hand(s)
+            tHero.CompleteCards(deck, _global_random);
+            opp.CompleteCards(deck, _global_random);
 
-      board = new BaseHand(board_string, 5);
-      //board.CompleteCards(deck, _global_random);
-      board.CommunityCards = true;
+            board = new BaseHand(board_string, 5);
+            //board.CompleteCards(deck, _global_random);
+            board.CommunityCards = true;
 
-      // Layout the hands
-      cnt += tHero.LayoutHand(duration / 3);
-      cnt += opp.LayoutHand(duration / 3);
+            // Layout the hands
+            cnt += tHero.LayoutHand(duration / 3);
+            cnt += opp.LayoutHand(duration / 3);
 
-      string result = $"{tHero.CardDescriptions} and {opp.CardDescriptions} over {cnt/2:n0} boards.";
-      string result2 = "";
+            string result = $"{tHero.CardDescriptions} and {opp.CardDescriptions} over {cnt / 2:n0} boards.";
+            string result2 = "";
 
-      cnt = 19; // hero.PlayAgainst(opponents.ToArray(), board, duration / 3 );
-      result2 = $"{hero.Percent}% against {opponents.Count} opponents over {cnt:n0} trials.";
+            cnt = 19; // hero.PlayAgainst(opponents.ToArray(), board, duration / 3 );
+            result2 = $"{hero.Percent}% against {opponents.Count} opponents over {cnt:n0} trials.";
 
-      // To play once
-      //cnt = hero.PlayAgainst(opponents.ToArray(), board);
-      //result2 = $"Hero {cnt} points.";
+            // To play once
+            //cnt = hero.PlayAgainst(opponents.ToArray(), board);
+            //result2 = $"Hero {cnt} points.";
 
 
-      return (result, result2);
-  }
+            return (result, result2);
+        }
 
-  protected (string, string) StartDeckDeal()
-  {
-      var deck = new StandardDeck();
-      var boardMask1 = 0x0UL;
-      var boardMask2 = 0x0UL;
-      ulong[] hands = new ulong[6];
+        protected (string, string) StartDeckDeal()
+        {
+            var deck = new StandardDeck();
+            var boardMask1 = 0x0UL;
+            var boardMask2 = 0x0UL;
+            ulong[] hands = new ulong[6];
 
-      var rand = _global_random;
-      var start = Stopwatch.GetTimestamp();
+            var rand = _global_random;
+            var start = Stopwatch.GetTimestamp();
 
-      for (int i = 0; i < 1_000_000; i++)
-      {
-          deck.Reset();
+            for (int i = 0; i < 1_000_000; i++)
+            {
+                deck.Reset();
 
-          for (int j = 0; j < hand_cnt; j++)
-          {
-              hands[j] = deck.DealCards(7, rand);
-          }
-          boardMask1 = deck.DealCards(5, rand);
-          boardMask2 = deck.DealCards(5, rand);
-      }
-      var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
+                for (int j = 0; j < hand_cnt; j++)
+                {
+                    hands[j] = deck.DealCards(7, rand);
+                }
+                boardMask1 = deck.DealCards(5, rand);
+                boardMask2 = deck.DealCards(5, rand);
+            }
+            var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
 
-      result = hand_cnt == 6 ? $"{end}ms full table double board Taiwanese 1 million times." : $"{end}ms to deal {hand_cnt + 2} different hands 1 million times.";
-      result2 = "Last result:<br>";
+            result = hand_cnt == 6 ? $"{end}ms full table double board Taiwanese 1 million times." : $"{end}ms to deal {hand_cnt + 2} different hands 1 million times.";
+            result2 = "Last result:<br>";
 
-      for (int j = 0; j < hand_cnt; j++)
-      {
-          result2 += deck.CardDescriptions(hands[j]) + "<br>";
-          displayHands.Add(new BaseHand(hands[j], 7));
-      }
+            for (int j = 0; j < hand_cnt; j++)
+            {
+                result2 += deck.CardDescriptions(hands[j]) + "<br>";
+                displayHands.Add(new BaseHand(hands[j], 7));
+            }
 
-      var board1 = new BaseHand(boardMask1, 5);
-      var board2 = new BaseHand(boardMask2, 5);
+            var board1 = new BaseHand(boardMask1, 5);
+            var board2 = new BaseHand(boardMask2, 5);
 
-      result2 += "Board1: " + board1.CardDescriptions + "<br>";
-      result2 += "Board2: " + board2.CardDescriptions + "<br>";
-      //displayHands.Add(board1);
-      //displayHands.Add(board2);
-      result2 += Poker.CFHandEvaluator.Hand.DescriptionFromMask(Poker.CFHandEvaluator.Hand.ParseHand(hand_1 ?? "") | boardMask1) + "<br>";
-      result2 += "Dealt Cards: " + deck.CardDescriptions(deck.DealtCards) + "<br>";
+            result2 += "Board1: " + board1.CardDescriptions + "<br>";
+            result2 += "Board2: " + board2.CardDescriptions + "<br>";
+            //displayHands.Add(board1);
+            //displayHands.Add(board2);
+            result2 += Poker.CFHandEvaluator.Hand.DescriptionFromMask(Poker.CFHandEvaluator.Hand.ParseHand(hand_1 ?? "") | boardMask1) + "<br>";
+            result2 += "Dealt Cards: " + deck.CardDescriptions(deck.DealtCards) + "<br>";
 
-      return (result, result2);
-  }
+            return (result, result2);
+        }
 
-  protected string TestSomething()
-  {
-      try
-      {
-          // Setup
-          var board = new BaseHand(2);
-          var fillers = new Fillers();
-          fillers.Add(new BaseHand(2));
-          fillers.Add(new BaseHand(2));
+        protected string TestSomething()
+        {
+            try
+            {
+                // Setup
+                var board = new BaseHand(2);
+                var fillers = new Fillers();
+                fillers.Add(new BaseHand(2));
+                fillers.Add(new BaseHand(2));
 
-          var deck = new StandardDeck();
-          deck.DealCards(30, _global_random);
+                var deck = new StandardDeck();
+                deck.DealCards(30, _global_random);
 
-          // 6,715,170‬ "hands"
+                // 6,715,170‬ "hands"
 
-          int i = 0;
-          // For each completed set of hands
-          var start = Stopwatch.GetTimestamp();
-          //foreach (var completeFillers in fillers.CompletedHands(deck, board, _global_random, Convert.ToInt64(Stopwatch.GetTimestamp() + (1.7 * Stopwatch.Frequency))))
-          foreach (var completeFillers in fillers.CompletedHands(deck, board))
-          {
-              i++;
-          }
-          var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
-          return $"{i:n0} trials dealt in {end:n4} ms.  {((1.0 * i) / end):n4} per ms.";
-      }
-      catch (ArgumentException e)
-      {
-          return e.Message;
-      }
+                int i = 0;
+                // For each completed set of hands
+                var start = Stopwatch.GetTimestamp();
+                foreach (var completeFillers in fillers.CompletedHands(deck, board, 1, 1, _global_random, 1.7))
+                //foreach (var completeFillers in fillers.CompletedHands(deck, board))
+                {
+                    i++;
+                }
+                var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
+                return $"{i:n0} trials dealt in {end:n4} ms.  {((1.0 * i) / end):n4} per ms.";
+            }
+            catch (ArgumentException e)
+            {
+                return e.Message;
+            }
 
-  }
+        }
 
 
 
 
-  protected string TestBitMasks()
-  {
-      try
-      {
-          // Setup
-          var deck = new StandardDeck();
-          var mask = deck.PeekCards(7, _global_random);
+        protected string TestBitMasks()
+        {
+            try
+            {
+                // Setup
+                var deck = new StandardDeck();
+                var mask = deck.PeekCards(7, _global_random);
 
-          var start = Stopwatch.GetTimestamp();
-          for (var i = 0; i < 10_000_000; i++)
-          {
-              // Test Here
-              var cardsOne = Bits.IndividualMasks(mask);
-              //var cardsTwo = Bits.IndividualMasksTwo(mask);
+                var start = Stopwatch.GetTimestamp();
+                for (var i = 0; i < 10_000_000; i++)
+                {
+                    // Test Here
+                    var cardsOne = Bits.IndividualMasks(mask);
+                    //var cardsTwo = Bits.IndividualMasksTwo(mask);
 
-              // Compare with Asserts  
-              //Debug.Assert(cardsOne.Length == cardsTwo.Length, "Don't match");
-              //for (var j = 0; j < cardsOne.Length; j++)
-              //    Debug.Assert(cardsOne[j] == cardsTwo[j], "Don't match");
-          }
+                    // Compare with Asserts
+                    //Debug.Assert(cardsOne.Length == cardsTwo.Length, "Don't match");
+                    //for (var j = 0; j < cardsOne.Length; j++)
+                    //    Debug.Assert(cardsOne[j] == cardsTwo[j], "Don't match");
+                }
 
-          // Visualize some cards
-          hero = new BaseHand(mask, 7);
-          board = new BaseHand(5);
+                // Visualize some cards
+                hero = new BaseHand(mask, 7);
+                board = new BaseHand(5);
 
-          var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
-          return $"{mask} tested 10 million times in {end:n4} ms";
-      }
-      catch (ArgumentException e)
-      {
-          return e.Message;
-      }
+                var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
+                return $"{mask} tested 10 million times in {end:n4} ms";
+            }
+            catch (ArgumentException e)
+            {
+                return e.Message;
+            }
 
-  }
+        }
 
 
-}
+            }

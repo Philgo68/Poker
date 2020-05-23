@@ -20,7 +20,7 @@ namespace Poker.Models
 		public virtual int CardCount => Suits * Ranks;
 		public virtual ulong AllCardsMask => ((0x1UL << CardCount) - 1);
 		public virtual ulong DealtCards { get; set; }
-		private int RemainingInDeck { get; set; }
+		public int RemainingInDeck { get; private set; }
 
 		public virtual ulong PeekCards(int numberOfCards, Random rand = null)
 		{
@@ -85,6 +85,10 @@ namespace Poker.Models
 			return DealCards(numberOfCards - Bits.BitCount(hand), rand) | hand;
 		}
 		public virtual void CompleteCards(BaseHand hand, Random rand = null)
+		{
+			hand.CardsMask |= DealCards(hand.CardsNeeded, rand);
+		}
+		public virtual void CompleteCards(IHand hand, Random rand = null)
 		{
 			hand.CardsMask |= DealCards(hand.CardsNeeded, rand);
 		}
@@ -169,10 +173,5 @@ namespace Poker.Models
 			return PokerEvaluate(hand | board, numberOfCards);
 		}
 		public virtual (int, uint) OmahaEvaluate(ulong hand, ulong board) => (0, 0);
-
-		public void CompleteCards(IHand hand, Random rand = null)
-		{
-			throw new NotImplementedException();
-		}
 	}
 }
