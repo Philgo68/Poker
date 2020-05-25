@@ -67,6 +67,15 @@ namespace Poker.Models
     public virtual string CardDescriptions => Deck.CardDescriptions(CardsMask);
     public virtual IEnumerable<int> CardNumbers => Deck.CardNumbers(CardsMask);
 
+    public event Action StateHasChangedDelegate;
+
+    protected void StateHasChanged()
+    {
+      StateHasChangedDelegate?.Invoke();
+    }
+
+    public virtual bool HandsLaidOut => true;
+
     public virtual (int, uint) Evaluate(ulong board)
     {
       return Evaluate(CardsMask, board);
@@ -111,9 +120,30 @@ namespace Poker.Models
       if (Bits.BitCount(CardsMask) > CardCount) throw new ArgumentException($"A {Name} hand must have {CardCount} cards or less.");
     }
 
+    public virtual void AddCard(int card)
+    {
+      CardsMask |= 1UL << card;
+      if (Bits.BitCount(cardsMask) > CardCount) throw new ArgumentException($"A {Name} hand must have {CardCount} cards or less.");
+    }
+
     public virtual void CompleteCards(BaseDeck deck, Random rand = null)
     {
       deck.CompleteCards(this, rand);
+    }
+
+    public virtual int BestCard()
+    {
+      uint c = (uint)((CardsMask >> (0)) & 0x1fffUL);
+      uint d = (uint)((CardsMask >> (13)) & 0x1fffUL);
+      uint h = (uint)((CardsMask >> (26)) & 0x1fffUL);
+      uint s = (uint)((CardsMask >> (39)) & 0x1fffUL);
+
+      uint m = Math.Max(c, Math.Max(d, Math.Max(h, s)));
+      int r = Bits.LeftBit(m) * 4;
+      if (m == s) return r;
+      if (m == s) return r - 1;
+      if (m == s) return r - 3;
+      return r - 3;
     }
 
     public virtual long LayoutHand(double duration = 0.1)

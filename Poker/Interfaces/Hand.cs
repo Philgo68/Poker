@@ -25,6 +25,9 @@ namespace Poker.Interfaces
     public decimal Percent { get; }
     public int CardCount { get; }
     public int CardsNeeded { get; }
+    public event Action StateHasChangedDelegate;
+    bool HandsLaidOut { get; }
+
     public void Reset();
 
     public void SetCards(ulong cardsMask);
@@ -32,6 +35,9 @@ namespace Poker.Interfaces
 
     public void AddCards(ulong cardsMask);
     public void AddCards(string cards);
+    public void AddCard(int card);
+
+    public int BestCard();
 
     public long LayoutHand(double duration = 0.1); 
   }

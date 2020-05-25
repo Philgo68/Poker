@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blazor.DragDrop.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +33,7 @@ namespace Poker
       services.AddServerSideBlazor();
       services.AddHttpClient();
       services.AddScoped<Helpers.SvgCards>();
+      services.AddBlazorDragDrop();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

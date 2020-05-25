@@ -8,6 +8,7 @@ namespace Poker.Models
 {
 	public abstract class BaseGame : IGame
 	{
+
 		public BaseGame()
 		{
 		}
@@ -23,6 +24,11 @@ namespace Poker.Models
 			{
 				CommunityCards = true
 			};
+		}
+
+		public virtual DisplayStage[] ExecutePhase(int game_phase, BaseTable table)
+		{
+			return new DisplayStage[] {};
 		}
 
 		public virtual (int, uint) Evaluate(IHand hand)

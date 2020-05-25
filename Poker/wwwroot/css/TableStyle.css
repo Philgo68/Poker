@@ -486,6 +486,19 @@
     transform: rotate(calc(4*var(--card-rotate)));
     transform-origin: var(--card-rotate-origin) 100%; }
 
+.layout-cards {
+  display: inline-block;
+  text-align: center; }
+  .layout-cards .dropzone {
+    display: inline-block;
+    min-height: unset;
+    min-width: unset; }
+  .layout-cards .svg-card-wrapper {
+    position: relative;
+    display: inline-block; }
+  .layout-cards .playing-card {
+    --card-size: 6em; }
+
 .svg-hand-rotator.cards-2 {
   transform: rotate(calc(-0.5*var(--card-rotate)));
   transform-origin: var(--card-rotate-origin) 100%; }

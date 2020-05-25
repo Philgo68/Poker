@@ -767,7 +767,25 @@
     }
 }
 
+.layout-cards {
+    display: inline-block;
+    text-align: center;
 
+    .dropzone {
+        display: inline-block;
+        min-height: unset;
+        min-width: unset;
+    }
+
+    .svg-card-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .playing-card {
+        --card-size: 6em;
+    }
+}
 
 .svg-hand-rotator.cards-2 {
     @include card-rotate(-0.5);

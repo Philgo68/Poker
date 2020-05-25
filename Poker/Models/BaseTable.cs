@@ -10,6 +10,15 @@ using System.Threading;
 
 namespace Poker.Models
 {
+
+	public enum DisplayStage
+	{
+		DealtCards,
+		BetsOut,
+		PotScooped,
+		DeliverPot
+	}
+
 	public interface IHandHolder
 	{
 		public IHand Hand { get; }
@@ -19,17 +28,31 @@ namespace Poker.Models
 	{
 		public IHand Hand { get; set; }
 		public IPlayer Player { get; set; }
+		public int Chips { get; set; }
+		public int ChipsMoving { get; set; }
 
-		public Seat(IHand hand, IPlayer player = null)
+		// Pre - calculated fro display actions
+		public int ChipsOut { get; set; }
+		public int ChipsIn { get; set; }
+		public int HandsWon { get; set; }
+
+		public Seat(IHand hand, IPlayer player = null, int chips = 500)
 		{
 			Hand = hand;
 			Player = player;
+			Chips = chips;
 		}
 	}
 
 	public class BaseTable : IHandHolder
 	{
+		const int standardTime = 4;
+
 		private IDeck deck;
+		private int game_phase;
+		private DisplayStage[] displayStages;
+		private readonly Dictionary<DisplayStage, Func<int>> DisplayActions = new Dictionary<DisplayStage, Func<int>>();
+		private int pot;
 
 		public BaseTable(IGame _game, int _totalSeats = 9)
 		{
@@ -38,6 +61,67 @@ namespace Poker.Models
 			seats = new Seat[totalSeats];
 			board = null;
 			deck = game.GetDeck();
+			game_phase = 0;
+
+			DisplayActions[DisplayStage.DealtCards] = () => {
+				NotifyStateChanged();
+				return standardTime * 2;
+			};
+
+			DisplayActions[DisplayStage.BetsOut] = () => {
+				foreach (var seat in OccupiedSeats())
+				{
+					if (seat.Hand is IHand Hand)
+					{
+						seat.ChipsMoving = seat.ChipsOut;
+						seat.Chips -= seat.ChipsOut;
+						seat.ChipsOut = 0;
+					}
+				}
+				NotifyStateChanged();
+				return standardTime;
+			};
+
+			DisplayActions[DisplayStage.PotScooped] = () => {
+				foreach (var seat in OccupiedSeats())
+				{
+					if (seat.Hand is IHand Hand)
+					{
+						pot += seat.ChipsMoving;
+						seat.ChipsMoving = 0;
+					}
+				}
+				NotifyStateChanged();
+				return standardTime;
+			};
+
+			DisplayActions[DisplayStage.DeliverPot] = () => {
+				pot = 0;
+				foreach (var seat in OccupiedSeats())
+				{
+					if (seat.Hand is IHand Hand)
+					{
+						seat.ChipsMoving = seat.ChipsIn;
+						seat.Chips += seat.ChipsIn;
+					}
+				}
+				NotifyStateChanged();
+				return standardTime;
+			};
+
+		}
+
+		public event Action StateHasChangedDelegate;
+
+		private void NotifyStateChanged()
+		{
+			StateHasChangedDelegate?.Invoke();
+		}
+
+		private void StateHasChanged()
+		{
+			NotifyStateChanged();
+			if (displayStages == null) TransitionToNextPhase();
 		}
 
 		public string Name => "BaseTable";
@@ -62,8 +146,23 @@ namespace Poker.Models
 			if (seatIndex == -1)	return null;
 
 			seats[seatIndex] = new Seat(hand, player);
+
+			hand.StateHasChangedDelegate += StateHasChanged;
+
+			InitializeDeckFromTable();
+
 			return seats[seatIndex];
 		}
+
+		public IEnumerable<Seat> OccupiedSeats()
+		{
+			for (var i = 0; i < totalSeats; i++)
+			{
+				if (seats[i] != null && seats[i].Chips > 0 && seats[i].Hand.CardsMask > 0)
+					yield return seats[i];
+			}
+		}
+
 
 		public Seat Hero()
 		{
@@ -99,9 +198,9 @@ namespace Poker.Models
 			}
 		}
 
-		public void LayoutHands()
+		public void LayoutHands(bool includingHero = true)
 		{
-			for (var i = 0; i < totalSeats; i++)
+			for (var i = (includingHero ? 0 : 1); i < totalSeats; i++)
 			{
 				if (seats[i] != null && seats[i].Hand != null)
 					seats[i].Hand.LayoutHand();
@@ -151,7 +250,7 @@ namespace Poker.Models
 
 		private void InitializeDeckFromTable()
 		{
-			var dealtCards = board.CardsMask;
+			var dealtCards = board != null ? board.CardsMask : 0UL;
 			foreach (var seat in seats.Where(s => s != null && s.Hand != null))
 			{
 				dealtCards |= seat.Hand.CardsMask;
@@ -160,7 +259,7 @@ namespace Poker.Models
 			deck.Reset(dealtCards);
 		}
 
-		public long PlayHandTrials(double duration = 0.0, long iterations = 0L)
+		public long PlayHandTrials(double duration = 0.0, ulong iterations = 0UL)
 		{
 			InitializeDeckFromTable();
 			var dealtCards = deck.DealtCards;
@@ -171,8 +270,8 @@ namespace Poker.Models
 			long loses = 0;
 			long ties = 0;
 
-			var threadCnt = Environment.ProcessorCount / 2;
-			iterations /= threadCnt;
+			int threadCnt = Environment.ProcessorCount / 2;
+			iterations /= Convert.ToUInt16(threadCnt);
 
 			Action<object> trial = delegate(object state)
 			{
@@ -237,6 +336,53 @@ namespace Poker.Models
 			seats[0].Hand.Loses = loses;
 
 			return wins + ties + loses;
+		}
+
+		public void DisplayNextStage()
+		{
+			if (displayStages.Length > 0)
+			{
+				var wait = DisplayActions[displayStages[0]]();
+				displayStages = displayStages.Skip(1).ToArray();
+				Task WaitTask = Task.Delay(wait * 1000);
+				WaitTask.ContinueWith(t => DisplayNextStage());
+			}
+			else
+			{
+				TransitionToNextPhase();
+			}
+		}
+
+		public void TransitionToNextPhase()
+		{
+			// Execute the next game step
+			displayStages = game.ExecutePhase(game_phase, this);
+
+			if (displayStages == null)
+			{
+				// not ready to move on
+			}
+			else
+			{
+				game_phase++;
+				DisplayNextStage();
+			}
+		}
+
+		public void CleanTableForNextHand()
+		{
+			// Get new blank hands for all seats with chips.
+			for (var i = 1; i < totalSeats; i++)
+			{
+				if (seats[i] != null && seats[i].Chips > 0)
+					seats[i].Hand = game.GetHand();
+			}
+
+			// Reset the deck
+			deck.Reset();
+
+			// Ready to start new hand
+			game_phase = 0;
 		}
 	}
 }

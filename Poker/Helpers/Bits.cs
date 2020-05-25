@@ -3,10 +3,12 @@
 // for more information on this license.
 // Originally ported by Keith Rule - Sept 2005, updated May 2006
 // Reorganized and extended by Chris Lasswell - March 2020
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Poker.Helpers
@@ -26,6 +28,19 @@ namespace Poker.Helpers
 
 			return maskValues;
 		}
+
+		public static int LeftBit(ulong bitField)
+		{
+			int r = 0;
+
+			while (bitField > 0 )
+			{
+				r++;
+				bitField >>= 1;
+			}
+			return r;
+		}
+			
 
 		/// <summary>
 		/// Fast Bitcounting method (https://en.wikipedia.org/wiki/Hamming_weight)

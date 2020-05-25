@@ -10,12 +10,12 @@ namespace Poker.Helpers
 {
   public class Fillers : List<IHand>
   {
-    public IEnumerable<List<IHand>> CompletedHands(IDeck deck, IHand board, int threadNum, int threadCnt, Random rand, double duration, long iterations = 0)
+    public IEnumerable<List<IHand>> CompletedHands(IDeck deck, IHand board, int threadNum, int threadCnt, Random rand, double duration, ulong iterations = 0)
     {
       // detemine the amount of possible work and prep for dealing all combinations
-      var cardsLeft = deck.RemainingInDeck;
-      var shuffleCnt = 1;
-      var totalIterations = 1;
+      ulong cardsLeft = Convert.ToUInt64(deck.RemainingInDeck);
+      var shuffleCnt = 1UL;
+      var totalIterations = 1UL;
 
       var newHand = new List<bool>();
       var hands = new List<IHand>();
@@ -41,7 +41,7 @@ namespace Poker.Helpers
       }
 
       // deal out all combinations
-     if (duration == 0 && (iterations == 0 || (iterations * threadCnt) > totalIterations))
+     if (duration == 0 && (iterations == 0 || (iterations * Convert.ToUInt16(threadCnt)) > totalIterations))
       {
         var start = 0x1UL << (deck.CardCount - 1);
         var levelZeroStart = start >> (threadNum - 1); 
@@ -93,7 +93,7 @@ namespace Poker.Helpers
       else if (iterations > 0)
       {
         var dealtCards = deck.DealtCards;
-        long cnt = 0;
+        ulong cnt = 0;
         do
         {
           board.CardsMask = deck.DealCards(board.CardCount, rand);

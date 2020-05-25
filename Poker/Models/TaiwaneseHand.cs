@@ -18,11 +18,14 @@ namespace Poker.Models
     private IHand topHand;
     private IHand middleHand;
     private IHand bottomHand;
-    private bool HandsLaidOut => (TopHand != null && MiddleHand != null && BottomHand != null);
+    private bool manualLayoutInProgress;
+
+    public override bool HandsLaidOut => (!manualLayoutInProgress && TopHand != null && MiddleHand != null && BottomHand != null);
 
     public override string Name => "Taiwanese";
     public TaiwaneseHand() : base(7)
     {
+      manualLayoutInProgress = false;
     }
     public int RunningScore { get; set; }
     public IHand TopHand { get => topHand; set { topHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
@@ -43,6 +46,12 @@ namespace Poker.Models
     {
       SetCards(cards);
     }
+    public TaiwaneseHand(IHand topHand, IHand middleHand, IHand bottomHand) : this()
+    {
+      TopHand = topHand;
+      MiddleHand = middleHand;
+      BottomHand = bottomHand;
+    }
 
     public override void SetCards(string cards)
     {
@@ -56,12 +65,6 @@ namespace Poker.Models
       if (hhs.Length >= 3) BottomHand = new BaseHand(hhs[2], 4);
     }
 
-    public TaiwaneseHand(IHand topHand, IHand middleHand, IHand bottomHand) : this()
-    {
-      TopHand = topHand;
-      MiddleHand = middleHand;
-      BottomHand = bottomHand;
-    }
     public override void Reset()
     {
       base.Reset();
@@ -81,6 +84,21 @@ namespace Poker.Models
         deck.CompleteCards(this.MiddleHand, rand);
         deck.CompleteCards(this.BottomHand, rand);
       }
+    }
+
+    public void StartManualLayout()
+    {
+      manualLayoutInProgress = true;
+      var cards = Bits.IndividualMasks(this.CardsMask);
+      TopHand = new BaseHand(cards[0], 1);
+      MiddleHand = new BaseHand(cards[1] | cards[2], 2);
+      BottomHand = new BaseHand(cards[3] | cards[4] | cards[5] | cards[6], 4);
+    }
+
+    public void CompleteManualLayout()
+    {
+      manualLayoutInProgress = false;
+      StateHasChanged();
     }
 
     public override long LayoutHand(double duration = 0.1)
@@ -121,71 +139,31 @@ namespace Poker.Models
         MiddleHand = possibleLayouts[0].MiddleHand;
         BottomHand = possibleLayouts[0].BottomHand;
       }
+
+      StateHasChanged();
+
       return cnt;
     }
 
 
-    public int PointTopHand(int handType)
-    {
-      return handType switch
-      {
-        2 => 1,
-        3 => 2,
-        4 => 3,
-        5 => 3,
-        6 => 4,
-        7 => 6,
-        8 => 12,
-        _ => 0
-      };
-    }
 
-    public int PointMiddleHand(int handType)
-    {
-      return handType switch
-      {
-        2 => 0,
-        3 => 1,
-        4 => 2,
-        5 => 2,
-        6 => 3,
-        7 => 5,
-        8 => 10,
-        _ => 0
-      };
-    }
-
-    public int PointBottomHand(int handType)
-    {
-      return handType switch
-      {
-        2 => 0,
-        3 => 0,
-        4 => 0,
-        5 => 0,
-        6 => 2,
-        7 => 4,
-        8 => 8,
-        _ => 0
-      };
-    }
 
     public int ScoreTopHand(ulong boardmask)
     {
       (var handType, _) = TexasHoldem.EvaluateHand(TopHand.CardsMask | boardmask);
-      return PointTopHand(handType);
+      return Taiwanese.PointTopHand(handType);
     }
 
     public int ScoreMiddleHand(ulong boardmask)
     {
       (var handType, _) = TexasHoldem.EvaluateHand(MiddleHand.CardsMask | boardmask);
-      return PointMiddleHand(handType);
+      return Taiwanese.PointMiddleHand(handType);
     }
 
     public int ScoreBottomHand(ulong boardmask)
     {
       (var handType, _) = Omaha.EvaluateHand(BottomHand.CardsMask, boardmask);
-      return PointBottomHand(handType);
+      return Taiwanese.PointBottomHand(handType);
     }
 
     public void ScoreOnBoard(ulong boardmask)
@@ -226,11 +204,11 @@ namespace Poker.Models
       {
         case 1:
           wins += 1 * opponents.Length;  // one from all the beaten players
-          wins += PointTopHand(heroType) * (opponents.Length - ((heroType > villianType) ? 0 : typeTies));  // Bonus from all players (subtracting all those with the same type of hand
+          wins += Taiwanese.PointTopHand(heroType) * (opponents.Length - ((heroType > villianType) ? 0 : typeTies));  // Bonus from all players (subtracting all those with the same type of hand
           winCnt++;
           break;
         case -1:
-          loses += 1 + ((villianType > heroType) ? PointTopHand(villianType) : 0); // one to the villain's pot plus the villain's bonus if it's a better type
+          loses += 1 + ((villianType > heroType) ? Taiwanese.PointTopHand(villianType) : 0); // one to the villain's pot plus the villain's bonus if it's a better type
           winCnt--;
           break;
         default:
@@ -265,11 +243,11 @@ namespace Poker.Models
       {
         case 1:
           wins += 2 * opponents.Length;  // 2 from all the beaten players
-          wins += PointMiddleHand(heroType) * (opponents.Length - ((heroType > villianType) ? 0 : typeTies));  // Bonus from all players (subtracting all those with the same type of hand
+          wins += Taiwanese.PointMiddleHand(heroType) * (opponents.Length - ((heroType > villianType) ? 0 : typeTies));  // Bonus from all players (subtracting all those with the same type of hand
           winCnt++;
           break;
         case -1:
-          loses += 2 + ((villianType > heroType) ? PointMiddleHand(villianType) : 0); // 2 to the villain's pot plus the villain's bonus if it's a better type
+          loses += 2 + ((villianType > heroType) ? Taiwanese.PointMiddleHand(villianType) : 0); // 2 to the villain's pot plus the villain's bonus if it's a better type
           winCnt--;
           break;
         default:
@@ -306,11 +284,11 @@ namespace Poker.Models
       {
         case 1:
           wins += 3 * opponents.Length;  // 3 from all the beaten players
-          wins += PointBottomHand(heroType) * (opponents.Length - ((heroType > villianType) ? 0 : typeTies));  // Bonus from al players (subtracting all those with the same type of hand
+          wins += Taiwanese.PointBottomHand(heroType) * (opponents.Length - ((heroType > villianType) ? 0 : typeTies));  // Bonus from al players (subtracting all those with the same type of hand
           winCnt++;
           break;
         case -1:
-          loses += 3 + ((villianType > heroType) ? PointBottomHand(villianType) : 0); // 3 to the villain's pot plus the villain's bonus if it's a better type
+          loses += 3 + ((villianType > heroType) ? Taiwanese.PointBottomHand(villianType) : 0); // 3 to the villain's pot plus the villain's bonus if it's a better type
           winCnt--;
           break;
         default:
