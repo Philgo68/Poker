@@ -15,6 +15,20 @@
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="_content/blazor-dragdrop/dragdrop.css" rel="stylesheet" />
+    <script type='text/javascript' src='https://www.x3dom.org/release/x3dom-full-physics.js'></script>
+    <script>
+        window.x3dom_reload = () => {
+            console.log('x3dom_reload');
+            x3dom.reload();
+            var elementsToFit = document.getElementsByClassName('x3d-fit')
+            for (var i = 0, len = elementsToFit.length | 0; i < len; i = i + 1 | 0) {
+                console.log('x3dom_fitAll');
+                elementsToFit[i].runtime.fitAll();
+            }
+        };
+    </script>
+    <link rel='stylesheet' type='text/css' href='https://www.x3dom.org/release/x3dom.css' />
+    <link href="css/TableStyle.css" rel="stylesheet" />
 </head>
 <body>
     <app>

@@ -104,7 +104,7 @@ namespace Poker.Models
     public override long LayoutHand(double duration = 0.1)
     {
       long cnt = 0;
-      if (!HandsLaidOut)
+      if (true || !HandsLaidOut)
       {
         var rand = new Random();
         long end = Convert.ToInt64(Stopwatch.GetTimestamp() + (duration * Stopwatch.Frequency));

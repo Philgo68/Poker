@@ -4,8 +4,6 @@
 
 @using System.Diagnostics;
 
-<link href="css/TableStyle.css" rel="stylesheet" />
-
 <h1>Poker Table</h1>
 
 <form @onsubmit="Submit">
@@ -59,43 +57,42 @@
 
 @if (table != null)
 {
-    var tHand = hero as TaiwaneseHand;
-    if (tHand != null && !tHand.HandsLaidOut)
+    var tHand = table.Hero()?.Hand as TaiwaneseHand;
+    if (tHand != null && !tHand.HandsLaidOut && tHand.CardsNeeded == 0)
     {
-        <PokerHandLayoutComponent Hand=@tHand Deck=@table.Deck />
-        <button class="btn btn-primary col-2" @onclick="SetHeroLayout">Set Hand</button>
+        <div class="row">
+            <PokerHandLayoutComponent Hand=@tHand Deck=@table.Deck />
+            <div class="col-auto my-auto"><PokerChipsComponent Chips="@(table.Hero().Chips)" /></div>
+            <button class="btn btn-primary col-2 my-auto" @onclick="SetHeroLayout">Set Hand</button>
+        </div>
     }
     else
     {
-        <div id="poker_table" class="poker-table handed-@(table.totalSeats) @(((table.game is Taiwanese) ? "svg-stacked-hand" : " "))" data-uid="">
-            @for (var i = 0; i < table.totalSeats; i++)
-            {
-                <div id="seat@(i)" class="seat">
-                    @if (table.seats[i] != null && table.seats[i].Hand != null)
-                    {
-                        <PokerHandComponent Hand=@table.seats[i].Hand Deck=@table.Deck ShowBlanks=@true />
-                    }
-                    <div class="name-chips">
-                        <div class="player-name">Name</div>
-                        <div class="chips">@table.seats[i].Chips)</div>
+        <div id="poker_table" class="poker-table handed-@(table.totalSeats)">
+            <div class="@(((table.game is Taiwanese) ? "svg-stacked-hand" : ""))">
+                @for (var i = 0; i < table.totalSeats; i++)
+                {
+                    <div id="seat@(i)" class="seat">
+                        @if (table.seats[i] != null && table.seats[i].Hand != null)
+                        {
+                            <PokerHandComponent Hand=@table.seats[i].Hand Deck=@table.Deck ShowBlanks=@true />
+                            <div class="name-chips">
+                                <div class="player-name">@(table.seats[i].Player.Name)</div>
+                                <div class="chips">@(table.seats[i].Chips)</div>
+                            </div>
+                            <div class="bet @(table.ChipsClass)"><PokerChipsComponent Chips=@table.seats[i].ChipsMoving /></div>
+                        }
                     </div>
-                    <div class="bet">@table.seats[i].ChipsMoving)</div>
+                }
+            </div>
+            @if (table.board != null)
+            {
+                <div id="board">
+                    <PokerHandComponent Hand=@table.board Deck=@table.Deck ShowBlanks=@true />
                 </div>
             }
-            <div id="board">
-                <div id="flop1" class="card boardcard"></div>
-                <div id="flop2" class="card boardcard"></div>
-                <div id="flop3" class="card boardcard"></div>
-                <div id="turn" class="card boardcard"></div>
-                <div id="river" class="card boardcard"></div>
-                <div id="burn1" class="card boardcard"></div>
-                <div id="burn2" class="card boardcard"></div>
-                <div id="burn3" class="card boardcard"></div>
-            </div>
-            <div id="pot">
-                <div id="current-pot"></div>
-                <div id="total-pot"></div>
-            </div>
+            <div id="current-pot"><PokerChipsComponent Chips=@table.Pot /></div>
+            <div id="total-pot"><div class="d-flex mx-auto">Total Pot: @table.Pot</div></div>
         </div>
         <div id="button" class="seat6-button"></div>
     }
@@ -122,6 +119,12 @@
       hand_1 = "As6d";
       hand_2 = "Ac3d;Ah4d";
       hand_cnt = 3;
+      board_string = "";
+
+      //hand_1 = "jh5h5dah4h3s2s";
+      //hand_2 = "7d8s6sacqd3c2d;5s9s9htd8c7c2c;jckhkdad6h3d2h";
+      //board_string = "kcqsqhjd5c";
+
       await svgCards.LoadCardsAsync();
   }
 
@@ -177,14 +180,11 @@
 
   private void SetHeroLayout()
   {
-      if (hero != null)
+      var tHand = table?.Hero()?.Hand as TaiwaneseHand;
+      if (tHand != null)
       {
-          var tHand = hero as TaiwaneseHand;
-          if (tHand != null)
-          {
-              tHand.CompleteManualLayout();
-              StateHasChanged();
-          }
+          tHand.CompleteManualLayout();
+          StateHasChanged();
       }
   }
 
@@ -200,7 +200,7 @@
           hero = game.GetHand();
           hero.SetCards(hand_1);
 
-          var heroSeat = table.OccupySeat(hero);
+          var heroSeat = table.OccupySeat(hero, new BasePlayer() { Name = "Hero", Computer = false });
 
           var setOpp = 0;
           foreach (var oh in (hand_2 ?? "").Split(";"))
@@ -218,6 +218,10 @@
               setOpp++;
           }
 
+          board = game.GetBoard();
+          board.SetCards(board_string);
+          table.SetBoard(board);
+
           if (game.GetType() == typeof(Taiwanese))
           {
               table.TransitionToNextPhase();
@@ -227,12 +231,14 @@
               if (game.GetType() == typeof(Taiwanese))
               {
                   table.CompleteCards();
-                  table.LayoutHands(false);
+                  table.LayoutHands(true);
               }
 
-              board = game.GetBoard();
-              board.SetCards(board_string);
-              table.SetBoard(board);
+              table.pot = _global_random.Next(20000);
+              foreach (var s in table.OccupiedSeats())
+              {
+                  s.ChipsMoving = _global_random.Next(750);
+              }
 
               StateHasChanged();
           }

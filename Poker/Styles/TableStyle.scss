@@ -1,6 +1,6 @@
 ﻿/* a full poker table */
 .poker-table {
-    background-image: url('../images/table_grid.png');
+    background-image: url('../images/table.png');
     background-repeat: no-repeat;
     background-size: 100%;
     position: relative;
@@ -18,13 +18,14 @@
         width: 24px;
     }
 
-    .bet {
+    .bet, #current-pot, #total-pot {
         position: absolute;
         width: 10em;
         color: white;
         text-shadow: -1px 0 1px black, 0 1px 1px black, 1px 0 1px black, 0 -1px 1px black;
         text-align: center;
         margin-left: -5em;
+        display: flex;
     }
 
     .seat {
@@ -70,7 +71,7 @@
             }
 
             .bet {
-                top: -20%;
+                top: -35%;
                 left: 50%;
             }
         }
@@ -210,7 +211,7 @@
             }
 
             .bet {
-                top: -20%;
+                top: -35%;
                 left: 50%;
             }
         }
@@ -335,8 +336,20 @@
             }
 
             .bet {
-                top: -20%;
+                top: -35%;
                 left: 50%;
+            }
+
+            .bet.scooping {
+                top: -120%;
+                left: 50%;
+                transition: all 1.5s ease;
+            }
+
+            .bet.scooping.returning {
+                top: -35%;
+                left: 50%;
+                transition: all 1.5s ease;
             }
         }
 
@@ -432,18 +445,22 @@
 
 
     #board {
-        left: 250px;
+        left: 30%;
+        width: 40%;
         position: absolute;
-        top: 168px;
+        top: 25%;
+        height: 15%;
+        overflow: hidden;
     }
 
-    #pot {
-        color: white;
-        font-size: 16px;
-        left: 325px;
-        position: absolute;
-        text-align: center;
-        top: 245px;
+    #current-pot {
+        left: 50%;
+        top: 40%;
+    }
+
+    #total-pot {
+        left: 50%;
+        top: 20%;
     }
 
     .boardcard {
@@ -859,6 +876,16 @@
     transform: none;
 }
 /* Override translations for 5 card community cards layouts */
+
+#board .holecards {
+    width: 45%;
+    height: 20%;
+}
+.community-cards.svg-hand-wrapper.cards-5 {
+    padding-top: 0%;
+    padding-left: 0%;
+}
+
 .community-cards.svg-hand-wrapper.cards-5 .svg-card-wrapper.card-1 .playing-card {
     @include card-translate(2);
 }
@@ -897,4 +924,17 @@
 
 svg.playing-card {
     width: var(--card-size);
+}
+
+.chip_stack {
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.x3d-fit {
+    margin: -25px;
+    width: 100px;
+    height: 100px;
 }

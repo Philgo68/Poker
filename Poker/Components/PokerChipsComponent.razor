@@ -1,0 +1,143 @@
+﻿@inject SvgCards svgCards
+@inject IJSRuntime JSRuntime
+
+@{
+    if (Chips != 0)
+    {
+        <div class="d-flex mx-auto">
+            <div class="my-auto">@(Chips)</div>
+            <div class="my-auto chip-stack">
+                <x3d class='x3d-fit'>
+                    <scene>
+                        <!--<viewpoint position="0.00000 0.00000 7.6875" orientation="0.00000 0.00000 0.00000 0.00000"
+                                   zNear="1.17048" zFar="10.74193" centerOfRotation="0.00000 0.00000 0.00000" fieldOfView="0.78540"
+                                   description="defaultX3DViewpointNode"></viewpoint> -->
+                        <navigationInfo type="None"></navigationInfo>
+                        <transform rotation="1 0 0 0.6">
+                            @{
+                                int stackSize = 0;
+                            }
+                            @foreach (var pattern in ChipPatterns)
+                            {
+                                var chipCount = Chips / pattern.amount;
+                                Chips -= chipCount * pattern.amount;
+
+                                @for (var c = 0; c < chipCount; c++)
+                                {
+                                    var width = (Math.PI / 180) * pattern.angle;
+                                    var oWidth = ((Math.PI * 2) / pattern.sections) - width;
+                                    var chipRotation = stackSize == 0 ? 0.0 : Math.PI * (_rnd.NextDouble() - 0.5);
+                                    <transform translation="0 @(-0.35 * stackSize++) 0">
+                                        <transform rotation="0 1 0 @((-width / 2) + chipRotation)">
+                                            @for (var i = 0; i < pattern.sections; i++)
+                                            {
+                                                <transform rotation="0 1 0 @(i * (width + oWidth))">
+                                                    <shape>
+                                                        <appearance>
+                                                            <material diffuseColor='@(pattern.sectionColor)'></material>
+                                                        </appearance>
+                                                        <rectangularTorus outerRadius="1.95" innerRadius="1.70" height="0.33" angle="@(width)"></rectangularTorus>
+                                                    </shape>
+                                                </transform>
+
+                                                <transform rotation="0 1 0 @(i * (width + oWidth) + width)">
+                                                    <shape>
+                                                        <appearance>
+                                                            <material diffuseColor='@(pattern.baseColor)'></material>
+                                                        </appearance>
+                                                        <rectangularTorus outerRadius="1.95" innerRadius="1.70" height="0.33" angle="@(oWidth)"></rectangularTorus>
+                                                    </shape>
+                                                </transform>
+
+                                            }
+                                        </transform>
+                                        @if (stackSize == 1)  // Only show inner details on top chip
+                                        {
+                                            <shape>
+                                                <appearance>
+                                                    <material diffuseColor='@(pattern.baseColor)'></material>
+                                                </appearance>
+                                                <rectangularTorus outerRadius="1.71" innerRadius="1.20" height="0.33"></rectangularTorus>
+                                            </shape>
+                                            <shape>
+                                                <appearance>
+                                                    <material diffuseColor='@(pattern.sectionColor)'></material>
+                                                </appearance>
+                                                <rectangularTorus outerRadius="1.20" innerRadius="1.0" height="0.33"></rectangularTorus>
+                                            </shape>
+                                            <shape>
+                                                <appearance>
+                                                    <material diffuseColor='1.00000 1.00000 1.00000'></material>
+                                                    <imageTexture url='@(pattern.file)'></imageTexture>
+                                                </appearance>
+                                                <cylinder radius="1.00" height="0.31"></cylinder>
+                                            </shape>
+                                        }
+                                    </transform>
+                                    <!--
+                                    <transform translation="0 0.17 0" rotation="-1 0 0 @(Math.PI / 2)">
+                                    <shape>
+                                        <appearance>
+                                            <material diffuseColor='0.00000 0.00000 0.00000'></material>
+                                        </appearance>
+                                        <text string='100'>
+                                            <fontStyle justify='&quot;MIDDLE&quot; &quot;MIDDLE&quot;' size='1' />
+                                        </text>
+                                    </shape>
+                                    </transform>
+                                    -->
+                                }
+                            }
+                        </transform>
+                    </scene>
+                </x3d>
+            </div>
+        </div>
+    }
+}
+
+
+@code {
+
+    struct ChipDef
+    {
+        public int amount;
+        public string baseColor;
+        public string sectionColor;
+        public int sections;
+        public int angle;
+        public string file;
+
+        public ChipDef(int amount, System.Drawing.Color baseColor, System.Drawing.Color sectionColor, int sections = 4, int angle = 30, string file = null)
+        {
+            this.amount = amount;
+            this.baseColor = $"{baseColor.R / 255.0} {baseColor.G / 255.0} {baseColor.B / 255.0}";
+            this.sectionColor = $"{sectionColor.R / 255.0} {sectionColor.G / 255.0} {sectionColor.B / 255.0}";
+            this.sections = sections;
+            this.angle = angle;
+            this.file = file ?? $"/images/{amount}.png";
+        }
+    }
+
+    ChipDef[] ChipPatterns =
+        {
+            new ChipDef(10000, System.Drawing.Color.FromArgb(255, 184, 101, 0), System.Drawing.Color.Black, 6, 20),
+            new ChipDef(5000, System.Drawing.Color.Purple, System.Drawing.Color.Black, 6, 20),
+            new ChipDef(1000, System.Drawing.Color.Yellow, System.Drawing.Color.Black),
+            new ChipDef(500, System.Drawing.Color.HotPink, System.Drawing.Color.Black),
+            new ChipDef(100, System.Drawing.Color.Black, System.Drawing.Color.Gray),
+            new ChipDef(25, System.Drawing.Color.DarkGreen, System.Drawing.Color.Gray),
+            new ChipDef(5, System.Drawing.Color.DarkRed, System.Drawing.Color.Gray),
+            new ChipDef(1, System.Drawing.Color.LightGray, System.Drawing.Color.DarkBlue)
+        };
+
+    Random _rnd = new Random();
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        JSRuntime.InvokeVoidAsync("x3dom_reload");
+    }
+
+    [Parameter]
+    public int Chips { get; set; }
+}

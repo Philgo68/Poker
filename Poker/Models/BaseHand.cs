@@ -133,16 +133,16 @@ namespace Poker.Models
 
     public virtual int BestCard()
     {
-      uint c = (uint)((CardsMask >> (0)) & 0x1fffUL);
-      uint d = (uint)((CardsMask >> (13)) & 0x1fffUL);
-      uint h = (uint)((CardsMask >> (26)) & 0x1fffUL);
-      uint s = (uint)((CardsMask >> (39)) & 0x1fffUL);
+      int c = Bits.LeftBit((CardsMask >> (0)) & 0x1fffUL);
+      int d = Bits.LeftBit((CardsMask >> (13)) & 0x1fffUL);
+      int h = Bits.LeftBit((CardsMask >> (26)) & 0x1fffUL);
+      int s = Bits.LeftBit((CardsMask >> (39)) & 0x1fffUL);
 
-      uint m = Math.Max(c, Math.Max(d, Math.Max(h, s)));
-      int r = Bits.LeftBit(m) * 4;
+      int m = Math.Max(c, Math.Max(d, Math.Max(h, s)));
+      int r = m * 4;
       if (m == s) return r;
-      if (m == s) return r - 1;
-      if (m == s) return r - 3;
+      if (m == d) return r - 1;
+      if (m == h) return r - 2;
       return r - 3;
     }
 

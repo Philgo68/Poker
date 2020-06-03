@@ -22,7 +22,7 @@ namespace Poker.Models
 
       //Layout Computer Hands
       PhaseActions.Add((table) => {
-        table.LayoutHands(false);
+        table.LayoutHands();
         return new DisplayStage[] { DisplayStage.DealtCards };
       });
 
@@ -45,33 +45,41 @@ namespace Poker.Models
       PhaseActions.Add((table) =>
       {
         PlayTopHand(table);
-        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.PotScooped, DisplayStage.DeliverPot };
+        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Middle Hand
       PhaseActions.Add((table) =>
       {
         PlayMiddleHand(table);
-        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.PotScooped, DisplayStage.DeliverPot };
+        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Bottom Hand
       PhaseActions.Add((table) =>
       {
         PlayBottomHand(table);
-        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.PotScooped, DisplayStage.DeliverPot };
+        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Scoop Bonus
       PhaseActions.Add((table) =>
       {
-        PlayScoopBonus(table);
-        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.PotScooped, DisplayStage.DeliverPot };
+        if (PlayScoopBonus(table))
+        {
+          return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        }
+        else
+        {
+          return new DisplayStage[] { };
+        }
       });
 
       //Deal 2nd Board
       PhaseActions.Add((table) =>
       {
+        table.CleanChips();
+
         var board = GetBoard();
         table.Deck.CompleteCards(board);
         table.SetBoard(board);
@@ -82,34 +90,40 @@ namespace Poker.Models
       PhaseActions.Add((table) =>
       {
         PlayTopHand(table);
-        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.PotScooped, DisplayStage.DeliverPot };
+        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Middle Hand
       PhaseActions.Add((table) =>
       {
         PlayMiddleHand(table);
-        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.PotScooped, DisplayStage.DeliverPot };
+        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Bottom Hand
       PhaseActions.Add((table) =>
       {
         PlayBottomHand(table);
-        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.PotScooped, DisplayStage.DeliverPot };
+        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Scoop Bonus
       PhaseActions.Add((table) =>
       {
-        PlayScoopBonus(table);
-        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.PotScooped, DisplayStage.DeliverPot };
+        if (PlayScoopBonus(table))
+        {
+          return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        }
+        else
+        {
+          return new DisplayStage[] { };
+        }
       });
 
       //Reset for next hand
       PhaseActions.Add((table) => {
         table.CleanTableForNextHand();
-        return new DisplayStage[] { DisplayStage.DealtCards };
+        return new DisplayStage[] { };
       });
     }
 
@@ -213,7 +227,7 @@ namespace Poker.Models
           }
           else
           {
-            seat.ChipsOut = base_chips + (tHand.LastEvaluation.Item1 == bestType ? 0 : bonus_chips);
+            seat.ChipsOut = Math.Min(seat.Chips, base_chips + (tHand.LastEvaluation.Item1 == bestType ? 0 : bonus_chips));
           }
           pot += seat.ChipsOut;
         }
@@ -229,9 +243,13 @@ namespace Poker.Models
         {
           if (tHand.LastEvaluation.Item2 == bestValue)
           {
-            seat.ChipsIn = cut + tHand.TopHand.BestCard() == bestCard ? remainder : 0;
+            seat.ChipsIn = cut + (tHand.TopHand.BestCard() == bestCard ? remainder : 0);
             if (winners == 1)
               seat.HandsWon = 1;
+          } 
+          else
+          {
+            seat.ChipsIn = 0;
           }
         }
       }
@@ -255,7 +273,7 @@ namespace Poker.Models
         }
       }
 
-      int base_chips = 1;
+      int base_chips = 2;
       int bonus_chips = PointMiddleHand(bestType);
 
       int pot = 0;
@@ -275,7 +293,7 @@ namespace Poker.Models
           }
           else
           {
-            seat.ChipsOut = base_chips + (tHand.LastEvaluation.Item1 == bestType ? 0 : bonus_chips);
+            seat.ChipsOut = Math.Min(seat.Chips, base_chips + (tHand.LastEvaluation.Item1 == bestType ? 0 : bonus_chips));
           }
           pot += seat.ChipsOut;
         }
@@ -291,9 +309,13 @@ namespace Poker.Models
         {
           if (tHand.LastEvaluation.Item2 == bestValue)
           {
-            seat.ChipsIn = cut + tHand.MiddleHand.BestCard() == bestCard ? remainder : 0;
+            seat.ChipsIn = cut + (tHand.MiddleHand.BestCard() == bestCard ? remainder : 0);
             if (winners == 1)
               seat.HandsWon++;
+          }
+          else
+          {
+            seat.ChipsIn = 0;
           }
         }
       }
@@ -317,7 +339,7 @@ namespace Poker.Models
         }
       }
 
-      int base_chips = 1;
+      int base_chips = 3;
       int bonus_chips = PointBottomHand(bestType);
 
       int pot = 0;
@@ -337,7 +359,7 @@ namespace Poker.Models
           }
           else
           {
-            seat.ChipsOut = base_chips + (tHand.LastEvaluation.Item1 == bestType ? 0 : bonus_chips);
+            seat.ChipsOut = Math.Min(seat.Chips, base_chips + (tHand.LastEvaluation.Item1 == bestType ? 0 : bonus_chips));
           }
           pot += seat.ChipsOut;
         }
@@ -353,7 +375,7 @@ namespace Poker.Models
         {
           if (tHand.LastEvaluation.Item2 == bestValue)
           {
-            seat.ChipsIn = cut + tHand.BottomHand.BestCard() == bestCard ? remainder : 0;
+            seat.ChipsIn = cut + (tHand.BottomHand.BestCard() == bestCard ? remainder : 0);
             if (winners == 1)
               seat.HandsWon++;
           } 
@@ -365,7 +387,7 @@ namespace Poker.Models
       }
     }
 
-    private void PlayScoopBonus(BaseTable table)
+    private bool PlayScoopBonus(BaseTable table)
     {
       // See if someone scooped all three hands
       bool scooped = false;
@@ -387,7 +409,7 @@ namespace Poker.Models
           {
             if (seat.HandsWon != 3)
             {
-              seat.ChipsOut = 3;
+              seat.ChipsOut = Math.Min(seat.Chips, 3);
             }
             else
             {
@@ -413,6 +435,17 @@ namespace Poker.Models
           }
         }
       }
+
+      // Clear Wins count
+      foreach (var seat in table.OccupiedSeats())
+      {
+        if (seat.Hand is TaiwaneseHand tHand)
+        {
+          seat.HandsWon = 0;
+        }
+      }
+
+      return scooped;
     }
 
     public override (int, uint) Evaluate(ulong cards)
