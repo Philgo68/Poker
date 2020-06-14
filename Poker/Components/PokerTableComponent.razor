@@ -1,0 +1,89 @@
+﻿@inject SvgCards svgCards
+@inject IJSRuntime JSRuntime
+
+@{
+    @if (Table != null)
+    {
+        @(Table.DisplayPhase)
+
+        var tHand = Table.Hero()?.Hand as TaiwaneseHand;
+        if (tHand != null && !tHand.HandsLaidOut && tHand.CardsNeeded == 0)
+        {
+            <div class="row">
+                <PokerHandLayoutComponent Hand=@tHand Deck=@Table.Deck />
+                <div class="col-auto my-auto"><PokerChipsComponent Chips="@(Table.Hero().Chips)" /></div>
+                <button class="btn btn-primary col-2 my-auto" @onclick="SetHeroLayout">Set Hand</button>
+            </div>
+        }
+        else
+        {
+            <div class="poker-table-holder">
+                <div id="poker_table" class="poker-table handed-@(Table.totalSeats) @(Table.DisplayPhase)">
+
+                    @for (var i = 0; i < Table.totalSeats; i++)
+                    {
+                        <div id="player@(i)">
+                            <div class="seat-location">
+                                <div class="seat">
+                                    @if (Table.seats[i] != null && Table.seats[i].Hand != null)
+                                    {
+                                        <div class="cards">
+                                            <PokerHandComponent Hand=@Table.seats[i].Hand Deck=@Table.Deck ShowBlanks=@true />
+                                        </div>
+                                        <div class="player-name">@(Table.seats[i].Player.Name)</div>
+                                        <div class="chips">@(Table.seats[i].Chips)</div>
+                                    }
+                                </div>
+                            </div>
+                            @if (Table.seats[i] != null)
+                            {
+                                @if (Table.seats[i].Button)
+                                {
+                                    <div class="button-location"><div class="button"></div></div>
+                                }
+                                <div class="bet-location">
+                                    <div class="bet"><PokerChipsComponent Chips=@Table.seats[i].ChipsMoving /></div>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @if (Table.board != null)
+                    {
+                        <div id="board-location">
+                            <div id="board">
+                                <PokerHandComponent Hand=@Table.board Deck=@Table.Deck ShowBlanks=@true />
+                            </div>
+                        </div>
+                    }
+                    <div id="current-pot-location">
+                        <div id="current-pot"><PokerChipsComponent Chips=@Table.Pot /></div>
+                    </div>
+                    <div id="total-pot-location">
+                        <div id="total-pot">
+                            <div class="d-flex mx-auto">Total Pot: @Table.Pot</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+
+}
+
+
+@code {
+    [Parameter]
+    public BaseTable Table { get; set; }
+
+    private void SetHeroLayout()
+    {
+        var tHand = Table?.Hero()?.Hand as TaiwaneseHand;
+        if (tHand != null)
+        {
+            tHand.CompleteManualLayout();
+            StateHasChanged();
+        }
+    }
+}

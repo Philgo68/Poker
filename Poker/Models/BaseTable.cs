@@ -39,11 +39,14 @@ namespace Poker.Models
     public int ChipsIn { get; set; }
     public int HandsWon { get; set; }
 
-    public Seat(IHand hand, IPlayer player = null, int chips = 13)
+    public bool Button { get; set; }
+
+    public Seat(IHand hand, IPlayer player = null, int chips = 500)
     {
       Hand = hand;
       Player = player;
       Chips = chips;
+      Button = true;
     }
   }
 
@@ -56,7 +59,7 @@ namespace Poker.Models
     private DisplayStage[] displayStages;
     private readonly Dictionary<DisplayStage, Func<double>> DisplayActions = new Dictionary<DisplayStage, Func<double>>();
     public int pot;
-    public string ChipsClass { get; set; }
+    public string DisplayPhase { get; set; }
 
     public BaseTable(IGame _game, int _totalSeats = 9)
     {
@@ -69,14 +72,16 @@ namespace Poker.Models
 
       DisplayActions[DisplayStage.DealtCards] = () =>
       {
-        ChipsClass = null;
+        DisplayPhase = null;
+        DisplayPhase = "dealtCards";
         NotifyStateChanged();
         return standardTime;
       };
 
       DisplayActions[DisplayStage.BetsOut] = () =>
       {
-        ChipsClass = null;
+        DisplayPhase = null;
+        DisplayPhase = "betsOut";
         foreach (var seat in OccupiedSeats())
         {
           if (seat.Hand is IHand Hand)
@@ -92,14 +97,14 @@ namespace Poker.Models
 
       DisplayActions[DisplayStage.Scooping] = () =>
       {
-        ChipsClass = "scooping";
+        DisplayPhase = "scooping";
         NotifyStateChanged();
         return standardTime/2;
       };
 
       DisplayActions[DisplayStage.PotScooped] = () =>
       {
-        ChipsClass = "scooping";
+        DisplayPhase = "scooping scooped";
         foreach (var seat in OccupiedSeats())
         {
           if (seat.Hand is IHand Hand)
@@ -114,14 +119,14 @@ namespace Poker.Models
 
       DisplayActions[DisplayStage.Delivering] = () =>
       {
-        ChipsClass = "scooping returning";
+        DisplayPhase = "scooping returning";
         NotifyStateChanged();
         return standardTime/2;
       };
 
       DisplayActions[DisplayStage.DeliverPot] = () =>
       {
-        ChipsClass = "scooping returning";
+        DisplayPhase = "returning delivered";
         Pot = 0;
         foreach (var seat in OccupiedSeats())
         {
@@ -168,7 +173,7 @@ namespace Poker.Models
       Reset(dealtCards);
     }
 
-    public Seat OccupySeat(IHand hand, IPlayer player = null)
+    public Seat OccupySeat(IHand hand, IPlayer player = null, int chips = 500)
     {
       // Find a seat for them
       var seatIndex = Array.IndexOf(seats, null);
@@ -176,7 +181,7 @@ namespace Poker.Models
 
       player ??= new BasePlayer() { Name = "Computer", Computer = true };
 
-      seats[seatIndex] = new Seat(hand, player);
+      seats[seatIndex] = new Seat(hand, player, chips);
 
       hand.StateHasChangedDelegate += StateHasChanged;
 
@@ -190,6 +195,14 @@ namespace Poker.Models
       foreach (var seat in seats)
       {
         if (seat != null && (seat.Chips > 0 || seat.ChipsOut > 0 || seat.ChipsIn > 0 || seat.ChipsMoving > 0) && seat.Hand?.CardsMask > 0)
+          yield return seat;
+      }
+    }
+
+    public IEnumerable<Seat> AllSeats()
+    {
+      foreach (var seat in seats)
+      {
           yield return seat;
       }
     }

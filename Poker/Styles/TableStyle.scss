@@ -1,61 +1,158 @@
-﻿/* a full poker table */
+﻿@function css_min($numbers...) {
+    @return m#{i}n(#{$numbers});
+}
+
+/* a full poker table */
+.poker-table-holder {
+    position: relative;
+    max-width: 1024px;
+    padding-top: css_min(67%, 686px);
+}
+
 .poker-table {
-    background-image: url('../images/table.png');
+    background-image: url('../images/table_grid.png');
     background-repeat: no-repeat;
     background-size: 100%;
-    position: relative;
+    top: 0;
+    left: 0;
     width: 80%;
+    height: 80%;
+    position: absolute;
     margin: 10%;
-    height: 0;
-    padding-top: 67.1%;
-
-    .button {
-        position: absolute;
-        background-image: url('../images/dealerbutton.png');
-        background-repeat: no-repeat;
-        background-size: 100%;
-        height: 19px;
-        width: 24px;
-    }
-
-    .bet, #current-pot, #total-pot {
-        position: absolute;
-        width: 10em;
-        color: white;
-        text-shadow: -1px 0 1px black, 0 1px 1px black, 1px 0 1px black, 0 -1px 1px black;
-        text-align: center;
-        margin-left: -5em;
-        display: flex;
-    }
-
-    .seat {
-        position: absolute;
+    /* size & locations */
+    .seat-location {
         height: 20%;
         width: 20%;
+    }
 
-        .holecards {
-            position: absolute;
-            width: 100%;
-            height: 60%;
-            overflow: hidden;
-        }
+    &.handed-6 {
 
-        .name-chips {
-            position: absolute;
-            top: 60%;
-            width: 100%;
-            background-color: rgba(64, 64, 64, 0.8);
-            border-radius: 0.5em 0.5em 0 0;
-            color: white;
-            text-align: center;
+        #player0 {
 
-            .player-name {
-                width: 100%;
+            .seat-location {
+                position: absolute;
+                top: 100%;
+                left: 50%;
+            }
+
+            .button-location {
+                position: absolute;
+                top: 80%;
+                left: 40%;
+            }
+
+            .bet-location {
+                position: absolute;
+                top: 80%;
+                left: 50%;
             }
         }
 
-        &:hover {
-            transform: scale(1.0);
+
+        #player1 {
+
+            .seat-location {
+                position: absolute;
+                left: 10%;
+                top: 80%;
+            }
+
+            .button-location {
+                position: absolute;
+                top: 60%;
+                left: 15%;
+            }
+
+            .bet-location {
+                position: absolute;
+                top: 67%;
+                left: 22%;
+            }
+        }
+
+        #player2 {
+
+            .seat-location {
+                position: absolute;
+                left: 10%;
+                top: 20%;
+            }
+
+            .button-location {
+                position: absolute;
+                top: 40%;
+                left: 15%;
+            }
+
+            .bet-location {
+                position: absolute;
+                top: 33%;
+                left: 22%;
+            }
+        }
+
+        #player3 {
+
+            .seat-location {
+                position: absolute;
+                left: 50%;
+                top: 0%;
+            }
+
+            .button-location {
+                position: absolute;
+                top: 20%;
+                left: 60%;
+            }
+
+            .bet-location {
+                position: absolute;
+                top: 20%;
+                left: 50%;
+            }
+        }
+
+        #player4 {
+
+            .seat-location {
+                position: absolute;
+                left: 90%;
+                top: 20%;
+            }
+
+            .button-location {
+                position: absolute;
+                top: 40%;
+                left: 85%;
+            }
+
+            .bet-location {
+                position: absolute;
+                top: 33%;
+                left: 78%;
+            }
+        }
+
+        #player5 {
+
+            .seat-location {
+                position: absolute;
+                left: 90%;
+                top: 80%;
+            }
+
+            .button-location {
+                position: absolute;
+                top: 60%;
+                left: 85%;
+            }
+
+            .bet-location {
+                position: absolute;
+                top: 67%;
+                left: 78%;
+                transition: all 1.5s ease;
+            }
         }
     }
 
@@ -324,143 +421,182 @@
         }
     }
 
-    &.handed-6 {
-
-        #seat0 {
-            left: 37%;
-            top: 64%;
-
-            .button {
-                top: -20%;
-                left: 5%;
-            }
-
-            .bet {
-                top: -35%;
-                left: 50%;
-            }
-
-            .bet.scooping {
-                top: -120%;
-                left: 50%;
-                transition: all 1.5s ease;
-            }
-
-            .bet.scooping.returning {
-                top: -35%;
-                left: 50%;
-                transition: all 1.5s ease;
-            }
-        }
-
-
-        #seat1 {
-            left: 0%;
-            top: 53%;
-
-            .button {
-                top: -30%;
-                left: 70%;
-            }
-
-            .bet {
-                top: -15%;
-                left: 105%;
-            }
-        }
-
-        #seat2 {
-            left: 0%;
-            top: 5%;
-
-            .button {
-                top: 75%;
-                left: 110%;
-            }
-
-            .bet {
-                top: 105%;
-                left: 105%;
-            }
-        }
-
-        #seat3 {
-            left: 40%;
-            top: -10%;
-
-            .button {
-                top: 102%;
-                left: 80%;
-            }
-
-            .bet {
-                top: 102%;
-                left: 50%;
-            }
-        }
-
-        #seat4 {
-            left: 80%;
-            top: 5%;
-
-            .button {
-                top: 75%;
-                left: -25%;
-            }
-
-            .bet {
-                top: 105%;
-                left: -10%;
-            }
-        }
-
-        #seat5 {
-            left: 80%;
-            top: 53%;
-
-            .button {
-                top: -30%;
-                left: 15%;
-            }
-
-            .bet {
-                top: -15%;
-                left: -5%;
-            }
-        }
-    }
-
-
-    #seat0 {
-        height: 20%;
-        width: 26%;
-    }
-
-    &.svg-stacked-hand #seat0 {
-        height: 20%;
-        width: 20%;
-        left: 40%;
-        top: 64%;
-    }
-
-
-    #board {
-        left: 30%;
-        width: 40%;
+    #board-location {
         position: absolute;
-        top: 25%;
+        left: 50%;
+        width: 40%;
+        top: 45%;
         height: 15%;
+    }
+
+    #current-pot-location {
+        position: absolute;
+        left: 50%;
+        top: 63%;
+    }
+
+    #total-pot-location {
+        position: absolute;
+        left: 50%;
+        top: 32%;
+    }
+
+    &.scooping .bet-location {
+        left: 50% !important;
+        top: 63% !important;
+        transition: all 1.5s ease;
+    }
+
+    &.handed-6.returning {
+
+        #player0 {
+
+            .bet-location {
+                position: absolute;
+                top: 80%;
+                left: 50%;
+                transition: all 1.5s ease;
+            }
+        }
+
+
+        #player1 {
+
+            .bet-location {
+                position: absolute;
+                top: 67%;
+                left: 22%;
+                transition: all 1.5s ease;
+            }
+        }
+
+        #player2 {
+
+            .bet-location {
+                position: absolute;
+                top: 33%;
+                left: 22%;
+                transition: all 1.5s ease;
+            }
+        }
+
+        #player3 {
+
+            .bet-location {
+                position: absolute;
+                top: 20%;
+                left: 50%;
+                transition: all 1.5s ease;
+            }
+        }
+
+        #player4 {
+
+            .bet-location {
+                position: absolute;
+                top: 33%;
+                left: 78%;
+                transition: all 1.5s ease;
+            }
+        }
+
+        #player5 {
+
+            .bet-location {
+                position: absolute;
+                top: 67%;
+                left: 78%;
+                transition: all 1.5s ease;
+            }
+        }
+    }
+    /* styles */
+    #board {
+        width: 100%;
+        height: 100%;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
         overflow: hidden;
     }
 
-    #current-pot {
+    .button {
+        background-image: url('../images/dealerbutton.png');
+        background-repeat: no-repeat;
+        background-size: 100%;
+        height: 19px;
+        width: 24px;
         left: 50%;
-        top: 40%;
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
 
-    #total-pot {
+    .bet, #current-pot, #total-pot {
+        width: 10em;
+        color: white;
+        text-shadow: -1px 0 1px black, 0 1px 1px black, 1px 0 1px black, 0 -1px 1px black;
+        text-align: center;
+        display: flex;
         left: 50%;
-        top: 20%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .seat {
+        width: 100%;
+        height: 100%;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+        .cards {
+            position: absolute;
+            width: 100%;
+            height: 60%;
+            overflow: hidden;
+        }
+
+        .top-hand {
+            position: absolute;
+            width: 70%;
+        }
+
+        .middle-hand {
+            position: absolute;
+            width: 70%;
+            margin-left: 30%;
+        }
+
+        .bottom-hand {
+            position: absolute;
+            margin-top: 19%;
+        }
+
+        .player-name {
+            position: absolute;
+            top: 60%;
+            width: 100%;
+            height: 20%;
+            background-color: rgba(64, 64, 64, 0.8);
+            border-radius: 0.5em 0.5em 0 0;
+            color: white;
+            text-align: center;
+        }
+
+        .chips {
+            position: absolute;
+            top: 80%;
+            width: 100%;
+            height: 20%;
+            background-color: rgba(64, 64, 64, 0.8);
+            color: white;
+            text-align: center;
+        }
+    }
+
+    #seat0 {
+        height: 26%;
+        width: 26%;
     }
 
     .boardcard {
@@ -471,223 +607,7 @@
         top: -10px;
         width: 50px;
     }
-
-    #flop1 {
-    }
-
-    #flop2 {
-        left: 52px;
-    }
-
-    #flop3 {
-        left: 104px;
-    }
-
-    #turn {
-        left: 156px;
-    }
-
-    #river {
-        left: 208px;
-    }
-
-    #burn1 {
-        left: 280px;
-        transform: rotate(-18deg);
-    }
-
-    #burn2 {
-        left: 290px;
-    }
-
-    #burn3 {
-        left: 300px;
-        transform: rotate(15deg);
-    }
-
-    #action-options {
-        height: 100px;
-        left: 110px;
-        position: absolute;
-        top: 450px;
-        width: 500px;
-    }
-
-    .action-button {
-        background-color: silver;
-        border-radius: 4px;
-        color: white;
-        cursor: pointer;
-        font-size: 18px;
-        height: 30px;
-        left: 0px;
-        padding: 10px 5px 0 5px;
-        position: absolute;
-        top: 0px;
-    }
-
-    #setup-options {
-        height: 400px;
-        left: 900px;
-        position: absolute;
-        top: 400px;
-        width: 200px;
-    }
-
-    .setup-button {
-        background-color: silver;
-        border-radius: 4px;
-        color: white;
-        cursor: pointer;
-        font-size: 18px;
-        height: 30px;
-        left: 0px;
-        padding: 10px 5px 0px 5px;
-        position: absolute;
-        text-align: center;
-        top: 0px;
-        width: 160px;
-    }
-
-    .setup-button:hover {
-        box-shadow: 3px 3px 4px #000000;
-    }
-
-    #speed-button {
-        cursor: default;
-        top: 50px;
-    }
-
-    select {
-        background-color: silver;
-        background: silver;
-        border-radius: 4px;
-        border: none;
-        cursor: pointer;
-        position: absolute;
-        right: 10px;
-        top: 10px;
-        width: 3em;
-    }
-
-    #mode-button {
-        top: 100px;
-    }
-
-    #help-button {
-        top: 150px;
-    }
-
-    #check-button {
-        top: 200px;
-    }
-
-    #history {
-        border-color: black;
-        border-radius: 4px;
-        border-style: solid;
-        border-width: 1px;
-        font-size: 10px;
-        height: 600px;
-        left: 50px;
-        position: absolute;
-        top: 600px;
-        width: 400px;
-    }
-
-    #game-response {
-        border: none;
-        color: black;
-        font-size: 12px;
-        height: 300px;
-        left: 900px;
-        position: absolute;
-        text-align: center;
-        top: 5px;
-        width: 600px;
-    }
-
-    #production-code {
-        color: black;
-        font-size: 10px;
-        height: 20px;
-        left: 900px;
-        position: absolute;
-        text-align: right;
-        top: 310px;
-        width: 600px;
-    }
-
-    .response-normal {
-        background-color: transparent;
-    }
-
-
-    .response-warning {
-        background-color: #FF0000;
-    }
-
-    #fold-button:hover {
-        box-shadow: 3px 3px 4px #000000;
-    }
-
-    #call-button {
-        left: 80px;
-    }
-
-    #call-button:hover {
-        box-shadow: 3px 3px 4px #000000;
-    }
-
-    #quick-raises {
-        background-color: silver;
-        border-radius: 4px;
-        font-size: 18px;
-        height: 75px;
-        left: 25px;
-        position: absolute;
-        text-align: center;
-        top: 515px;
-        width: 350px;
-    }
-
-    #quick-raises a:link {
-        color: white;
-        text-decoration: none;
-    }
-
-    #quick-raises a:hover {
-        color: white;
-        text-shadow: 3px 3px 4px #000000;
-    }
-
-
-    #modal-box {
-        background-color: silver;
-        display: none;
-        font-size: 12px;
-        height: 100%;
-        left: 0px;
-        overflow: auto; /* Enable scroll */
-        position: fixed;
-        text-align: center;
-        top: 0px;
-        width: 100%;
-        z-index: 1; /* Stay on top */
-    }
-
-    #modal-box a:link {
-        color: white;
-        text-decoration: none;
-    }
-
-    #modal-box a:hover {
-        color: white;
-        text-shadow: 3px 3px 4px #000000;
-    }
 }
-
-
 /* just a single hand */
 .poker-hand {
     width: 15%;
@@ -697,8 +617,6 @@
         padding: 12.5%;
     }
 }
-
-
 /* hand layout */
 @mixin linear-slid($cards) {
     padding-right: calc(($cards - 1)*var(--card-reveal));
@@ -711,7 +629,6 @@
     display: inline-block;
     position: relative;
     /*overflow: hidden;*/
-
     &.cards-1 {
         --card-size: 90%;
         padding-top: 0%;
@@ -876,11 +793,11 @@
     transform: none;
 }
 /* Override translations for 5 card community cards layouts */
-
 #board .holecards {
     width: 45%;
     height: 20%;
 }
+
 .community-cards.svg-hand-wrapper.cards-5 {
     padding-top: 0%;
     padding-left: 0%;

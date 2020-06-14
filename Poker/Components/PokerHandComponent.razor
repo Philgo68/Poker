@@ -6,9 +6,13 @@
         var tHand = Hand as TaiwaneseHand;
         if (tHand != null)
         {
-            <div class="svg-stacked-hand">
+            <div class="top-hand">
                 <PokerHandComponent Hand=@tHand.TopHand Deck=@Deck ShowBlanks=@ShowBlanks />
+            </div>
+            <div class="middle-hand">
                 <PokerHandComponent Hand=@tHand.MiddleHand Deck=@Deck ShowBlanks=@ShowBlanks />
+            </div>
+            <div class="bottom-hand">
                 <PokerHandComponent Hand=@tHand.BottomHand Deck=@Deck ShowBlanks=@ShowBlanks />
             </div>
         }
