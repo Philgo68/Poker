@@ -182,7 +182,8 @@
                 table.pot = _global_random.Next(20000);
                 foreach (var s in table.AllSeats())
                 {
-                    s.ChipsMoving = _global_random.Next(750);
+                    if (s != null) 
+                      s.ChipsMoving = _global_random.Next(750);
                 }
 
                 StateHasChanged();

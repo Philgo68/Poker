@@ -57,9 +57,11 @@ namespace Poker.Models
     private IDeck deck;
     private int game_phase;
     private DisplayStage[] displayStages;
+
     private readonly Dictionary<DisplayStage, Func<double>> DisplayActions = new Dictionary<DisplayStage, Func<double>>();
     public int pot;
     public string DisplayPhase { get; set; }
+    public string PhaseTitle { get; set; }
 
     public BaseTable(IGame _game, int _totalSeats = 9)
     {
@@ -401,7 +403,7 @@ namespace Poker.Models
     public void TransitionToNextPhase()
     {
       // Execute the next game step
-      displayStages = game.ExecutePhase(game_phase, this);
+      (PhaseTitle, displayStages) = game.ExecutePhase(game_phase, this);
 
       // Check Chips 
       var inC = 0;

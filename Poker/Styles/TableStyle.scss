@@ -5,12 +5,13 @@
 /* a full poker table */
 .poker-table-holder {
     position: relative;
-    max-width: 1024px;
-    padding-top: css_min(67%, 686px);
+    max-width: 1306px;
+    padding-top: css_min(67%, 875px);
+    margin-bottom: 8%;
 }
 
 .poker-table {
-    background-image: url('../images/table_grid.png');
+    background-image: url('../images/table.png');
     background-repeat: no-repeat;
     background-size: 100%;
     top: 0;
@@ -19,10 +20,22 @@
     height: 80%;
     position: absolute;
     margin: 10%;
+
+    .layout-location {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
     /* size & locations */
     .seat-location {
         height: 20%;
         width: 20%;
+    }
+
+    .bet-location {
+        z-index: 5;
     }
 
     &.handed-6 {
@@ -563,13 +576,16 @@
 
         .middle-hand {
             position: absolute;
-            width: 70%;
-            margin-left: 30%;
+            margin-top: -2%;
+            width: 60%;
+            margin-left: 27%;
         }
 
         .bottom-hand {
             position: absolute;
-            margin-top: 19%;
+            margin-top: 15%;
+            width: 75%;
+            margin-left: 8%;
         }
 
         .player-name {
@@ -593,6 +609,53 @@
             text-align: center;
         }
     }
+
+    &.top-hand {
+        .top-hand .holecards {
+            width: 80%;
+        }
+
+        .middle-hand .holecards {
+            opacity: .2;
+        }
+
+        .bottom-hand .holecards {
+            opacity: .2;
+        }
+    }
+
+    &.middle-hand {
+        .top-hand .holecards {
+            opacity: .2;
+        }
+
+        .middle-hand {
+            margin-top: -2%;
+            width: 75%;
+            margin-left: 22%;
+        }
+
+        .bottom-hand .holecards {
+            opacity: .2;
+        }
+    }
+
+    &.bottom-hand {
+        .top-hand .holecards {
+            opacity: .2;
+        }
+
+        .middle-hand .holecards {
+            opacity: .2;
+        }
+
+        .bottom-hand {
+            margin-top: 5%;
+            width: 100%;
+            margin-left: 0%;
+        }
+    }
+
 
     #seat0 {
         height: 26%;

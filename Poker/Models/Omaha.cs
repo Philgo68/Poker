@@ -44,194 +44,146 @@ namespace Poker.Models
       var boardcards = Bits.IndividualMasks(board);
       int bestType, nextType;
       uint bestRank, nextRank;
+      ulong selectedBoardCards;
 
-      (bestType, bestRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[1] | boardcards[2]);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[1] | boardcards[3]);
+      selectedBoardCards = boardcards[0] | boardcards[1] | boardcards[2];
+      (bestType, bestRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
+      //if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[2]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[2]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[2] | boardcards[3]);
+      selectedBoardCards = boardcards[0] | boardcards[1] | boardcards[3];
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[2]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[2]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[1] | boardcards[2] | boardcards[3]);
+      selectedBoardCards = boardcards[0] | boardcards[1] | boardcards[4];
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[2]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[2]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[1] | boardcards[4]);
+      selectedBoardCards = boardcards[0] | boardcards[2] | boardcards[3];
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[2]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[2]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      
+      selectedBoardCards = boardcards[0] | boardcards[2] | boardcards[4];
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[2]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[2]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[2] | boardcards[4]);
+      selectedBoardCards = boardcards[0] | boardcards[3] | boardcards[4];
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[1] | boardcards[2] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[2]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[3] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[1] | boardcards[3] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[2]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[2] | boardcards[3] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[3]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank); 
+      
+      selectedBoardCards = boardcards[1] | boardcards[2] | boardcards[3];
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[3]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[2]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[3]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[2]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank); 
+      
+      selectedBoardCards = boardcards[1] | boardcards[2] | boardcards[4];
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[3] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[2]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[1] | boardcards[3] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[2]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[3]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank); 
+      
+      selectedBoardCards = boardcards[1] | boardcards[3] | boardcards[4];
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[3]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[2]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[3]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[2]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank); 
+      
+      selectedBoardCards = boardcards[2] | boardcards[3] | boardcards[4];
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[3] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[2]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[1] | boardcards[3] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[2]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[1] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[1] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-
-
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[1] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
 
       return (bestType, bestRank);

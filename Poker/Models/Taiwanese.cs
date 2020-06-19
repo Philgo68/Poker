@@ -9,7 +9,7 @@ namespace Poker.Models
 {
 	public class Taiwanese : PokerGame
 	{
-    private readonly List<Func<BaseTable, DisplayStage[]>> PhaseActions = new List<Func<BaseTable, DisplayStage[]>>();
+    private readonly List<Func<BaseTable, (string, DisplayStage[])>> PhaseActions = new List<Func<BaseTable, (string, DisplayStage[])>>();
 		public Taiwanese()
 		{
       // Setup Phases
@@ -17,13 +17,13 @@ namespace Poker.Models
       // Deal Cards
       PhaseActions.Add((table) => {
         table.CompleteCards();
-        return new DisplayStage[] { DisplayStage.DealtCards };
+        return ("Hands Dealt", new DisplayStage[] { DisplayStage.DealtCards });
       });
 
       //Layout Computer Hands
       PhaseActions.Add((table) => {
         table.LayoutHands();
-        return new DisplayStage[] { DisplayStage.DealtCards };
+        return ("Layout Hands", new DisplayStage[] { DisplayStage.DealtCards });
       });
 
       //Deal 1st Board
@@ -32,34 +32,37 @@ namespace Poker.Models
         // Need to wait until all hands are laid out before continuing.
         if (table.OccupiedSeats().Any( s => !s.Hand.HandsLaidOut ))
         {
-          return null;
+          return (null, null);
         }
 
         var board = GetBoard();
         table.Deck.CompleteCards(board);
         table.SetBoard(board);
-        return new DisplayStage[] { DisplayStage.DealtCards };
+        return ("Board One", new DisplayStage[] { DisplayStage.DealtCards });
       });
 
       //Play Top Hand
       PhaseActions.Add((table) =>
       {
         PlayTopHand(table);
-        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        LogTable(table, "Top Hand 1");
+        return ("Top Hand", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
       });
 
       //Play Middle Hand
       PhaseActions.Add((table) =>
       {
         PlayMiddleHand(table);
-        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        LogTable(table, "Middle Hand 1");
+        return ("Middle Hand", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
       });
 
       //Play Bottom Hand
       PhaseActions.Add((table) =>
       {
         PlayBottomHand(table);
-        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        LogTable(table, "Bottom Hand 1");
+        return ("Bottom Hand", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
       });
 
       //Play Scoop Bonus
@@ -67,11 +70,12 @@ namespace Poker.Models
       {
         if (PlayScoopBonus(table))
         {
-          return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+          LogTable(table, "Scoop Bonus 1");
+          return ("Scoop Bonus", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
         }
         else
         {
-          return new DisplayStage[] { };
+          return ("Scoop Bonus", new DisplayStage[] { });
         }
       });
 
@@ -83,28 +87,31 @@ namespace Poker.Models
         var board = GetBoard();
         table.Deck.CompleteCards(board);
         table.SetBoard(board);
-        return new DisplayStage[] { DisplayStage.DealtCards };
+        return ("Board Two", new DisplayStage[] { DisplayStage.DealtCards });
       });
 
       //Play Top Hand
       PhaseActions.Add((table) =>
       {
         PlayTopHand(table);
-        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        LogTable(table, "Top Hand 2");
+        return ("Top Hand", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
       });
 
       //Play Middle Hand
       PhaseActions.Add((table) =>
       {
         PlayMiddleHand(table);
-        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        LogTable(table, "Middle Hand 2");
+        return ("Middle Hand", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
       });
 
       //Play Bottom Hand
       PhaseActions.Add((table) =>
       {
         PlayBottomHand(table);
-        return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        LogTable(table, "Bottom Hand 2");
+        return ("Bottom Hand", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
       });
 
       //Play Scoop Bonus
@@ -112,19 +119,31 @@ namespace Poker.Models
       {
         if (PlayScoopBonus(table))
         {
-          return new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+          LogTable(table, "Scoop Bonus 2");
+          return ("Scoop Bonus", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
         }
         else
         {
-          return new DisplayStage[] { };
+          return ("Scoop Bonus", new DisplayStage[] { });
         }
       });
 
       //Reset for next hand
       PhaseActions.Add((table) => {
         table.CleanTableForNextHand();
-        return new DisplayStage[] { };
+        return ("", new DisplayStage[] { });
       });
+    }
+
+    public void LogTable(BaseTable table, string description)
+    {
+      // Logging:
+      Console.WriteLine($"--- {description} ---");
+      Console.WriteLine($"  Board: {table.board.CardDescriptions}");
+      foreach (var seat in table.OccupiedSeats())
+      {
+        Console.WriteLine($"  Seat: {seat.Player.Name}  Cards: {seat.Hand.CardDescriptions}  Out: {seat.ChipsOut}  In: {seat.ChipsIn}");
+      }
     }
 
 		public override string Name { get { return "Taiwanese"; } }
@@ -139,7 +158,7 @@ namespace Poker.Models
 			return new TaiwaneseHand();
 		}
 
-    public override DisplayStage[] ExecutePhase(int game_phase, BaseTable table)
+    public override (string, DisplayStage[]) ExecutePhase(int game_phase, BaseTable table)
     {
       return PhaseActions[game_phase](table);
     }

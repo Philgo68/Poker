@@ -9,13 +9,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using Poker.CFHandEvaluator;
 using Poker.Helpers;
+using Poker.Models;
 
 namespace Poker.Interfaces
 {
   public interface IHand : IComparable
   {
     public virtual string Name => "BaseHand";
+
     public ulong CardsMask { get; set; }
+    public BaseDeck Deck { get; set; }
     public long Wins { get; set; }
     public long Loses { get; set; }
     public long Ties { get; set; }
@@ -25,6 +28,7 @@ namespace Poker.Interfaces
     public decimal Percent { get; }
     public int CardCount { get; }
     public int CardsNeeded { get; }
+    public string CardDescriptions { get; }
     public event Action StateHasChangedDelegate;
     bool HandsLaidOut { get; }
 

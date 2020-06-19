@@ -37,6 +37,8 @@ namespace Poker.Models
       return -RunningScore.CompareTo(((TaiwaneseHand)obj).RunningScore);
     }
 
+    public override string CardDescriptions => $"{Deck.CardDescriptions(TopHand.CardsMask)}  -  {Deck.CardDescriptions(MiddleHand.CardsMask)}  -  {Deck.CardDescriptions(BottomHand.CardsMask)}";
+
     public TaiwaneseHand(ulong cardsMask) : this()
     {
       SetCards(cardsMask);

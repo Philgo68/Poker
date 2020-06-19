@@ -87,10 +87,12 @@ namespace Poker.Models
 		public virtual void CompleteCards(BaseHand hand, Random rand = null)
 		{
 			hand.CardsMask |= DealCards(hand.CardsNeeded, rand);
+			hand.Deck = this;
 		}
 		public virtual void CompleteCards(IHand hand, Random rand = null)
 		{
 			hand.CardsMask |= DealCards(hand.CardsNeeded, rand);
+			hand.Deck = this;
 		}
 
 		public virtual void Reset(ulong dealtCards = 0x0UL)

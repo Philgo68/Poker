@@ -26,9 +26,9 @@ namespace Poker.Models
 			};
 		}
 
-		public virtual DisplayStage[] ExecutePhase(int game_phase, BaseTable table)
+		public virtual (string, DisplayStage[]) ExecutePhase(int game_phase, BaseTable table)
 		{
-			return new DisplayStage[] {};
+			return ("", new DisplayStage[] {});
 		}
 
 		public virtual (int, uint) Evaluate(IHand hand)

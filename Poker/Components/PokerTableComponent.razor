@@ -4,22 +4,24 @@
 @{
     @if (Table != null)
     {
-        @(Table.DisplayPhase)
-
         var tHand = Table.Hero()?.Hand as TaiwaneseHand;
         if (tHand != null && !tHand.HandsLaidOut && tHand.CardsNeeded == 0)
         {
-            <div class="row">
-                <PokerHandLayoutComponent Hand=@tHand Deck=@Table.Deck />
-                <div class="col-auto my-auto"><PokerChipsComponent Chips="@(Table.Hero().Chips)" /></div>
-                <button class="btn btn-primary col-2 my-auto" @onclick="SetHeroLayout">Set Hand</button>
+            <div class="poker-table-holder">
+                <div id="poker_table" class="poker-table handed-@(Table.totalSeats) @(Table.DisplayPhase) @(Table.PhaseTitle.Classify())">
+                        <div class="layout-location">
+                            <PokerHandLayoutComponent Hand=@tHand Deck=@Table.Deck />
+                            <div class="col-auto my-auto"><PokerChipsComponent Chips="@(Table.Hero().Chips)" /></div>
+                            <button class="btn btn-primary col-2 my-auto" @onclick="SetHeroLayout">Set Hand</button>
+                        </div>
+                </div>
             </div>
         }
         else
         {
             <div class="poker-table-holder">
-                <div id="poker_table" class="poker-table handed-@(Table.totalSeats) @(Table.DisplayPhase)">
-
+                <div id="poker_table" class="poker-table handed-@(Table.totalSeats) @(Table.DisplayPhase) @(Table.PhaseTitle.Classify())">
+                    @(Table.PhaseTitle)
                     @for (var i = 0; i < Table.totalSeats; i++)
                     {
                         <div id="player@(i)">

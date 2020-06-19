@@ -1,11 +1,12 @@
 ﻿/* a full poker table */
 .poker-table-holder {
   position: relative;
-  max-width: 1024px;
-  padding-top: min(67%, 686px); }
+  max-width: 1306px;
+  padding-top: min(67%, 875px);
+  margin-bottom: 8%; }
 
 .poker-table {
-  background-image: url("../../images/table_grid.png");
+  background-image: url("../../images/table.png");
   background-repeat: no-repeat;
   background-size: 100%;
   top: 0;
@@ -16,9 +17,17 @@
   margin: 10%;
   /* size & locations */
   /* styles */ }
+  .poker-table .layout-location {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center; }
   .poker-table .seat-location {
     height: 20%;
     width: 20%; }
+  .poker-table .bet-location {
+    z-index: 5; }
   .poker-table.handed-6 #player0 .seat-location {
     position: absolute;
     top: 100%;
@@ -334,11 +343,14 @@
       width: 70%; }
     .poker-table .seat .middle-hand {
       position: absolute;
-      width: 70%;
-      margin-left: 30%; }
+      margin-top: -2%;
+      width: 60%;
+      margin-left: 27%; }
     .poker-table .seat .bottom-hand {
       position: absolute;
-      margin-top: 19%; }
+      margin-top: 15%;
+      width: 75%;
+      margin-left: 8%; }
     .poker-table .seat .player-name {
       position: absolute;
       top: 60%;
@@ -356,6 +368,28 @@
       background-color: rgba(64, 64, 64, 0.8);
       color: white;
       text-align: center; }
+  .poker-table.top-hand .top-hand .holecards {
+    width: 80%; }
+  .poker-table.top-hand .middle-hand .holecards {
+    opacity: .2; }
+  .poker-table.top-hand .bottom-hand .holecards {
+    opacity: .2; }
+  .poker-table.middle-hand .top-hand .holecards {
+    opacity: .2; }
+  .poker-table.middle-hand .middle-hand {
+    margin-top: -2%;
+    width: 75%;
+    margin-left: 22%; }
+  .poker-table.middle-hand .bottom-hand .holecards {
+    opacity: .2; }
+  .poker-table.bottom-hand .top-hand .holecards {
+    opacity: .2; }
+  .poker-table.bottom-hand .middle-hand .holecards {
+    opacity: .2; }
+  .poker-table.bottom-hand .bottom-hand {
+    margin-top: 5%;
+    width: 100%;
+    margin-left: 0%; }
   .poker-table #seat0 {
     height: 26%;
     width: 26%; }
