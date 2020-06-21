@@ -56,6 +56,21 @@
 
 <PokerTableComponent Table=@table />
 
+@if (show_chips)
+{
+    // 1  5  25 100 500 1000 5000 10000
+    <div class="d-flex mx-auto">
+        @{
+            var chips = hand_cnt.Value;
+            for (var offset = 0.0; offset < 90.0; offset += 11.25)
+            {
+                <div class="my-auto"><PokerChipsComponent Chips="@(chips)" Klass="large" Offset="@(offset)" /></div>
+            }
+        }
+    </div>
+    <div id="screenshotPreviews"></div>
+}
+
 @code {
     string hand_1, hand_2, board_string, button;
     int? hand_cnt;
@@ -67,6 +82,7 @@
     IDeck deck = null;
     double seconds;
     long iterations;
+    bool show_chips = false;
 
     private string result, result2;
     private static Random _global_random = new Random();
@@ -182,8 +198,8 @@
                 table.pot = _global_random.Next(20000);
                 foreach (var s in table.AllSeats())
                 {
-                    if (s != null) 
-                      s.ChipsMoving = _global_random.Next(750);
+                    if (s != null)
+                        s.ChipsMoving = _global_random.Next(750);
                 }
 
                 StateHasChanged();
@@ -299,6 +315,8 @@
         try
         {
             // Setup
+            show_chips = true;
+
             var board = new BaseHand(2);
             var fillers = new Fillers();
             fillers.Add(new BaseHand(2));

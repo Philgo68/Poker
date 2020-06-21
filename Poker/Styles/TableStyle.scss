@@ -20,6 +20,7 @@
     height: 80%;
     position: absolute;
     margin: 10%;
+    --transition-time: 1s;
 
     .layout-location {
         position: absolute;
@@ -164,7 +165,7 @@
                 position: absolute;
                 top: 67%;
                 left: 78%;
-                transition: all 1.5s ease;
+                transition: all var(--transition-time) ease;
             }
         }
     }
@@ -457,7 +458,7 @@
     &.scooping .bet-location {
         left: 50% !important;
         top: 63% !important;
-        transition: all 1.5s ease;
+        transition: all var(--transition-time) ease;
     }
 
     &.handed-6.returning {
@@ -468,7 +469,7 @@
                 position: absolute;
                 top: 80%;
                 left: 50%;
-                transition: all 1.5s ease;
+                transition: all var(--transition-time) ease;
             }
         }
 
@@ -479,7 +480,7 @@
                 position: absolute;
                 top: 67%;
                 left: 22%;
-                transition: all 1.5s ease;
+                transition: all var(--transition-time) ease;
             }
         }
 
@@ -489,7 +490,7 @@
                 position: absolute;
                 top: 33%;
                 left: 22%;
-                transition: all 1.5s ease;
+                transition: all var(--transition-time) ease;
             }
         }
 
@@ -499,7 +500,7 @@
                 position: absolute;
                 top: 20%;
                 left: 50%;
-                transition: all 1.5s ease;
+                transition: all var(--transition-time) ease;
             }
         }
 
@@ -509,7 +510,7 @@
                 position: absolute;
                 top: 33%;
                 left: 78%;
-                transition: all 1.5s ease;
+                transition: all var(--transition-time) ease;
             }
         }
 
@@ -519,7 +520,7 @@
                 position: absolute;
                 top: 67%;
                 left: 78%;
-                transition: all 1.5s ease;
+                transition: all var(--transition-time) ease;
             }
         }
     }
@@ -616,17 +617,17 @@
         }
 
         .middle-hand .holecards {
-            opacity: .2;
+            opacity: .25;
         }
 
         .bottom-hand .holecards {
-            opacity: .2;
+            opacity: .25;
         }
     }
 
     &.middle-hand {
         .top-hand .holecards {
-            opacity: .2;
+            opacity: .25;
         }
 
         .middle-hand {
@@ -636,21 +637,21 @@
         }
 
         .bottom-hand .holecards {
-            opacity: .2;
+            opacity: .25;
         }
     }
 
     &.bottom-hand {
         .top-hand .holecards {
-            opacity: .2;
+            opacity: .25;
         }
 
         .middle-hand .holecards {
-            opacity: .2;
+            opacity: .25;
         }
 
         .bottom-hand {
-            margin-top: 5%;
+            margin-top: 8%;
             width: 100%;
             margin-left: 0%;
         }
@@ -906,15 +907,90 @@ svg.playing-card {
     width: var(--card-size);
 }
 
-.chip_stack {
-    width: 50px;
-    height: 50px;
-    overflow: hidden;
-    display: inline-block;
-}
-
 .x3d-fit {
     margin: -25px;
     width: 100px;
     height: 100px;
+}
+
+.chip-stack.large .x3d-reg {
+    margin: 0px;
+    width: 128px;
+    height: 96px;
+}
+
+.chip-stack {
+    display: inline-block;
+
+    .chip {
+        background-repeat: no-repeat;
+        background-size: 800% 100%;
+        width: 4em;
+        height: 3em;
+        margin-top: -3.28125em;
+    }
+
+    .chip:nth-child(1) {
+        margin-top: 0px;
+    }
+
+    .chip-0 {
+        background-position-x: 0px;
+    }
+
+    .chip-1 {
+        background-position-x: -4em;
+    }
+
+    .chip-2 {
+        background-position-x: -8em;
+    }
+
+    .chip-3 {
+        background-position-x: -12em;
+    }
+
+    .chip-4 {
+        background-position-x: -16em;
+    }
+
+    .chip-5 {
+        background-position-x: -20em;
+    }
+
+    .chip-6 {
+        background-position-x: -24em;
+    }
+
+    .chip-7 {
+        background-position-x: -28em;
+    }
+
+    .chips-1 {
+        background-image: url('../images/chips-1.png');
+    }
+
+    .chips-5 {
+        background-image: url('../images/chips-5.png');
+    }
+
+    .chips-25 {
+        background-image: url('../images/chips-25.png');
+    }
+
+    .chips-100 {
+        background-image: url('../images/chips-100.png');
+    }
+
+    .chips-500 {
+        background-image: url('../images/chips-500.png');
+    }
+
+    .chips-1000 {
+        background-image: url('../images/chips-1000.png');
+    }
+
+    .chips-5000 {
+        background-image: url('../images/chips-5000.png');
+    }
 }

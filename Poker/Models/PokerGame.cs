@@ -204,6 +204,19 @@ namespace Poker.Models
       StraightFlush = 8
     }
 
+    public static string[] HandTypeDescriptions = new string[]
+    {
+      "High Card",
+      "Pair",
+      "Two Pair",
+      "Trips",
+      "Straight",
+      "Flush",
+      "Full House",
+      "Four of a Kind",
+      "Straight Flush"
+    };
+
     private static readonly int CARD_WIDTH = 4;
 
     private static readonly int TOP_CARD_SHIFT = 16;

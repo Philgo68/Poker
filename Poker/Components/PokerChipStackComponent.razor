@@ -1,0 +1,41 @@
+﻿@inject SvgCards svgCards
+@inject IJSRuntime JSRuntime
+
+@{
+    if (Chips != 0)
+    {
+        <div class="d-flex mx-auto">
+            <div class="my-auto">@(Chips)</div>
+            <div class="my-auto chip-stack">
+                @{
+                    int amount;
+                    int chipCount;
+
+                    for (var i = 1; i <= ChipSizes.Length; i++)
+                    {
+                        amount = ChipSizes[i - 1];
+                        chipCount = (i == ChipSizes.Length) ? Chips / amount : (Chips % ChipSizes[i]) / amount;
+                        Chips -= chipCount * amount;
+
+                        @for (var c = 0; c < chipCount; c++)
+                        {
+                            <div class="chip chip-@(_rnd.Next(8)) chips-@(amount)"></div>
+                        }
+                    }
+                }
+
+            </div>
+
+        </div>
+    }
+}
+
+
+@code {
+
+    int[] ChipSizes = new int[] { 1, 5, 25, 100, 500, 1000, 5000, 10000 };
+    Random _rnd = new Random();
+
+    [Parameter]
+    public int Chips { get; set; }
+}

@@ -62,6 +62,7 @@ namespace Poker.Models
     public int pot;
     public string DisplayPhase { get; set; }
     public string PhaseTitle { get; set; }
+    public string PhaseMessage { get; set; }
 
     public BaseTable(IGame _game, int _totalSeats = 9)
     {
@@ -76,6 +77,13 @@ namespace Poker.Models
       {
         DisplayPhase = null;
         DisplayPhase = "dealtCards";
+        foreach (var seat in OccupiedSeats())
+        {
+          if (seat.Hand is IHand Hand)
+          {
+            seat.ChipsMoving = 0;
+          }
+        }
         NotifyStateChanged();
         return standardTime;
       };
@@ -94,14 +102,14 @@ namespace Poker.Models
           }
         }
         NotifyStateChanged();
-        return standardTime;
+        return standardTime/3;
       };
 
       DisplayActions[DisplayStage.Scooping] = () =>
       {
         DisplayPhase = "scooping";
         NotifyStateChanged();
-        return standardTime/2;
+        return 1.0;
       };
 
       DisplayActions[DisplayStage.PotScooped] = () =>
@@ -116,14 +124,14 @@ namespace Poker.Models
           }
         }
         NotifyStateChanged();
-        return standardTime/2;
+        return 0;
       };
 
       DisplayActions[DisplayStage.Delivering] = () =>
       {
         DisplayPhase = "scooping returning";
         NotifyStateChanged();
-        return standardTime/2;
+        return 1.0;
       };
 
       DisplayActions[DisplayStage.DeliverPot] = () =>
@@ -140,7 +148,7 @@ namespace Poker.Models
           }
         }
         NotifyStateChanged();
-        return standardTime/2;
+        return standardTime;
       };
 
     }
@@ -403,7 +411,7 @@ namespace Poker.Models
     public void TransitionToNextPhase()
     {
       // Execute the next game step
-      (PhaseTitle, displayStages) = game.ExecutePhase(game_phase, this);
+      displayStages = game.ExecutePhase(game_phase, this);
 
       // Check Chips 
       var inC = 0;
@@ -455,6 +463,8 @@ namespace Poker.Models
     {
       // Clear table and get new blank hands for all seats with chips.
       CleanChips();
+      PhaseTitle = "";
+      PhaseMessage = "";
 
       for (var i = 0; i < totalSeats; i++)
       {

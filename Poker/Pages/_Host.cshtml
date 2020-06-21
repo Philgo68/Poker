@@ -29,6 +29,18 @@
     </script>
     <link rel='stylesheet' type='text/css' href='https://www.x3dom.org/release/x3dom.css' />
     <link href="css/TableStyle.css" rel="stylesheet" />
+    <script>
+        function screenshot(element) {
+            console.log('Screenshot');
+            //Get data url from the runtime
+            var imgUrl = element.closest(".x3d-reg").runtime.getScreenshot();
+
+            //Create preview image...
+            var newScreenshotImage = document.createElement('img');
+            newScreenshotImage.src = imgUrl;
+            document.getElementById("screenshotPreviews").append(newScreenshotImage);
+        }
+    </script>
 </head>
 <body>
     <app>

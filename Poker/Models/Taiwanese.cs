@@ -9,21 +9,25 @@ namespace Poker.Models
 {
 	public class Taiwanese : PokerGame
 	{
-    private readonly List<Func<BaseTable, (string, DisplayStage[])>> PhaseActions = new List<Func<BaseTable, (string, DisplayStage[])>>();
+    private readonly List<Func<BaseTable, DisplayStage[]>> PhaseActions = new List<Func<BaseTable, DisplayStage[]>>();
 		public Taiwanese()
 		{
       // Setup Phases
 
       // Deal Cards
       PhaseActions.Add((table) => {
+        table.PhaseTitle = "Hands Dealt";
+        table.PhaseMessage = "";
         table.CompleteCards();
-        return ("Hands Dealt", new DisplayStage[] { DisplayStage.DealtCards });
+        return new DisplayStage[] { DisplayStage.DealtCards };
       });
 
       //Layout Computer Hands
       PhaseActions.Add((table) => {
+        table.PhaseTitle = "Layout Hands";
+        table.PhaseMessage = "";
         table.LayoutHands();
-        return ("Layout Hands", new DisplayStage[] { DisplayStage.DealtCards });
+        return new DisplayStage[] { DisplayStage.DealtCards };
       });
 
       //Deal 1st Board
@@ -32,106 +36,126 @@ namespace Poker.Models
         // Need to wait until all hands are laid out before continuing.
         if (table.OccupiedSeats().Any( s => !s.Hand.HandsLaidOut ))
         {
-          return (null, null);
+          return null;
         }
-
+        table.PhaseTitle = "Board One";
+        table.PhaseMessage = "";
         var board = GetBoard();
         table.Deck.CompleteCards(board);
         table.SetBoard(board);
-        return ("Board One", new DisplayStage[] { DisplayStage.DealtCards });
+        return new DisplayStage[] { DisplayStage.DealtCards };
       });
 
       //Play Top Hand
       PhaseActions.Add((table) =>
       {
+        table.PhaseTitle = "Top Hand";
+        table.PhaseMessage = "";
         PlayTopHand(table);
         LogTable(table, "Top Hand 1");
-        return ("Top Hand", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
+        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Middle Hand
       PhaseActions.Add((table) =>
       {
+        table.PhaseTitle = "Middle Hand";
+        table.PhaseMessage = "";
         PlayMiddleHand(table);
         LogTable(table, "Middle Hand 1");
-        return ("Middle Hand", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
+        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Bottom Hand
       PhaseActions.Add((table) =>
       {
+        table.PhaseTitle = "Bottom Hand";
+        table.PhaseMessage = "";
         PlayBottomHand(table);
         LogTable(table, "Bottom Hand 1");
-        return ("Bottom Hand", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
+        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Scoop Bonus
       PhaseActions.Add((table) =>
       {
+        table.PhaseTitle = "Scoop Bonus";
+        table.PhaseMessage = "";
         if (PlayScoopBonus(table))
         {
           LogTable(table, "Scoop Bonus 1");
-          return ("Scoop Bonus", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
+          return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
         }
         else
         {
-          return ("Scoop Bonus", new DisplayStage[] { });
+          return new DisplayStage[] { };
         }
       });
 
       //Deal 2nd Board
       PhaseActions.Add((table) =>
       {
+        table.PhaseTitle = "Board Two";
+        table.PhaseMessage = "";
+
         table.CleanChips();
 
         var board = GetBoard();
         table.Deck.CompleteCards(board);
         table.SetBoard(board);
-        return ("Board Two", new DisplayStage[] { DisplayStage.DealtCards });
+        return new DisplayStage[] { DisplayStage.DealtCards };
       });
 
       //Play Top Hand
       PhaseActions.Add((table) =>
       {
+        table.PhaseTitle = "Top Hand";
+        table.PhaseMessage = "";
         PlayTopHand(table);
         LogTable(table, "Top Hand 2");
-        return ("Top Hand", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
+        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Middle Hand
       PhaseActions.Add((table) =>
       {
+        table.PhaseTitle = "Middle Hand";
+        table.PhaseMessage = "";
         PlayMiddleHand(table);
         LogTable(table, "Middle Hand 2");
-        return ("Middle Hand", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
+        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Bottom Hand
       PhaseActions.Add((table) =>
       {
+        table.PhaseTitle = "Bottom Hand";
+        table.PhaseMessage = "";
         PlayBottomHand(table);
         LogTable(table, "Bottom Hand 2");
-        return ("Bottom Hand", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
+        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Scoop Bonus
       PhaseActions.Add((table) =>
       {
+        table.PhaseTitle = "Scoop Bonus";
+        table.PhaseMessage = "";
         if (PlayScoopBonus(table))
         {
           LogTable(table, "Scoop Bonus 2");
-          return ("Scoop Bonus", new DisplayStage[] { DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot });
+          return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
         }
         else
         {
-          return ("Scoop Bonus", new DisplayStage[] { });
+          return new DisplayStage[] { };
         }
       });
 
       //Reset for next hand
       PhaseActions.Add((table) => {
         table.CleanTableForNextHand();
-        return ("", new DisplayStage[] { });
+        return new DisplayStage[] { };
       });
     }
 
@@ -158,7 +182,7 @@ namespace Poker.Models
 			return new TaiwaneseHand();
 		}
 
-    public override (string, DisplayStage[]) ExecutePhase(int game_phase, BaseTable table)
+    public override DisplayStage[] ExecutePhase(int game_phase, BaseTable table)
     {
       return PhaseActions[game_phase](table);
     }
@@ -226,6 +250,8 @@ namespace Poker.Models
         }
       }
 
+      table.PhaseMessage = TexasHoldem.HandTypeDescriptions[bestType];
+
       int base_chips = 1;
       int bonus_chips = PointTopHand(bestType);
 
@@ -292,6 +318,8 @@ namespace Poker.Models
         }
       }
 
+      table.PhaseMessage = TexasHoldem.HandTypeDescriptions[bestType];
+
       int base_chips = 2;
       int bonus_chips = PointMiddleHand(bestType);
 
@@ -357,6 +385,8 @@ namespace Poker.Models
           }
         }
       }
+
+      table.PhaseMessage = Omaha.HandTypeDescriptions[bestType];
 
       int base_chips = 3;
       int bonus_chips = PointBottomHand(bestType);

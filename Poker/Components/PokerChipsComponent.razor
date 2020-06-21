@@ -5,14 +5,22 @@
     if (Chips != 0)
     {
         <div class="d-flex mx-auto">
-            <div class="my-auto">@(Chips)</div>
-            <div class="my-auto chip-stack">
-                <x3d class='x3d-fit'>
+            @if (Klass != "large")
+            {
+                <div class="my-auto">@(Chips)</div>
+            }
+            <div class="my-auto chip-stack @(Klass)">
+                <x3d class='x3d-reg' onclick="screenshot(this);">
                     <scene>
-                        <!--<viewpoint position="0.00000 0.00000 7.6875" orientation="0.00000 0.00000 0.00000 0.00000"
-                                   zNear="1.17048" zFar="10.74193" centerOfRotation="0.00000 0.00000 0.00000" fieldOfView="0.78540"
+                        <!--<viewpoint position="0.00000 0.00000 10.45933" orientation="0.00000 0.00000 0.00000 0.00000"
+                                   zNear="4.90155" zFar="17.75007" centerOfRotation="0.00000 0.00000 0.00000" fieldOfView="0.78540"
                                    description="defaultX3DViewpointNode"></viewpoint> -->
+                        <viewpoint position="0.00000 0.00000 6.75933" orientation="0.00000 0.00000 0.00000 0.00000"
+                                   zNear="4.90155" zFar="17.75007" centerOfRotation="0.00000 0.00000 0.00000" fieldOfView="0.5"
+                                   description="defaultX3DViewpointNode"></viewpoint>
                         <navigationInfo type="None"></navigationInfo>
+                        <directionallight id="directional" direction="0.0 -1 0.0" on="TRUE" intensity="@(1.36 + (_rnd.NextDouble() * 0.02))" shadowintensity="0.0"
+                                          color="1,1,1" shadowmapsize="1024" znear="-1" zfar="-1" shadowcascades="1" shadowsplitfactor="1" shadowsplitoffset="0.1"></directionallight>
                         <transform rotation="1 0 0 0.6">
                             @{
                                 int stackSize = 0;
@@ -26,7 +34,7 @@
                                 {
                                     var width = (Math.PI / 180) * pattern.angle;
                                     var oWidth = ((Math.PI * 2) / pattern.sections) - width;
-                                    var chipRotation = stackSize == 0 ? 0.0 : Math.PI * (_rnd.NextDouble() - 0.5);
+                                    var chipRotation = stackSize == 0 ? Math.PI * Offset / 180 : Math.PI * (_rnd.NextDouble() - 0.5);
                                     <transform translation="0 @(-0.35 * stackSize++) 0">
                                         <transform rotation="0 1 0 @((-width / 2) + chipRotation)">
                                             @for (var i = 0; i < pattern.sections; i++)
@@ -75,23 +83,24 @@
                                         }
                                     </transform>
                                     <!--
-                                    <transform translation="0 0.17 0" rotation="-1 0 0 @(Math.PI / 2)">
-                                    <shape>
-                                        <appearance>
-                                            <material diffuseColor='0.00000 0.00000 0.00000'></material>
-                                        </appearance>
-                                        <text string='100'>
-                                            <fontStyle justify='&quot;MIDDLE&quot; &quot;MIDDLE&quot;' size='1' />
-                                        </text>
-                                    </shape>
-                                    </transform>
-                                    -->
+                <transform translation="0 0.17 0" rotation="-1 0 0 @(Math.PI / 2)">
+                <shape>
+                    <appearance>
+                        <material diffuseColor='0.00000 0.00000 0.00000'></material>
+                    </appearance>
+                    <text string='100'>
+                        <fontStyle justify='&quot;MIDDLE&quot; &quot;MIDDLE&quot;' size='1' />
+                    </text>
+                </shape>
+                </transform>
+                -->
                                 }
                             }
                         </transform>
                     </scene>
                 </x3d>
             </div>
+
         </div>
     }
 }
@@ -121,10 +130,10 @@
 
     ChipDef[] ChipPatterns =
         {
-            new ChipDef(10000, System.Drawing.Color.FromArgb(255, 184, 101, 0), System.Drawing.Color.Black, 6, 20),
+            new ChipDef(10000, System.Drawing.Color.FromArgb(255, 145, 55, 0), System.Drawing.Color.Black, 6, 20),
             new ChipDef(5000, System.Drawing.Color.Purple, System.Drawing.Color.Black, 6, 20),
             new ChipDef(1000, System.Drawing.Color.Yellow, System.Drawing.Color.Black),
-            new ChipDef(500, System.Drawing.Color.HotPink, System.Drawing.Color.Black),
+            new ChipDef(500, System.Drawing.Color.FromArgb(255, 69, 22, 113), System.Drawing.Color.Black),
             new ChipDef(100, System.Drawing.Color.Black, System.Drawing.Color.Gray),
             new ChipDef(25, System.Drawing.Color.DarkGreen, System.Drawing.Color.Gray),
             new ChipDef(5, System.Drawing.Color.DarkRed, System.Drawing.Color.Gray),
@@ -140,4 +149,10 @@
 
     [Parameter]
     public int Chips { get; set; }
+
+    [Parameter]
+    public double Offset { get; set; }
+
+    [Parameter]
+    public string Klass { get; set; }
 }

@@ -9,11 +9,11 @@
         {
             <div class="poker-table-holder">
                 <div id="poker_table" class="poker-table handed-@(Table.totalSeats) @(Table.DisplayPhase) @(Table.PhaseTitle.Classify())">
-                        <div class="layout-location">
-                            <PokerHandLayoutComponent Hand=@tHand Deck=@Table.Deck />
-                            <div class="col-auto my-auto"><PokerChipsComponent Chips="@(Table.Hero().Chips)" /></div>
-                            <button class="btn btn-primary col-2 my-auto" @onclick="SetHeroLayout">Set Hand</button>
-                        </div>
+                    <div class="layout-location">
+                        <PokerHandLayoutComponent Hand=@tHand Deck=@Table.Deck />
+                        <div class="col-auto my-auto"><PokerChipStackComponent Chips="@(Table.Hero().Chips)" /></div>
+                        <button class="btn btn-primary col-2 my-auto" @onclick="SetHeroLayout">Set Hand</button>
+                    </div>
                 </div>
             </div>
         }
@@ -21,7 +21,8 @@
         {
             <div class="poker-table-holder">
                 <div id="poker_table" class="poker-table handed-@(Table.totalSeats) @(Table.DisplayPhase) @(Table.PhaseTitle.Classify())">
-                    @(Table.PhaseTitle)
+                    <div>@(Table.PhaseTitle)</div>
+                    <div>@(Table.PhaseMessage)</div>
                     @for (var i = 0; i < Table.totalSeats; i++)
                     {
                         <div id="player@(i)">
@@ -44,7 +45,7 @@
                                     <div class="button-location"><div class="button"></div></div>
                                 }
                                 <div class="bet-location">
-                                    <div class="bet"><PokerChipsComponent Chips=@Table.seats[i].ChipsMoving /></div>
+                                    <div class="bet"><PokerChipStackComponent Chips=@Table.seats[i].ChipsMoving /></div>
                                 </div>
                             }
                         </div>
@@ -59,7 +60,7 @@
                         </div>
                     }
                     <div id="current-pot-location">
-                        <div id="current-pot"><PokerChipsComponent Chips=@Table.Pot /></div>
+                        <div id="current-pot"><PokerChipStackComponent Chips=@Table.Pot /></div>
                     </div>
                     <div id="total-pot-location">
                         <div id="total-pot">
