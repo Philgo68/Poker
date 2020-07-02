@@ -13,6 +13,7 @@ using Poker.Interfaces;
 
 namespace Poker.Models
 {
+ [Serializable]
   public class BaseHand : IHand
   {
     private readonly int cardCount;
@@ -67,6 +68,7 @@ namespace Poker.Models
     public virtual string CardDescriptions => Deck.CardDescriptions(CardsMask);
     public virtual IEnumerable<int> CardNumbers => Deck.CardNumbers(CardsMask);
 
+    [field: NonSerialized]
     public event Action StateHasChangedDelegate;
 
     protected void StateHasChanged()

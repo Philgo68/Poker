@@ -4,18 +4,25 @@ using Poker.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Poker.Models
 {
-	public class Taiwanese : PokerGame
-	{
-    private readonly List<Func<BaseTable, DisplayStage[]>> PhaseActions = new List<Func<BaseTable, DisplayStage[]>>();
-		public Taiwanese()
-		{
-      // Setup Phases
+  [Serializable]
+  public class Taiwanese : PokerGame
+  {
+    [NonSerialized]
+    private List<Func<BaseTable, DisplayStage[]>> PhaseActions;
+    public Taiwanese()
+    {
+      SetupPhases();
+    }
 
-      // Deal Cards
-      PhaseActions.Add((table) => {
+    public void SetupPhases()
+    {
+      PhaseActions = new List<Func<BaseTable, DisplayStage[]>>();
+      PhaseActions.Add((table) =>
+      {
         table.PhaseTitle = "Hands Dealt";
         table.PhaseMessage = "";
         table.CompleteCards();
@@ -23,7 +30,8 @@ namespace Poker.Models
       });
 
       //Layout Computer Hands
-      PhaseActions.Add((table) => {
+      PhaseActions.Add((table) =>
+      {
         table.PhaseTitle = "Layout Hands";
         table.PhaseMessage = "";
         table.LayoutHands();
@@ -34,7 +42,7 @@ namespace Poker.Models
       PhaseActions.Add((table) =>
       {
         // Need to wait until all hands are laid out before continuing.
-        if (table.OccupiedSeats().Any( s => !s.Hand.HandsLaidOut ))
+        if (table.OccupiedSeats().Any(s => !s.Hand.HandsLaidOut))
         {
           return null;
         }
@@ -153,12 +161,18 @@ namespace Poker.Models
       });
 
       //Reset for next hand
-      PhaseActions.Add((table) => {
+      PhaseActions.Add((table) =>
+      {
         table.CleanTableForNextHand();
         return new DisplayStage[] { };
       });
     }
 
+    [OnDeserialized()]
+    internal void OnDeserializedMethod(StreamingContext context)
+    {
+      SetupPhases();
+    }
     public void LogTable(BaseTable table, string description)
     {
       // Logging:
@@ -170,17 +184,17 @@ namespace Poker.Models
       }
     }
 
-		public override string Name { get { return "Taiwanese"; } }
+    public override string Name { get { return "Taiwanese"; } }
 
-		public override IDeck GetDeck(ulong dealtCards = 0)
-		{
-			return new StandardDeck(dealtCards);
-		}
+    public override IDeck GetDeck(ulong dealtCards = 0)
+    {
+      return new StandardDeck(dealtCards);
+    }
 
-		public override IHand GetHand()
-		{
-			return new TaiwaneseHand();
-		}
+    public override IHand GetHand()
+    {
+      return new TaiwaneseHand();
+    }
 
     public override DisplayStage[] ExecutePhase(int game_phase, BaseTable table)
     {
@@ -291,7 +305,7 @@ namespace Poker.Models
             seat.ChipsIn = cut + (tHand.TopHand.BestCard() == bestCard ? remainder : 0);
             if (winners == 1)
               seat.HandsWon = 1;
-          } 
+          }
           else
           {
             seat.ChipsIn = 0;
@@ -427,7 +441,7 @@ namespace Poker.Models
             seat.ChipsIn = cut + (tHand.BottomHand.BestCard() == bestCard ? remainder : 0);
             if (winners == 1)
               seat.HandsWon++;
-          } 
+          }
           else
           {
             seat.ChipsIn = 0;
@@ -507,9 +521,9 @@ namespace Poker.Models
     }
 
     public override (int, uint) Evaluate(ulong hand, ulong board)
-		{
+    {
       return EvaluateTaiwaneseHand(hand, board);
-		}
+    }
 
     public static (int, uint) EvaluateTaiwaneseHand(ulong hand, ulong board)
     {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poker.Models
 {
+  [Serializable]
   public class BasePlayer : IPlayer
 
   {

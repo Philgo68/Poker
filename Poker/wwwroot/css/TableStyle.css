@@ -6,7 +6,7 @@
   margin-bottom: 8%; }
 
 .poker-table {
-  background-image: url("../../images/table.png");
+  background-image: url("../images/table.png");
   background-repeat: no-repeat;
   background-size: 100%;
   top: 0;
@@ -463,17 +463,22 @@
     transform-origin: var(--card-rotate-origin) 100%; }
 
 .layout-cards {
+  position: relative;
   display: inline-block;
-  text-align: center; }
+  text-align: center;
+  width: 40%; }
   .layout-cards .dropzone {
     display: inline-block;
-    min-height: unset;
-    min-width: unset; }
-  .layout-cards .svg-card-wrapper {
-    position: relative;
+    min-height: unset; }
+  .layout-cards .seat {
     display: inline-block; }
-  .layout-cards .playing-card {
-    --card-size: 6em; }
+  .layout-cards .cards {
+    display: inline-block; }
+  .layout-cards .svg-card-wrapper {
+    display: inline-block;
+    --card-size: 100%;
+    width: 23%;
+    position: relative; }
 
 .svg-hand-rotator.cards-2 {
   transform: rotate(calc(-0.5*var(--card-rotate)));
@@ -606,16 +611,16 @@ svg.playing-card {
   .chip-stack .chip-7 {
     background-position-x: -28em; }
   .chip-stack .chips-1 {
-    background-image: url("../../images/chips-1.png"); }
+    background-image: url("../images/chips-1.png"); }
   .chip-stack .chips-5 {
-    background-image: url("../../images/chips-5.png"); }
+    background-image: url("../images/chips-5.png"); }
   .chip-stack .chips-25 {
-    background-image: url("../../images/chips-25.png"); }
+    background-image: url("../images/chips-25.png"); }
   .chip-stack .chips-100 {
-    background-image: url("../../images/chips-100.png"); }
+    background-image: url("../images/chips-100.png"); }
   .chip-stack .chips-500 {
-    background-image: url("../../images/chips-500.png"); }
+    background-image: url("../images/chips-500.png"); }
   .chip-stack .chips-1000 {
-    background-image: url("../../images/chips-1000.png"); }
+    background-image: url("../images/chips-1000.png"); }
   .chip-stack .chips-5000 {
-    background-image: url("../../images/chips-5000.png"); }
+    background-image: url("../images/chips-5000.png"); }

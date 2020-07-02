@@ -3,6 +3,9 @@
 @inject SvgCards svgCards
 
 @using System.Diagnostics;
+@using System.Runtime.Serialization;
+@using System.Runtime.Serialization.Formatters.Binary;
+@using System.IO;
 
 <h1>Poker Table</h1>
 
@@ -72,264 +75,265 @@
 }
 
 @code {
-    string hand_1, hand_2, board_string, button;
-    int? hand_cnt;
-    IHand hero = null;
-    List<IHand> opponents = new List<IHand>();
-    IHand board = null;
-    List<IHand> displayHands = new List<IHand>();
-    BaseTable table = null;
-    IDeck deck = null;
-    double seconds;
-    long iterations;
-    bool show_chips = false;
+  string hand_1, hand_2, board_string, button;
+  int? hand_cnt;
+  IHand hero = null;
+  List<IHand> opponents = new List<IHand>();
+  IHand board = null;
+  List<IHand> displayHands = new List<IHand>();
+  BaseTable table = null;
+  IDeck deck = null;
+  double seconds;
+  long iterations;
+  bool show_chips = false;
 
-    private string result, result2;
-    private static Random _global_random = new Random();
+  private string result, result2;
+  private static Random _global_random = new Random();
 
-    protected async override Task OnInitializedAsync()
-    {
-        hand_1 = "As6d";
-        hand_2 = "Ac3d;Ah4d";
-        hand_cnt = 3;
-        board_string = "";
+  protected async override Task OnInitializedAsync()
+  {
+      hand_1 = "As6d";
+      hand_2 = "Ac3d;Ah4d";
+      hand_cnt = 3;
+      board_string = "";
 
-        //hand_1 = "jh5h5dah4h3s2s";
-        //hand_2 = "7d8s6sacqd3c2d;5s9s9htd8c7c2c;jckhkdad6h3d2h";
-        //board_string = "kcqsqhjd5c";
+      //hand_1 = "jh5h5dah4h3s2s";
+      //hand_2 = "7d8s6sacqd3c2d;5s9s9htd8c7c2c;jckhkdad6h3d2h";
+      //board_string = "kcqsqhjd5c";
 
-        await svgCards.LoadCardsAsync();
-    }
+      await svgCards.LoadCardsAsync();
+  }
 
-    private async void MyChangeHandler()
-    {
-        await InvokeAsync(() => StateHasChanged());
-    }
+  private async void MyChangeHandler()
+  {
+      await InvokeAsync(() => StateHasChanged());
+  }
 
-    async Task Submit()
-    {
-        result = "Loading...";
-        result2 = null;
+  async Task Submit()
+  {
+      result = "Loading...";
+      result2 = null;
 
-        table = null;
-        deck = null;
+      table = null;
+      deck = null;
 
-        hero = null;
-        board = null;
-        opponents.Clear();
-        displayHands.Clear();
+      hero = null;
+      board = null;
+      opponents.Clear();
+      displayHands.Clear();
 
-        StateHasChanged();
-        await Task.Delay(1);
+      StateHasChanged();
+      await Task.Delay(1);
 
-        switch (button)
-        {
-            case "Single":
-                result = await Task.FromResult(DemoTable(new OneCardHoldem()));
-                break;
-            case "Texas":
-                result = await Task.FromResult(DemoTable(new TexasHoldem(), 6));
-                break;
-            case "Omaha":
-                result = await Task.FromResult(DemoTable(new Omaha(), 6));
-                break;
-            case "Taiwanese":
-                result = await Task.FromResult(DemoTable(new Taiwanese(), 6));
-                break;
-            case "Deal":
-                (result, result2) = await Task.FromResult(StartDeckDeal());
-                break;
-            case "Test":
-                result = await Task.FromResult(TestSomething());
-                break;
-            default:
-                result = $"Unknown Button: {button}";
-                break;
-        };
-        button = null;
-    }
+      switch (button)
+      {
+          case "Single":
+              result = await Task.FromResult(DemoTable(new OneCardHoldem()));
+              break;
+          case "Texas":
+              result = await Task.FromResult(DemoTable(new TexasHoldem(), 6));
+              break;
+          case "Omaha":
+              result = await Task.FromResult(DemoTable(new Omaha(), 6));
+              break;
+          case "Taiwanese":
+              result = await Task.FromResult(DemoTable(new Taiwanese(), 6));
+              break;
+          case "Deal":
+              (result, result2) = await Task.FromResult(StartDeckDeal());
+              break;
+          case "Test":
+              result = await Task.FromResult(TestSomething());
+              break;
+          default:
+              result = $"Unknown Button: {button}";
+              break;
+      };
+      button = null;
+  }
 
-    protected string DemoTable(IGame game, int seats = 9)
-    {
-        try
-        {
-            table = new BaseTable(game, seats);
-            table.StateHasChangedDelegate += MyChangeHandler;
+  protected string DemoTable(IGame game, int seats = 9)
+  {
+      try
+      {
+          table = new BaseTable(game, seats);
+          table.StateHasChangedDelegate += MyChangeHandler;
 
-            hand_cnt = Math.Min(seats - 1, (hand_cnt ?? 1));
+          hand_cnt = Math.Min(seats - 1, (hand_cnt ?? 1));
 
-            hero = game.GetHand();
-            hero.SetCards(hand_1);
+          hero = game.GetHand();
+          hero.SetCards(hand_1);
 
-            var heroSeat = table.OccupySeat(hero, new BasePlayer() { Name = "Hero", Computer = false });
+          var heroSeat = table.OccupySeat(hero, new BasePlayer() { Name = "Hero", Computer = false });
 
-            var setOpp = 0;
-            foreach (var oh in (hand_2 ?? "").Split(";"))
-            {
-                var oppHand = game.GetHand();
-                oppHand.SetCards(oh);
-                table.OccupySeat(oppHand, null);
-                setOpp++;
-            }
+          var setOpp = 0;
+          foreach (var oh in (hand_2 ?? "").Split(";"))
+          {
+              var oppHand = game.GetHand();
+              oppHand.SetCards(oh);
+              table.OccupySeat(oppHand, null);
+              setOpp++;
+          }
 
-            hand_cnt = Math.Max(hand_cnt ?? 1, setOpp);
-            for (var i = setOpp; i < hand_cnt; i++)
-            {
-                table.OccupySeat(game.GetHand(), null);
-                setOpp++;
-            }
+          hand_cnt = Math.Max(hand_cnt ?? 1, setOpp);
+          for (var i = setOpp; i < hand_cnt; i++)
+          {
+              table.OccupySeat(game.GetHand(), null);
+              setOpp++;
+          }
 
-            board = game.GetBoard();
-            board.SetCards(board_string);
-            table.SetBoard(board);
+          board = game.GetBoard();
+          board.SetCards(board_string);
+          table.SetBoard(board);
 
-            if (true && (game.GetType() == typeof(Taiwanese)))
-            {
-                table.TransitionToNextPhase();
-            }
-            else
-            {
-                if (game.GetType() == typeof(Taiwanese))
-                {
-                    table.CompleteCards();
-                    table.LayoutHands(true);
-                }
+          table.Store();
 
-                table.pot = _global_random.Next(20000);
-                foreach (var s in table.AllSeats())
-                {
-                    if (s != null)
-                        s.ChipsMoving = _global_random.Next(750);
-                }
+          if (true && (game.GetType() == typeof(Taiwanese)))
+          {
+              table.TransitionToNextPhase();
+          }
+          else
+          {
+              if (game.GetType() == typeof(Taiwanese))
+              {
+                  table.CompleteCards();
+                  table.LayoutHands(true);
+              }
 
-                StateHasChanged();
-            }
+              table.pot = _global_random.Next(20000);
+              foreach (var s in table.AllSeats())
+              {
+                  if (s != null)
+                      s.ChipsMoving = _global_random.Next(750);
+              }
 
-            return $"Table Setup.";
-        }
-        catch (ArgumentException e)
-        {
-            return e.Message;
-        }
+              StateHasChanged();
+          }
 
-    }
+          return $"Table Setup.";
+      }
+      catch (ArgumentException e)
+      {
+          return e.Message;
+      }
 
-    protected (string, string) StartTaiwanese()
-    {
-        long cnt = 0;
-        var duration = 5.0;
+  }
 
-        //AhKsQsQhTh9h5s
-        //AsAhAcQhQc7s2d
-        //AsAhAcKhQsTs3c
-        // Tc7h7c6s6c2h2c  vs AcQhTsTd9h5s4s
-        // ThAsAhKsKh7d6d  vs Td8h8dJs7s4d3s     Th / As, Ah / Ks, Kh, 7d, 6d  and  Td / 8h, 8d / Js, 7s, 4d, 3s
+  protected (string, string) StartTaiwanese()
+  {
+      long cnt = 0;
+      var duration = 5.0;
 
-        //5d / 8s, 8h / As, 7c, 6c, 2d  vs Ts / 7s, 6d / Ks, 3s, 3d, 3c  on adqdjd9s9d
+      //AhKsQsQhTh9h5s
+      //AsAhAcQhQc7s2d
+      //AsAhAcKhQsTs3c
+      // Tc7h7c6s6c2h2c  vs AcQhTsTd9h5s4s
+      // ThAsAhKsKh7d6d  vs Td8h8dJs7s4d3s     Th / As, Ah / Ks, Kh, 7d, 6d  and  Td / 8h, 8d / Js, 7s, 4d, 3s
 
-
-        hero = new TaiwaneseHand();
-        TaiwaneseHand tHero = (TaiwaneseHand)hero;
-        tHero.SetCards(hand_1);
-
-        var opp = new TaiwaneseHand();
-        opp.SetCards(hand_2);
-        opponents.Add(opp);
-
-        // Create deck the initial cards "dealt"
-        var deck = new StandardDeck(tHero.CardsMask | opp.CardsMask);
-
-        // Fill in the blanks in the hand(s)
-        tHero.CompleteCards(deck, _global_random);
-        opp.CompleteCards(deck, _global_random);
-
-        board = new BaseHand(board_string, 5);
-        //board.CompleteCards(deck, _global_random);
-        board.CommunityCards = true;
-
-        // Layout the hands
-        cnt += tHero.LayoutHand(duration / 3);
-        cnt += opp.LayoutHand(duration / 3);
-
-        string result = $"{tHero.CardDescriptions} and {opp.CardDescriptions} over {cnt / 2:n0} boards.";
-        string result2 = "";
-
-        cnt = 19; // hero.PlayAgainst(opponents.ToArray(), board, duration / 3 );
-        result2 = $"{hero.Percent}% against {opponents.Count} opponents over {cnt:n0} trials.";
-
-        // To play once
-        //cnt = hero.PlayAgainst(opponents.ToArray(), board);
-        //result2 = $"Hero {cnt} points.";
+      //5d / 8s, 8h / As, 7c, 6c, 2d  vs Ts / 7s, 6d / Ks, 3s, 3d, 3c  on adqdjd9s9d
 
 
-        return (result, result2);
-    }
+      hero = new TaiwaneseHand();
+      TaiwaneseHand tHero = (TaiwaneseHand)hero;
+      tHero.SetCards(hand_1);
 
-    protected (string, string) StartDeckDeal()
-    {
-        var deck = new StandardDeck();
-        var boardMask1 = 0x0UL;
-        var boardMask2 = 0x0UL;
-        ulong[] hands = new ulong[6];
+      var opp = new TaiwaneseHand();
+      opp.SetCards(hand_2);
+      opponents.Add(opp);
 
-        var rand = _global_random;
-        var start = Stopwatch.GetTimestamp();
+      // Create deck the initial cards "dealt"
+      var deck = new StandardDeck(tHero.CardsMask | opp.CardsMask);
 
-        for (int i = 0; i < 1_000_000; i++)
-        {
-            deck.Reset();
+      // Fill in the blanks in the hand(s)
+      tHero.CompleteCards(deck, _global_random);
+      opp.CompleteCards(deck, _global_random);
 
-            for (int j = 0; j < hand_cnt; j++)
-            {
-                hands[j] = deck.DealCards(7, rand);
-            }
-            boardMask1 = deck.DealCards(5, rand);
-            boardMask2 = deck.DealCards(5, rand);
-        }
-        var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
+      board = new BaseHand(board_string, 5);
+      //board.CompleteCards(deck, _global_random);
+      board.CommunityCards = true;
 
-        result = hand_cnt == 6 ? $"{end}ms full table double board Taiwanese 1 million times." : $"{end}ms to deal {hand_cnt + 2} different hands 1 million times.";
-        result2 = "Last result:<br>";
+      // Layout the hands
+      cnt += tHero.LayoutHand(duration / 3);
+      cnt += opp.LayoutHand(duration / 3);
 
-        for (int j = 0; j < hand_cnt; j++)
-        {
-            result2 += deck.CardDescriptions(hands[j]) + "<br>";
-            displayHands.Add(new BaseHand(hands[j], 7));
-        }
+      string result = $"{tHero.CardDescriptions} and {opp.CardDescriptions} over {cnt / 2:n0} boards.";
+      string result2 = "";
 
-        var board1 = new BaseHand(boardMask1, 5);
-        var board2 = new BaseHand(boardMask2, 5);
+      cnt = 19; // hero.PlayAgainst(opponents.ToArray(), board, duration / 3 );
+      result2 = $"{hero.Percent}% against {opponents.Count} opponents over {cnt:n0} trials.";
 
-        result2 += "Board1: " + board1.CardDescriptions + "<br>";
-        result2 += "Board2: " + board2.CardDescriptions + "<br>";
-        //displayHands.Add(board1);
-        //displayHands.Add(board2);
-        result2 += Poker.CFHandEvaluator.Hand.DescriptionFromMask(Poker.CFHandEvaluator.Hand.ParseHand(hand_1 ?? "") | boardMask1) + "<br>";
-        result2 += "Dealt Cards: " + deck.CardDescriptions(deck.DealtCards) + "<br>";
+      // To play once
+      //cnt = hero.PlayAgainst(opponents.ToArray(), board);
+      //result2 = $"Hero {cnt} points.";
 
-        return (result, result2);
-    }
 
-    protected string TestSomething()
-    {
-        try
-        {
-            // Setup
-            show_chips = true;
+      return (result, result2);
+  }
 
-            var board = new BaseHand(2);
-            var fillers = new Fillers();
-            fillers.Add(new BaseHand(2));
-            fillers.Add(new BaseHand(2));
+  protected (string, string) StartDeckDeal()
+  {
+      var deck = new StandardDeck();
+      var boardMask1 = 0x0UL;
+      var boardMask2 = 0x0UL;
+      ulong[] hands = new ulong[6];
 
-            var deck = new StandardDeck();
-            deck.DealCards(30, _global_random);
-            return "Test Done.";
-        }
-        catch (ArgumentException e)
-        {
-            return e.Message;
-        }
+      var rand = _global_random;
+      var start = Stopwatch.GetTimestamp();
 
-    }
+      for (int i = 0; i < 1_000_000; i++)
+      {
+          deck.Reset();
+
+          for (int j = 0; j < hand_cnt; j++)
+          {
+              hands[j] = deck.DealCards(7, rand);
+          }
+          boardMask1 = deck.DealCards(5, rand);
+          boardMask2 = deck.DealCards(5, rand);
+      }
+      var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
+
+      result = hand_cnt == 6 ? $"{end}ms full table double board Taiwanese 1 million times." : $"{end}ms to deal {hand_cnt + 2} different hands 1 million times.";
+      result2 = "Last result:<br>";
+
+      for (int j = 0; j < hand_cnt; j++)
+      {
+          result2 += deck.CardDescriptions(hands[j]) + "<br>";
+          displayHands.Add(new BaseHand(hands[j], 7));
+      }
+
+      var board1 = new BaseHand(boardMask1, 5);
+      var board2 = new BaseHand(boardMask2, 5);
+
+      result2 += "Board1: " + board1.CardDescriptions + "<br>";
+      result2 += "Board2: " + board2.CardDescriptions + "<br>";
+      //displayHands.Add(board1);
+      //displayHands.Add(board2);
+      result2 += Poker.CFHandEvaluator.Hand.DescriptionFromMask(Poker.CFHandEvaluator.Hand.ParseHand(hand_1 ?? "") | boardMask1) + "<br>";
+      result2 += "Dealt Cards: " + deck.CardDescriptions(deck.DealtCards) + "<br>";
+
+      return (result, result2);
+  }
+
+  protected string TestSomething()
+  {
+      try
+      {
+          IFormatter formatter = new BinaryFormatter();
+          var stream = new FileStream("TableSaves/uyfa53bm.osy", FileMode.Open, FileAccess.Read);
+          table = (BaseTable)formatter.Deserialize(stream);
+          stream.Close();
+
+
+          table.StateHasChangedDelegate += MyChangeHandler;
+          table.TransitionToNextPhase();
+
+          return "Table Running";
+      }
+      catch (ArgumentException e)
+      {
+          return e.Message;
+      }
+
+  }
 }

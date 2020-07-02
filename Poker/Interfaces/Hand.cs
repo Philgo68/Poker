@@ -29,6 +29,7 @@ namespace Poker.Interfaces
     public int CardCount { get; }
     public int CardsNeeded { get; }
     public string CardDescriptions { get; }
+
     public event Action StateHasChangedDelegate;
     bool HandsLaidOut { get; }
 

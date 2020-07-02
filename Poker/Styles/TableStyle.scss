@@ -11,7 +11,7 @@
 }
 
 .poker-table {
-    background-image: url('../images/table.png');
+    background-image: url('../wwwroot/images/table.png');
     background-repeat: no-repeat;
     background-size: 100%;
     top: 0;
@@ -693,6 +693,7 @@
     display: inline-block;
     position: relative;
     /*overflow: hidden;*/
+
     &.cards-1 {
         --card-size: 90%;
         padding-top: 0%;
@@ -766,22 +767,29 @@
 }
 
 .layout-cards {
+    position: relative;
     display: inline-block;
     text-align: center;
+    width: 40%;
 
     .dropzone {
         display: inline-block;
         min-height: unset;
-        min-width: unset;
     }
 
-    .svg-card-wrapper {
-        position: relative;
+    .seat {
         display: inline-block;
     }
 
-    .playing-card {
-        --card-size: 6em;
+    .cards {
+        display: inline-block;
+    }
+
+    .svg-card-wrapper {
+        display: inline-block;
+        --card-size: 100%;
+        width: 23%;
+        position: relative;
     }
 }
 
@@ -967,30 +975,30 @@ svg.playing-card {
     }
 
     .chips-1 {
-        background-image: url('../images/chips-1.png');
+        background-image: url('../wwwroot/images/chips-1.png');
     }
 
     .chips-5 {
-        background-image: url('../images/chips-5.png');
+        background-image: url('../wwwroot/images/chips-5.png');
     }
 
     .chips-25 {
-        background-image: url('../images/chips-25.png');
+        background-image: url('../wwwroot/images/chips-25.png');
     }
 
     .chips-100 {
-        background-image: url('../images/chips-100.png');
+        background-image: url('../wwwroot/images/chips-100.png');
     }
 
     .chips-500 {
-        background-image: url('../images/chips-500.png');
+        background-image: url('../wwwroot/images/chips-500.png');
     }
 
     .chips-1000 {
-        background-image: url('../images/chips-1000.png');
+        background-image: url('../wwwroot/images/chips-1000.png');
     }
 
     .chips-5000 {
-        background-image: url('../images/chips-5000.png');
+        background-image: url('../wwwroot/images/chips-5000.png');
     }
 }

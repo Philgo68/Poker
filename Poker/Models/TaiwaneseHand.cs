@@ -13,6 +13,7 @@ using YYClass;
 
 namespace Poker.Models
 {
+  [Serializable]
   public class TaiwaneseHand : BaseHand
   {
     private IHand topHand;

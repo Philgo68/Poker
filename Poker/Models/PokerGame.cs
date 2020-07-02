@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace Poker.Models
 {
+  [Serializable]
 	public abstract class PokerGame : BaseGame
 	{
 		public PokerGame()

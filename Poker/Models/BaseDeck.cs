@@ -8,6 +8,7 @@ using Poker.Interfaces;
 
 namespace Poker.Models
 {
+	[Serializable]
 	public abstract class BaseDeck : IDeck
 	{
 		public virtual string Name { get; private set; } = "BaseDeck";

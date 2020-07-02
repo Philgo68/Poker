@@ -11,9 +11,10 @@
             @foreach (var card in Deck.CardNumbers(Hand.TopHand.CardsMask))
             {
 
-                <Draggable Tag="@(new { Card = card })" OnDrop="@OnDrop" class="svg-card-wrapper">
+                <Draggable Tag="@(new { Card = card })" OnDrop="@OnDrop" class="svg-card-wrapper card-0">
                     @(svgCards.Faces[card])
                 </Draggable>
+                <div></div>
 
             }
         </Dropzone>
@@ -25,7 +26,7 @@
             @foreach (var card in Deck.CardNumbers(Hand.MiddleHand.CardsMask))
             {
 
-                <Draggable Tag="@(new { Card = card })" OnDrop="@OnDrop" class="svg-card-wrapper">
+                <Draggable Tag="@(new { Card = card })" OnDrop="@OnDrop" class="svg-card-wrapper card-0">
                     @(svgCards.Faces[card])
                 </Draggable>
 
@@ -38,7 +39,7 @@
         <Dropzone Name="BottomHand" ForceSwap="true">
             @foreach (var card in Deck.CardNumbers(Hand.BottomHand.CardsMask))
             {
-                <Draggable Tag="@(new { Card = card })" OnDrop="@OnDrop" class="svg-card-wrapper">
+                <Draggable Tag="@(new { Card = card })" OnDrop="@OnDrop" class="svg-card-wrapper card-0">
                     @(svgCards.Faces[card])
                 </Draggable>
 

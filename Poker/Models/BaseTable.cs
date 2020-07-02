@@ -8,6 +8,9 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.CodeAnalysis.Operations;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace Poker.Models
 {
@@ -27,6 +30,7 @@ namespace Poker.Models
     public IHand Hand { get; }
   }
 
+  [Serializable]
   public class Seat : IHandHolder
   {
     public IHand Hand { get; set; }
@@ -50,19 +54,24 @@ namespace Poker.Models
     }
   }
 
+  [Serializable]
   public class BaseTable : IHandHolder
   {
     const double standardTime = 3;
 
     private IDeck deck;
     private int game_phase;
+
     private DisplayStage[] displayStages;
 
-    private readonly Dictionary<DisplayStage, Func<double>> DisplayActions = new Dictionary<DisplayStage, Func<double>>();
+    [NonSerialized]
+    private Dictionary<DisplayStage, Func<double>> DisplayActions;
     public int pot;
     public string DisplayPhase { get; set; }
     public string PhaseTitle { get; set; }
     public string PhaseMessage { get; set; }
+
+    private string StorageFile { get; set; }
 
     public BaseTable(IGame _game, int _totalSeats = 9)
     {
@@ -72,6 +81,11 @@ namespace Poker.Models
       board = null;
       deck = game.GetDeck();
       game_phase = 0;
+      SetupDisplayActions();
+    }
+    public void SetupDisplayActions()
+    {
+      DisplayActions = new Dictionary<DisplayStage, Func<double>>();
 
       DisplayActions[DisplayStage.DealtCards] = () =>
       {
@@ -153,6 +167,18 @@ namespace Poker.Models
 
     }
 
+    [OnDeserialized()]
+    internal void OnDeserializedMethod(StreamingContext context)
+    {
+      SetupDisplayActions();
+      foreach (var seat in AllSeats())
+      {
+        if (seat?.Hand != null)
+          seat.Hand.StateHasChangedDelegate += StateHasChanged;
+      }
+    }
+
+    [field: NonSerialized]
     public event Action StateHasChangedDelegate;
 
     private void NotifyStateChanged()
@@ -166,10 +192,23 @@ namespace Poker.Models
       if (displayStages == null) TransitionToNextPhase();
     }
 
+    public void Store()
+    {
+      StorageFile ??= $"TableSaves/{Path.GetRandomFileName()}";
+      IFormatter formatter = new BinaryFormatter();
+      Stream stream = new FileStream(StorageFile, FileMode.Create, FileAccess.Write);
+
+      formatter.Serialize(stream, this);
+      stream.Close();
+    }
+
     public string Name => "BaseTable";
     public int totalSeats { get; private set; }
+
     public Seat[] seats { get; private set; }
+
     public IHand board { get; private set; }
+
     public IGame game { get; private set; }
 
     public IDeck Deck => deck;
@@ -410,6 +449,10 @@ namespace Poker.Models
 
     public void TransitionToNextPhase()
     {
+      // Save before executing phase zero
+      if (game_phase == 0)
+        Store();
+
       // Execute the next game step
       displayStages = game.ExecutePhase(game_phase, this);
 

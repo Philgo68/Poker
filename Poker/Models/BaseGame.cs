@@ -6,6 +6,7 @@ using Poker.Interfaces;
 
 namespace Poker.Models
 {
+	[Serializable]
 	public abstract class BaseGame : IGame
 	{
 
