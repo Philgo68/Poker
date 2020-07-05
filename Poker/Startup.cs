@@ -32,8 +32,8 @@ namespace Poker
       var builder = services.AddRazorPages();
       services.AddServerSideBlazor();
       services.AddHttpClient();
-      services.AddScoped<Helpers.SvgCards>();
       services.AddBlazorDragDrop();
+      services.AddSingleton(new Helpers.SvgCards());
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

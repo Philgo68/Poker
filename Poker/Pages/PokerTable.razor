@@ -1,7 +1,5 @@
 ﻿@page "/pokertable"
 
-@inject SvgCards svgCards
-
 @using System.Diagnostics;
 @using System.Runtime.Serialization;
 @using System.Runtime.Serialization.Formatters.Binary;
@@ -100,8 +98,6 @@
       //hand_1 = "jh5h5dah4h3s2s";
       //hand_2 = "7d8s6sacqd3c2d;5s9s9htd8c7c2c;jckhkdad6h3d2h";
       //board_string = "kcqsqhjd5c";
-
-      await svgCards.LoadCardsAsync();
   }
 
   private async void MyChangeHandler()

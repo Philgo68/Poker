@@ -49,38 +49,37 @@
 </div>
 
 @code {
-  [Parameter]
-  public TaiwaneseHand Hand { get; set; }
-  [Parameter]
-  public IDeck Deck { get; set; }
-  [Inject]
-  private DragDropService DragDropService { get; set; }
+    [Parameter]
+    public TaiwaneseHand Hand { get; set; }
+    [Parameter]
+    public IDeck Deck { get; set; }
+    [Inject]
+    private DragDropService DragDropService { get; set; }
 
-  protected async override Task OnInitializedAsync()
-  {
-      Hand.StartManualLayout();
-      await svgCards.LoadCardsAsync();
-  }
+    protected async override Task OnInitializedAsync()
+    {
+        Hand.StartManualLayout();
+    }
 
-  protected void OnDrop(dynamic d, int i)
-  {
-      Hand.TopHand.CardsMask = 0UL;
-      foreach (var frag in DragDropService.GetDraggablesForDropzone("TopHand"))
-      {
-          Hand.TopHand.AddCard(frag.Tag.Card);
-      }
+    protected void OnDrop(dynamic d, int i)
+    {
+        Hand.TopHand.CardsMask = 0UL;
+        foreach (var frag in DragDropService.GetDraggablesForDropzone("TopHand"))
+        {
+            Hand.TopHand.AddCard(frag.Tag.Card);
+        }
 
-      Hand.MiddleHand.CardsMask = 0UL;
-      foreach (var frag in DragDropService.GetDraggablesForDropzone("MiddleHand"))
-      {
-          Hand.MiddleHand.AddCard(frag.Tag.Card);
-      }
+        Hand.MiddleHand.CardsMask = 0UL;
+        foreach (var frag in DragDropService.GetDraggablesForDropzone("MiddleHand"))
+        {
+            Hand.MiddleHand.AddCard(frag.Tag.Card);
+        }
 
-      Hand.BottomHand.CardsMask = 0UL;
-      foreach (var frag in DragDropService.GetDraggablesForDropzone("BottomHand"))
-      {
-          Hand.BottomHand.AddCard(frag.Tag.Card);
-      }
-  }
+        Hand.BottomHand.CardsMask = 0UL;
+        foreach (var frag in DragDropService.GetDraggablesForDropzone("BottomHand"))
+        {
+            Hand.BottomHand.AddCard(frag.Tag.Card);
+        }
+    }
 
 }
