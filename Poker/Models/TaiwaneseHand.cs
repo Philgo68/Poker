@@ -93,6 +93,10 @@ namespace Poker.Models
     {
       manualLayoutInProgress = true;
       var cards = Bits.IndividualMasks(this.CardsMask);
+
+      Random rnd = new Random();
+      cards = cards.OrderBy(x => rnd.Next()).ToArray();
+
       TopHand = new BaseHand(cards[0], 1);
       MiddleHand = new BaseHand(cards[1] | cards[2], 2);
       BottomHand = new BaseHand(cards[3] | cards[4] | cards[5] | cards[6], 4);
