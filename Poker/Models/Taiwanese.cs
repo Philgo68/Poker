@@ -256,6 +256,7 @@ namespace Poker.Models
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
+          seat.HandsWon = 0;
           tHand.LastEvaluation = TexasHoldem.EvaluateHand(tHand.TopHand.CardsMask | table.board.CardsMask);
           if (tHand.LastEvaluation.Item2 > bestValue)
           {
@@ -304,7 +305,7 @@ namespace Poker.Models
           {
             seat.ChipsIn = cut + (tHand.TopHand.BestCard() == bestCard ? remainder : 0);
             if (winners == 1)
-              seat.HandsWon = 1;
+              seat.HandsWon++;
           }
           else
           {
@@ -453,14 +454,7 @@ namespace Poker.Models
     private bool PlayScoopBonus(BaseTable table)
     {
       // See if someone scooped all three hands
-      bool scooped = false;
-      foreach (var seat in table.OccupiedSeats())
-      {
-        if (seat.Hand is TaiwaneseHand tHand)
-        {
-          scooped = seat.HandsWon == 3;
-        }
-      }
+      bool scooped = table.OccupiedSeats().Any(seat => seat.HandsWon == 3);
 
       if (scooped)
       {
@@ -468,43 +462,28 @@ namespace Poker.Models
         // Determine chips out and pot size
         foreach (var seat in table.OccupiedSeats())
         {
-          if (seat.Hand is TaiwaneseHand)
+          if (seat.HandsWon != 3)
           {
-            if (seat.HandsWon != 3)
-            {
-              seat.ChipsOut = Math.Min(seat.Chips, 3);
-            }
-            else
-            {
-              seat.ChipsOut = 0;
-            }
-            pot += seat.ChipsOut;
+            seat.ChipsOut = Math.Min(seat.Chips, 3);
           }
+          else
+          {
+            seat.ChipsOut = 0;
+          }
+          pot += seat.ChipsOut;
         }
 
         // Determine chips in 
         foreach (var seat in table.OccupiedSeats())
         {
-          if (seat.Hand is TaiwaneseHand)
+          if (seat.HandsWon == 3)
           {
-            if (seat.HandsWon == 3)
-            {
-              seat.ChipsIn = pot;
-            }
-            else
-            {
-              seat.ChipsIn = 0;
-            }
+            seat.ChipsIn = pot;
           }
-        }
-      }
-
-      // Clear Wins count
-      foreach (var seat in table.OccupiedSeats())
-      {
-        if (seat.Hand is TaiwaneseHand tHand)
-        {
-          seat.HandsWon = 0;
+          else
+          {
+            seat.ChipsIn = 0;
+          }
         }
       }
 
