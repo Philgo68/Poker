@@ -15,9 +15,9 @@ using System.IO;
 namespace Poker.Models
 {
   [Serializable]
-  public class BaseTable : IHandHolder
+  public class BaseTable : IHandHolder, ISavable
   {
-    const double standardTime = 3;
+    const double standardTime = 2;
 
     private BaseDeck deck;
     private int game_phase;
@@ -142,12 +142,7 @@ namespace Poker.Models
 
     public void Store()
     {
-      StorageFile ??= $"TableSaves/{Path.GetRandomFileName()}";
-      IFormatter formatter = new BinaryFormatter();
-      Stream stream = new FileStream(StorageFile, FileMode.Create, FileAccess.Write);
-
-      formatter.Serialize(stream, this);
-      stream.Close();
+      DbAccess.Save<BaseTable>(this);
     }
 
     public string Name => "BaseTable";
@@ -164,6 +159,8 @@ namespace Poker.Models
     BaseHand IHandHolder.Hand => board;
 
     public int Pot { get => pot; private set => pot = value; }
+
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     public BaseTable(ulong dealtCards = 0x0UL)
     {

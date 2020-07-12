@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace Poker
 {
@@ -32,6 +34,9 @@ namespace Poker
       services.AddServerSideBlazor();
       services.AddHttpClient();
       services.AddSingleton(new Helpers.SvgCards());
+      SqlMapper.AddTypeHandler(new Helpers.MySqlGuidTypeHandler());
+      SqlMapper.RemoveTypeMap(typeof(Guid));
+      SqlMapper.RemoveTypeMap(typeof(Guid?));
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
