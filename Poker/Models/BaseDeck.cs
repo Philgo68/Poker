@@ -9,7 +9,7 @@ using Poker.Interfaces;
 namespace Poker.Models
 {
 	[Serializable]
-	public abstract class BaseDeck : IDeck
+	public abstract class BaseDeck
 	{
 		public virtual string Name { get; private set; } = "BaseDeck";
 		public virtual int Suits => 0;
@@ -90,12 +90,6 @@ namespace Poker.Models
 			hand.CardsMask |= DealCards(hand.CardsNeeded, rand);
 			hand.Deck = this;
 		}
-		public virtual void CompleteCards(IHand hand, Random rand = null)
-		{
-			hand.CardsMask |= DealCards(hand.CardsNeeded, rand);
-			hand.Deck = this;
-		}
-
 		public virtual void Reset(ulong dealtCards = 0x0UL)
 		{
 			DealtCards = dealtCards;

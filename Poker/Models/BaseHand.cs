@@ -14,7 +14,7 @@ using Poker.Interfaces;
 namespace Poker.Models
 {
  [Serializable]
-  public class BaseHand : IHand
+  public class BaseHand : IHandHolder, IComparable
   {
     private readonly int cardCount;
     private int cardsNeeded;
@@ -77,6 +77,8 @@ namespace Poker.Models
     }
 
     public virtual bool HandsLaidOut => true;
+
+    BaseHand IHandHolder.Hand => this;
 
     public virtual (int, uint) Evaluate(ulong board)
     {

@@ -1,4 +1,5 @@
 ﻿using Poker.Interfaces;
+using Poker.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Poker.Helpers
 {
-  public class Fillers : List<IHand>
+  public class Fillers : List<BaseHand>
   {
-    public IEnumerable<List<IHand>> CompletedHands(IDeck deck, IHand board, int threadNum, int threadCnt, Random rand, double duration, ulong iterations = 0)
+    public IEnumerable<List<BaseHand>> CompletedHands(BaseDeck deck, BaseHand board, int threadNum, int threadCnt, Random rand, double duration, ulong iterations = 0)
     {
       // detemine the amount of possible work and prep for dealing all combinations
       ulong cardsLeft = Convert.ToUInt64(deck.RemainingInDeck);
@@ -18,7 +19,7 @@ namespace Poker.Helpers
       var totalIterations = 1UL;
 
       var newHand = new List<bool>();
-      var hands = new List<IHand>();
+      var hands = new List<BaseHand>();
 
       board.CardsMask = 0;
       for (var i = 1; i <= board.CardCount; i++)

@@ -7,7 +7,7 @@ using Poker.Interfaces;
 namespace Poker.Models
 {
 	[Serializable]
-	public abstract class BaseGame : IGame
+	public abstract class BaseGame
 	{
 
 		public BaseGame()
@@ -16,10 +16,10 @@ namespace Poker.Models
 
 		public abstract string Name { get; }
 
-		public abstract IDeck GetDeck(ulong dealtCards = 0x0UL);
+		public abstract BaseDeck GetDeck(ulong dealtCards = 0x0UL);
 
-		public abstract IHand GetHand();
-		public virtual IHand GetBoard()
+		public abstract BaseHand GetHand();
+		public virtual BaseHand GetBoard()
 		{
 			return new BaseHand(5)
 			{
@@ -32,11 +32,11 @@ namespace Poker.Models
 			return new DisplayStage[] {};
 		}
 
-		public virtual (int, uint) Evaluate(IHand hand)
+		public virtual (int, uint) Evaluate(BaseHand hand)
 		{
 			return Evaluate(hand.CardsMask);
 		}
-		public virtual (int, uint) Evaluate(IHand hand, IHand board)
+		public virtual (int, uint) Evaluate(BaseHand hand, BaseHand board)
 		{
 			return Evaluate(hand.CardsMask, board.CardsMask);
 		}

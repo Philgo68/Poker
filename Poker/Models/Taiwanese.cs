@@ -186,12 +186,12 @@ namespace Poker.Models
 
     public override string Name { get { return "Taiwanese"; } }
 
-    public override IDeck GetDeck(ulong dealtCards = 0)
+    public override BaseDeck GetDeck(ulong dealtCards = 0)
     {
       return new StandardDeck(dealtCards);
     }
 
-    public override IHand GetHand()
+    public override BaseHand GetHand()
     {
       return new TaiwaneseHand();
     }
@@ -494,7 +494,7 @@ namespace Poker.Models
     {
       throw new ArgumentException("Taiwanese Evaluation must include a hand and a board.");
     }
-    public override (int, uint) Evaluate(IHand hand)
+    public override (int, uint) Evaluate(BaseHand hand)
     {
       throw new ArgumentException("Taiwanese Evaluation must include a hand and a board.");
     }

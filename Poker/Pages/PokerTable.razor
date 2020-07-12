@@ -75,12 +75,12 @@
 @code {
   string hand_1, hand_2, board_string, button;
   int? hand_cnt;
-  IHand hero = null;
-  List<IHand> opponents = new List<IHand>();
-  IHand board = null;
-  List<IHand> displayHands = new List<IHand>();
+  BaseHand hero = null;
+  List<BaseHand> opponents = new List<BaseHand>();
+  BaseHand board = null;
+  List<BaseHand> displayHands = new List<BaseHand>();
   BaseTable table = null;
-  IDeck deck = null;
+  BaseDeck deck = null;
   double seconds;
   long iterations;
   bool show_chips = false;
@@ -148,7 +148,7 @@
       button = null;
   }
 
-  protected string DemoTable(IGame game, int seats = 9)
+  protected string DemoTable(BaseGame game, int seats = 9)
   {
       try
       {

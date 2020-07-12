@@ -14,12 +14,12 @@ namespace Poker.Models
 
 		public override string Name { get { return "Texas Hold'em"; } }
 
-		public override IDeck GetDeck(ulong dealtCards = 0)
+		public override BaseDeck GetDeck(ulong dealtCards = 0)
 		{
 			return new StandardDeck(dealtCards);
 		}
 
-		public override IHand GetHand()
+		public override BaseHand GetHand()
 		{
 			return new BaseHand(2);
 		}

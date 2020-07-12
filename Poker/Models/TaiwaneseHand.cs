@@ -16,9 +16,9 @@ namespace Poker.Models
   [Serializable]
   public class TaiwaneseHand : BaseHand
   {
-    private IHand topHand;
-    private IHand middleHand;
-    private IHand bottomHand;
+    private BaseHand topHand;
+    private BaseHand middleHand;
+    private BaseHand bottomHand;
     private bool manualLayoutInProgress;
 
     public override bool HandsLaidOut => (!manualLayoutInProgress && TopHand != null && MiddleHand != null && BottomHand != null);
@@ -29,9 +29,9 @@ namespace Poker.Models
       manualLayoutInProgress = false;
     }
     public int RunningScore { get; set; }
-    public IHand TopHand { get => topHand; set { topHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
-    public IHand MiddleHand { get => middleHand; set { middleHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
-    public IHand BottomHand { get => bottomHand; set { bottomHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
+    public BaseHand TopHand { get => topHand; set { topHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
+    public BaseHand MiddleHand { get => middleHand; set { middleHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
+    public BaseHand BottomHand { get => bottomHand; set { bottomHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
 
     public override int CompareTo(object obj)
     {
@@ -49,7 +49,7 @@ namespace Poker.Models
     {
       SetCards(cards);
     }
-    public TaiwaneseHand(IHand topHand, IHand middleHand, IHand bottomHand) : this()
+    public TaiwaneseHand(BaseHand topHand, BaseHand middleHand, BaseHand bottomHand) : this()
     {
       TopHand = topHand;
       MiddleHand = middleHand;
