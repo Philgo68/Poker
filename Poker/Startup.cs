@@ -5,12 +5,18 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Poker.Areas.Identity;
+using Poker.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Poker
 {
@@ -30,10 +36,14 @@ namespace Poker
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
     public void ConfigureServices(IServiceCollection services)
     {
-      var builder = services.AddRazorPages();
+      services.AddDbContext<PokerDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("PokerContextConnection")));
+      services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<PokerDbContext>();
+      services.AddRazorPages();
       services.AddServerSideBlazor();
+      services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
       services.AddHttpClient();
       services.AddSingleton(new Helpers.SvgCards());
+
       SqlMapper.AddTypeHandler(new Helpers.MySqlGuidTypeHandler());
       SqlMapper.RemoveTypeMap(typeof(Guid));
       SqlMapper.RemoveTypeMap(typeof(Guid?));
@@ -45,6 +55,7 @@ namespace Poker
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
+        app.UseDatabaseErrorPage();
       }
       else
       {
@@ -52,6 +63,8 @@ namespace Poker
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
       }
+
+      app.UseHttpsRedirection();
       app.UseStaticFiles();
 
       var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
@@ -62,12 +75,14 @@ namespace Poker
         ContentTypeProvider = provider
       });
 
-      app.UseHttpsRedirection();
-
       app.UseRouting();
+
+      app.UseAuthentication();
+      app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {
+        endpoints.MapControllers();
         endpoints.MapBlazorHub();
         endpoints.MapFallbackToPage("/_Host");
       });

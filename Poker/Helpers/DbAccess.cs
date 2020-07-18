@@ -23,11 +23,9 @@ namespace Poker.Helpers
       get
       {
         IFormatter formatter = new BinaryFormatter();
-        using (var ms = new MemoryStream())
-        {
-          formatter.Serialize(ms, this);
-          return ms.ToArray();
-        }
+        using var ms = new MemoryStream();
+        formatter.Serialize(ms, this);
+        return ms.ToArray();
       }
     }
   }
@@ -82,27 +80,21 @@ namespace Poker.Helpers
     public static List<T> Load<T>()
     {
       IFormatter formatter = new BinaryFormatter();
-      using (var ms = new MemoryStream())
+      using var ms = new MemoryStream();
+      using SQLiteConnection cnn = GetOpenConnection();
+      var rawData = GetData<T>(cnn);
+      return rawData.Select(rd =>
       {
-        using (SQLiteConnection cnn = GetOpenConnection())
-        {
-          var rawData = GetData<T>(cnn);
-          return rawData.Select(rd =>
-          {
-            ms.Write(rd.Data, 0, rd.Data.Length);
-            ms.Seek(0, SeekOrigin.Begin);
-            return (T)formatter.Deserialize(ms);
-          }).ToList();
-        }
-      }
+        ms.Write(rd.Data, 0, rd.Data.Length);
+        ms.Seek(0, SeekOrigin.Begin);
+        return (T)formatter.Deserialize(ms);
+      }).ToList();
     }
 
     public static void Save<T>(ISavable data)
     {
-      using (SQLiteConnection cnn = GetOpenConnection())
-      {
-        cnn.Execute($"insert into {typeof(T).ToString().Replace('.', '_')} (Id, Data) values (@Id, @Data) on conflict(id) do update set Data = excluded.Data;", new { data.Id, data.Data });
-      }
+      using SQLiteConnection cnn = GetOpenConnection();
+      cnn.Execute($"insert into {typeof(T).ToString().Replace('.', '_')} (Id, Data) values (@Id, @Data) on conflict(id) do update set Data = excluded.Data;", new { data.Id, data.Data });
     }
 
   }
