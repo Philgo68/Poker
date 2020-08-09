@@ -36,21 +36,24 @@ namespace Poker
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddDbContext<PokerDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("PokerContextConnection")));
+      var db = new PokerDbContext(new DbContextOptionsBuilder<PokerDbContext>().UseSqlite(Configuration.GetConnectionString("PokerContextConnection")).Options);
+      services.AddSingleton(db);
+      //services.AddDbContext<PokerDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("PokerContextConnection")));
       services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<PokerDbContext>();
       services.AddRazorPages();
       services.AddServerSideBlazor();
       services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
       services.AddHttpClient();
       services.AddSingleton(new Helpers.SvgCards());
+      services.AddSingleton(new Helpers.Dealers(db));
 
-      SqlMapper.AddTypeHandler(new Helpers.MySqlGuidTypeHandler());
-      SqlMapper.RemoveTypeMap(typeof(Guid));
-      SqlMapper.RemoveTypeMap(typeof(Guid?));
+      //SqlMapper.AddTypeHandler(new Helpers.MySqlGuidTypeHandler());
+      //SqlMapper.RemoveTypeMap(typeof(Guid));
+      //SqlMapper.RemoveTypeMap(typeof(Guid?));
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PokerDbContext db)
     {
       if (env.IsDevelopment())
       {
@@ -74,6 +77,8 @@ namespace Poker
       {
         ContentTypeProvider = provider
       });
+
+      db.Database.EnsureCreated();
 
       app.UseRouting();
 

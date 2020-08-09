@@ -58,18 +58,18 @@
     @if (table != null)
     {
         <div class="poker-hand">
-            <PokerHandComponent Hand=@table.Hero().Hand Deck=@table.Deck ShowBlanks=@true />
+            <PokerHandComponent Hand=@table.Hero().Hand Deck=@table.SampleDeck ShowBlanks=@true />
         </div>
         <div class="d-inline-block m-2">vs.</div>
         @foreach (var seat in @table.Opponents())
         {
             <div class="poker-hand">
-                <PokerHandComponent Hand=@seat.Hand Deck=@table.Deck ShowBlanks=@true />
+                <PokerHandComponent Hand=@seat.Hand Deck=@table.SampleDeck ShowBlanks=@true />
             </div>
         }
         <div class="d-inline-block m-2">on</div>
         <div class="poker-hand">
-            <PokerHandComponent Hand=@board Deck=@table.Deck ShowBlanks=@true />
+            <PokerHandComponent Hand=@board Deck=@table.SampleDeck ShowBlanks=@true />
         </div>
     }
 
@@ -127,7 +127,7 @@
   List<BaseHand> opponents = new List<BaseHand>();
   BaseHand board = null;
   List<BaseHand> displayHands = new List<BaseHand>();
-  BaseTable table = null;
+  Table table = null;
   BaseDeck deck = null;
   double seconds;
   long iterations;
@@ -191,25 +191,25 @@
   {
       try
       {
-          table = new BaseTable(game);
+          table = new Table(game);
 
           var heroHand = game.GetHand();
           heroHand.SetCards(hand_1);
-          var heroSeat = table.OccupySeat(heroHand);
+          //var heroSeat = table.OccupySeat(heroHand);
 
           var setOpp = 0;
           foreach (var oh in (hand_2 ?? "").Split(";"))
           {
               var oppHand = game.GetHand();
               oppHand.SetCards(oh);
-              table.OccupySeat(oppHand);
+              //table.OccupySeat(oppHand);
               setOpp++;
           }
 
           hand_cnt = Math.Max(hand_cnt ?? 1, setOpp);
           for (var i = setOpp; i < hand_cnt; i++)
           {
-              table.OccupySeat(game.GetHand());
+              //table.OccupySeat(game.GetHand());
               setOpp++;
           }
 
@@ -221,7 +221,7 @@
 
           // Play for x seconds or iterations
           var start = Stopwatch.GetTimestamp();
-          long cnt = table.PlayHandTrials(seconds, Convert.ToUInt64(iterations * 1_000_000));
+          long cnt = 0; //table.PlayHandTrials(seconds, Convert.ToUInt64(iterations * 1_000_000));
           var end = 1000.0 * (Stopwatch.GetTimestamp() - start) / Stopwatch.Frequency;
 
           return $"{heroHand.Percent}% against {setOpp} opponents over {cnt:n0} trials in {end}ms.<br>Wins: {heroHand.Wins:n0}  Loses: {heroHand.Loses:n0}  Ties: {heroHand.Ties:n0}.";

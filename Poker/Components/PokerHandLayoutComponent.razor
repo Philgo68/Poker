@@ -6,7 +6,7 @@
         int i = 0;
         <div class="hand-area">
 
-            @for (int c = 0; c < Hand.TopHand.CardCount; c++)
+            @for (int c = 0; c < TopHand.CardCount; c++)
             {
                 var card = i;
                 <div @ondragstart="(e)=>Ondragstart(e, Cards[card])" ondragover="event.preventDefault();" @ondrop="(e)=>Ondrop(e, Cards[card])" draggable="true" class="draggable svg-card-wrapper card-0">
@@ -19,7 +19,7 @@
     @{
         <div class="w-100"></div>
         <div class="hand-area">
-            @for (int c = 0; c < Hand.MiddleHand.CardCount; c++)
+            @for (int c = 0; c < MiddleHand.CardCount; c++)
             {
                 var card = i;
                 <div @ondragstart="(e)=>Ondragstart(e, Cards[card])" ondragover="event.preventDefault();" @ondrop="(e)=>Ondrop(e, Cards[card])" draggable="true" class="draggable svg-card-wrapper card-0">
@@ -32,7 +32,7 @@
     @{
         <div class="w-100"></div>
         <div class="hand-area">
-            @for (int c = 0; c < Hand.BottomHand.CardCount; c++)
+            @for (int c = 0; c < BottomHand.CardCount; c++)
             {
                 var card = i;
                 <div @ondragstart="(e)=>Ondragstart(e, Cards[card])" ondragover="event.preventDefault();" @ondrop="(e)=>Ondrop(e, Cards[card])" draggable="true" class="draggable svg-card-wrapper card-0">
@@ -46,49 +46,56 @@
 
 
 @code {
-    [Parameter]
-    public TaiwaneseHand Hand { get; set; }
-    [Parameter]
-    public BaseDeck Deck { get; set; }
+  [Parameter]
+  public TaiwaneseHand Hand { get; set; }
+  [Parameter]
+  public BaseDeck Deck { get; set; }
 
-    private List<int> Cards;
-    private int card_dragging;
+  private List<int> Cards;
+  private int card_dragging;
 
-    protected async override Task OnInitializedAsync()
-    {
-        Hand.StartManualLayout();
+  private BaseHand TopHand, MiddleHand, BottomHand;
 
-        Random rnd = new Random();
-        Cards = new List<int>();
+  protected async override Task OnInitializedAsync()
+  {
+      (TopHand, MiddleHand, BottomHand) = Hand.StartManualLayout();
 
-        foreach (var card in Deck.CardNumbers(Hand.TopHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
-        foreach (var card in Deck.CardNumbers(Hand.MiddleHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
-        foreach (var card in Deck.CardNumbers(Hand.BottomHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
-    }
+      Random rnd = new Random();
+      Cards = new List<int>();
 
-    private void Ondragstart(DragEventArgs e, int card)
-    {
-        // Start Dragging the card
-        card_dragging = card;
-    }
+      foreach (var card in Deck.CardNumbers(TopHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
+      foreach (var card in Deck.CardNumbers(MiddleHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
+      foreach (var card in Deck.CardNumbers(BottomHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
+  }
 
-    private void Ondrop(DragEventArgs e, int card)
-    {
-        // Swap this Card with the card being dragged
-        var card1 = Cards.IndexOf(card_dragging);
-        var card2 = Cards.IndexOf(card);
+  private void Ondragstart(DragEventArgs e, int card)
+  {
+      // Start Dragging the card
+      card_dragging = card;
+  }
 
-        (Cards[card1], Cards[card2]) = (Cards[card2], Cards[card1]);
+  private void Ondrop(DragEventArgs e, int card)
+  {
+      // Swap this Card with the card being dragged
+      var card1 = Cards.IndexOf(card_dragging);
+      var card2 = Cards.IndexOf(card);
 
-        // Reset the Hands
-        Hand.TopHand.CardsMask = 0UL;
-        Hand.MiddleHand.CardsMask = 0UL;
-        Hand.BottomHand.CardsMask = 0UL;
+      (Cards[card1], Cards[card2]) = (Cards[card2], Cards[card1]);
 
-        int i = 0;
-        for (int c = 0; c < Hand.TopHand.CardCount; c++) Hand.TopHand.AddCard(Cards[i++]);
-        for (int c = 0; c < Hand.MiddleHand.CardCount; c++) Hand.MiddleHand.AddCard(Cards[i++]);
-        for (int c = 0; c < Hand.BottomHand.CardCount; c++) Hand.BottomHand.AddCard(Cards[i++]);
-    }
+      // Reset the Hands
+      TopHand.CardsMask = 0UL;
+      MiddleHand.CardsMask = 0UL;
+      BottomHand.CardsMask = 0UL;
+
+      int i = 0;
+      for (int c = 0; c < TopHand.CardCount; c++) TopHand.AddCard(Cards[i++]);
+      for (int c = 0; c < MiddleHand.CardCount; c++) MiddleHand.AddCard(Cards[i++]);
+      for (int c = 0; c < BottomHand.CardCount; c++) BottomHand.AddCard(Cards[i++]);
+
+      // Store in Hand
+      Hand.TopHand = TopHand;
+      Hand.MiddleHand = MiddleHand;
+      Hand.BottomHand = BottomHand;
+  }
 
 }

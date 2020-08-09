@@ -27,10 +27,12 @@ namespace Poker.Models
 			};
 		}
 
-		public virtual DisplayStage[] ExecutePhase(int game_phase, BaseTable table)
+		public virtual DisplayStage[] ExecutePhase(int game_phase, TableDealer tableDealer)
 		{
 			return new DisplayStage[] {};
 		}
+
+		public abstract int PhaseCount { get; }
 
 		public virtual (int, uint) Evaluate(BaseHand hand)
 		{

@@ -13,8 +13,8 @@ namespace Poker.Models
 		}
 
 		public override string Name { get { return "Omaha"; } }
-
-		public override BaseDeck GetDeck(ulong dealtCards = 0)
+    
+    public override BaseDeck GetDeck(ulong dealtCards = 0)
 		{
 			return new StandardDeck(dealtCards);
 		}

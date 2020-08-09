@@ -29,9 +29,9 @@ namespace Poker.Models
       manualLayoutInProgress = false;
     }
     public int RunningScore { get; set; }
-    public BaseHand TopHand { get => topHand; set { topHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
-    public BaseHand MiddleHand { get => middleHand; set { middleHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
-    public BaseHand BottomHand { get => bottomHand; set { bottomHand = value; CardsMask = (TopHand?.CardsMask ?? 0) | (MiddleHand?.CardsMask ?? 0) | (BottomHand?.CardsMask ?? 0); } }
+    public BaseHand TopHand { get => manualLayoutInProgress ? null : topHand; set { topHand = value; CardsMask = (topHand?.CardsMask ?? 0) | (middleHand?.CardsMask ?? 0) | (bottomHand?.CardsMask ?? 0); } }
+    public BaseHand MiddleHand { get => manualLayoutInProgress ? null : middleHand; set { middleHand = value; CardsMask = (topHand?.CardsMask ?? 0) | (middleHand?.CardsMask ?? 0) | (bottomHand?.CardsMask ?? 0); } }
+    public BaseHand BottomHand { get => manualLayoutInProgress ? null : bottomHand; set { bottomHand = value; CardsMask = (topHand?.CardsMask ?? 0) | (middleHand?.CardsMask ?? 0) | (bottomHand?.CardsMask ?? 0); } }
 
     public override int CompareTo(object obj)
     {
@@ -89,7 +89,7 @@ namespace Poker.Models
       }
     }
 
-    public void StartManualLayout()
+    public (BaseHand, BaseHand, BaseHand) StartManualLayout()
     {
       manualLayoutInProgress = true;
       var cards = Bits.IndividualMasks(this.CardsMask);
@@ -100,6 +100,7 @@ namespace Poker.Models
       TopHand = new BaseHand(cards[0], 1);
       MiddleHand = new BaseHand(cards[1] | cards[2], 2);
       BottomHand = new BaseHand(cards[3] | cards[4] | cards[5] | cards[6], 4);
+      return (topHand, middleHand, bottomHand);
     }
 
     public void CompleteManualLayout()

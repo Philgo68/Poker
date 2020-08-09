@@ -11,8 +11,6 @@ namespace Poker.Models
   [Serializable]
   public class Taiwanese : PokerGame
   {
-    [NonSerialized]
-    private List<Func<BaseTable, DisplayStage[]>> PhaseActions;
     public Taiwanese()
     {
       SetupPhases();
@@ -20,78 +18,86 @@ namespace Poker.Models
 
     public void SetupPhases()
     {
-      PhaseActions = new List<Func<BaseTable, DisplayStage[]>>();
-      PhaseActions.Add((table) =>
+      PhaseActions = new List<Func<TableDealer, DisplayStage[]>>();
+
+      //Reset table for new hand
+      PhaseActions.Add((tableDealer) =>
       {
-        table.PhaseTitle = "Hands Dealt";
-        table.PhaseMessage = "";
-        table.CompleteCards();
+        tableDealer.CleanTableForNewHand();
+        return new DisplayStage[] { };
+      });
+
+      PhaseActions.Add((tableDealer) =>
+      {
+        tableDealer.Table.PhaseTitle = "Hands Dealt";
+        tableDealer.Table.PhaseMessage = "";
+        tableDealer.DealHands();
         return new DisplayStage[] { DisplayStage.DealtCards };
       });
 
       //Layout Computer Hands
-      PhaseActions.Add((table) =>
+      PhaseActions.Add((tableDealer) =>
       {
-        table.PhaseTitle = "Layout Hands";
-        table.PhaseMessage = "";
-        table.LayoutHands();
+        tableDealer.Table.PhaseTitle = "Layout Hands";
+        tableDealer.Table.PhaseMessage = "";
+        tableDealer.LayoutHands();
         return new DisplayStage[] { DisplayStage.DealtCards };
       });
 
       //Deal 1st Board
-      PhaseActions.Add((table) =>
+      PhaseActions.Add((tableDealer) =>
       {
         // Need to wait until all hands are laid out before continuing.
-        if (table.OccupiedSeats().Any(s => !s.Hand.HandsLaidOut))
+        if (tableDealer.Table.SeatsWithHands().Any(s => !s.Hand.HandsLaidOut))
         {
           return null;
         }
-        table.PhaseTitle = "Board One";
-        table.PhaseMessage = "";
+        tableDealer.Table.PhaseTitle = "Board One";
+        tableDealer.Table.PhaseMessage = "";
         var board = GetBoard();
-        table.Deck.CompleteCards(board);
-        table.SetBoard(board);
+        tableDealer.Deck.CompleteCards(board);
+        tableDealer.Table.SetBoard(board);
         return new DisplayStage[] { DisplayStage.DealtCards };
       });
 
       //Play Top Hand
-      PhaseActions.Add((table) =>
+      PhaseActions.Add((tableDealer) =>
       {
-        table.PhaseTitle = "Top Hand";
-        table.PhaseMessage = "";
-        PlayTopHand(table);
-        LogTable(table, "Top Hand 1");
+        tableDealer.Table.PhaseTitle = "Top Hand";
+        tableDealer.Table.PhaseMessage = "";
+        PlayTopHand(tableDealer.Table);
+        LogTable(tableDealer.Table, "Top Hand 1");
         return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Middle Hand
-      PhaseActions.Add((table) =>
+      PhaseActions.Add((tableDealer) =>
       {
-        table.PhaseTitle = "Middle Hand";
-        table.PhaseMessage = "";
-        PlayMiddleHand(table);
-        LogTable(table, "Middle Hand 1");
+        tableDealer.Table.PhaseTitle = "Middle Hand";
+        tableDealer.Table.PhaseMessage = "";
+        PlayMiddleHand(tableDealer.Table);
+        LogTable(tableDealer.Table, "Middle Hand 1");
         return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Bottom Hand
-      PhaseActions.Add((table) =>
+      PhaseActions.Add((tableDealer) =>
       {
-        table.PhaseTitle = "Bottom Hand";
-        table.PhaseMessage = "";
-        PlayBottomHand(table);
-        LogTable(table, "Bottom Hand 1");
+        tableDealer.Table.PhaseTitle = "Bottom Hand";
+        tableDealer.Table.PhaseMessage = "";
+        PlayBottomHand(tableDealer.Table);
+        LogTable(tableDealer.Table, "Bottom Hand 1");
         return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Scoop Bonus
-      PhaseActions.Add((table) =>
+      PhaseActions.Add((tableDealer) =>
       {
-        table.PhaseTitle = "Scoop Bonus";
-        table.PhaseMessage = "";
-        if (PlayScoopBonus(table))
+        tableDealer.Table.PhaseTitle = "Scoop Bonus";
+        tableDealer.Table.PhaseMessage = "";
+        if (PlayScoopBonus(tableDealer.Table))
         {
-          LogTable(table, "Scoop Bonus 1");
+          LogTable(tableDealer.Table, "Scoop Bonus 1");
           return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
         }
         else
@@ -101,70 +107,63 @@ namespace Poker.Models
       });
 
       //Deal 2nd Board
-      PhaseActions.Add((table) =>
+      PhaseActions.Add((tableDealer) =>
       {
-        table.PhaseTitle = "Board Two";
-        table.PhaseMessage = "";
+        tableDealer.Table.PhaseTitle = "Board Two";
+        tableDealer.Table.PhaseMessage = "";
 
-        table.CleanChips();
+        tableDealer.CleanChips();
 
         var board = GetBoard();
-        table.Deck.CompleteCards(board);
-        table.SetBoard(board);
+        tableDealer.Deck.CompleteCards(board);
+        tableDealer.Table.SetBoard(board);
         return new DisplayStage[] { DisplayStage.DealtCards };
       });
 
       //Play Top Hand
-      PhaseActions.Add((table) =>
+      PhaseActions.Add((tableDealer) =>
       {
-        table.PhaseTitle = "Top Hand";
-        table.PhaseMessage = "";
-        PlayTopHand(table);
-        LogTable(table, "Top Hand 2");
+        tableDealer.Table.PhaseTitle = "Top Hand";
+        tableDealer.Table.PhaseMessage = "";
+        PlayTopHand(tableDealer.Table);
+        LogTable(tableDealer.Table, "Top Hand 2");
         return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Middle Hand
-      PhaseActions.Add((table) =>
+      PhaseActions.Add((tableDealer) =>
       {
-        table.PhaseTitle = "Middle Hand";
-        table.PhaseMessage = "";
-        PlayMiddleHand(table);
-        LogTable(table, "Middle Hand 2");
+        tableDealer.Table.PhaseTitle = "Middle Hand";
+        tableDealer.Table.PhaseMessage = "";
+        PlayMiddleHand(tableDealer.Table);
+        LogTable(tableDealer.Table, "Middle Hand 2");
         return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Bottom Hand
-      PhaseActions.Add((table) =>
+      PhaseActions.Add((tableDealer) =>
       {
-        table.PhaseTitle = "Bottom Hand";
-        table.PhaseMessage = "";
-        PlayBottomHand(table);
-        LogTable(table, "Bottom Hand 2");
+        tableDealer.Table.PhaseTitle = "Bottom Hand";
+        tableDealer.Table.PhaseMessage = "";
+        PlayBottomHand(tableDealer.Table);
+        LogTable(tableDealer.Table, "Bottom Hand 2");
         return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
       });
 
       //Play Scoop Bonus
-      PhaseActions.Add((table) =>
+      PhaseActions.Add((tableDealer) =>
       {
-        table.PhaseTitle = "Scoop Bonus";
-        table.PhaseMessage = "";
-        if (PlayScoopBonus(table))
+        tableDealer.Table.PhaseTitle = "Scoop Bonus";
+        tableDealer.Table.PhaseMessage = "";
+        if (PlayScoopBonus(tableDealer.Table))
         {
-          LogTable(table, "Scoop Bonus 2");
+          LogTable(tableDealer.Table, "Scoop Bonus 2");
           return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
         }
         else
         {
           return new DisplayStage[] { };
         }
-      });
-
-      //Reset for next hand
-      PhaseActions.Add((table) =>
-      {
-        table.CleanTableForNextHand();
-        return new DisplayStage[] { };
       });
     }
 
@@ -173,12 +172,12 @@ namespace Poker.Models
     {
       SetupPhases();
     }
-    public void LogTable(BaseTable table, string description)
+    public void LogTable(Table table, string description)
     {
       // Logging:
       Console.WriteLine($"--- {description} ---");
-      Console.WriteLine($"  Board: {table.board.CardDescriptions}");
-      foreach (var seat in table.OccupiedSeats())
+      Console.WriteLine($"  Board: {table.Board.CardDescriptions}");
+      foreach (var seat in table.SeatsWithHands())
       {
         Console.WriteLine($"  Seat: {seat.Player.Name}  Cards: {seat.Hand.CardDescriptions}  Out: {seat.ChipsOut}  In: {seat.ChipsIn}");
       }
@@ -196,12 +195,12 @@ namespace Poker.Models
       return new TaiwaneseHand();
     }
 
-    public override DisplayStage[] ExecutePhase(int game_phase, BaseTable table)
+    public override DisplayStage[] ExecutePhase(int game_phase, TableDealer tableDealer)
     {
-      return PhaseActions[game_phase](table);
+      return PhaseActions[game_phase](tableDealer);
     }
 
-    public static int PointTopHand(int handType)
+     public static int PointTopHand(int handType)
     {
       return handType switch
       {
@@ -246,18 +245,18 @@ namespace Poker.Models
       };
     }
 
-    private void PlayTopHand(BaseTable table)
+    private void PlayTopHand(Table table)
     {
       int bestType = 0;
       uint bestValue = 0;
 
       // Find best hand
-      foreach (var seat in table.OccupiedSeats())
+      foreach (var seat in table.SeatsWithHands())
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
           seat.HandsWon = 0;
-          tHand.LastEvaluation = TexasHoldem.EvaluateHand(tHand.TopHand.CardsMask | table.board.CardsMask);
+          tHand.LastEvaluation = TexasHoldem.EvaluateHand(tHand.TopHand.CardsMask | table.Board.CardsMask);
           if (tHand.LastEvaluation.Item2 > bestValue)
           {
             (bestType, bestValue) = (tHand.LastEvaluation);
@@ -275,7 +274,7 @@ namespace Poker.Models
       int bestCard = 0;
 
       // Determine chips out and pot size and number of winners and the best card from the winners
-      foreach (var seat in table.OccupiedSeats())
+      foreach (var seat in table.SeatsWithHands())
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
@@ -297,7 +296,7 @@ namespace Poker.Models
       int remainder = pot % winners;
 
       // Determine chips in
-      foreach (var seat in table.OccupiedSeats())
+      foreach (var seat in table.SeatsWithHands())
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
@@ -315,17 +314,17 @@ namespace Poker.Models
       }
     }
 
-    private void PlayMiddleHand(BaseTable table)
+    private void PlayMiddleHand(Table table)
     {
       int bestType = 0;
       uint bestValue = 0;
 
       // Find best hand
-      foreach (var seat in table.OccupiedSeats())
+      foreach (var seat in table.SeatsWithHands())
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
-          tHand.LastEvaluation = TexasHoldem.EvaluateHand(tHand.MiddleHand.CardsMask | table.board.CardsMask);
+          tHand.LastEvaluation = TexasHoldem.EvaluateHand(tHand.MiddleHand.CardsMask | table.Board.CardsMask);
           if (tHand.LastEvaluation.Item2 > bestValue)
           {
             (bestType, bestValue) = (tHand.LastEvaluation);
@@ -343,7 +342,7 @@ namespace Poker.Models
       int bestCard = 0;
 
       // Determine chips out and pot size and number of winners and the best card from the winners
-      foreach (var seat in table.OccupiedSeats())
+      foreach (var seat in table.SeatsWithHands())
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
@@ -365,7 +364,7 @@ namespace Poker.Models
       int remainder = pot % winners;
 
       // Determine chips in
-      foreach (var seat in table.OccupiedSeats())
+      foreach (var seat in table.SeatsWithHands())
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
@@ -383,17 +382,17 @@ namespace Poker.Models
       }
     }
 
-    private void PlayBottomHand(BaseTable table)
+    private void PlayBottomHand(Table table)
     {
       int bestType = 0;
       uint bestValue = 0;
 
       // Find best hand
-      foreach (var seat in table.OccupiedSeats())
+      foreach (var seat in table.SeatsWithHands())
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
-          tHand.LastEvaluation = Omaha.EvaluateHand(tHand.BottomHand.CardsMask, table.board.CardsMask);
+          tHand.LastEvaluation = Omaha.EvaluateHand(tHand.BottomHand.CardsMask, table.Board.CardsMask);
           if (tHand.LastEvaluation.Item2 > bestValue)
           {
             (bestType, bestValue) = (tHand.LastEvaluation);
@@ -411,7 +410,7 @@ namespace Poker.Models
       int bestCard = 0;
 
       // Determine chips out and pot size and number of winners and the best card from the winners
-      foreach (var seat in table.OccupiedSeats())
+      foreach (var seat in table.SeatsWithHands())
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
@@ -433,7 +432,7 @@ namespace Poker.Models
       int remainder = pot % winners;
 
       // Determine chips in
-      foreach (var seat in table.OccupiedSeats())
+      foreach (var seat in table.SeatsWithHands())
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
@@ -451,16 +450,16 @@ namespace Poker.Models
       }
     }
 
-    private bool PlayScoopBonus(BaseTable table)
+    private bool PlayScoopBonus(Table table)
     {
       // See if someone scooped all three hands
-      bool scooped = table.OccupiedSeats().Any(seat => seat.HandsWon == 3);
+      bool scooped = table.SeatsWithHands().Any(seat => seat.HandsWon == 3);
 
       if (scooped)
       {
         int pot = 0;
         // Determine chips out and pot size
-        foreach (var seat in table.OccupiedSeats())
+        foreach (var seat in table.SeatsWithHands())
         {
           if (seat.HandsWon != 3)
           {
@@ -474,7 +473,7 @@ namespace Poker.Models
         }
 
         // Determine chips in 
-        foreach (var seat in table.OccupiedSeats())
+        foreach (var seat in table.SeatsWithHands())
         {
           if (seat.HandsWon == 3)
           {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Poker.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,6 +44,33 @@ namespace Poker.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Players",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Bankroll = table.Column<int>(nullable: false),
+                    Computer = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Players", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tables",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    TotalSeats = table.Column<int>(nullable: false),
+                    GameString = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tables", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -152,6 +179,32 @@ namespace Poker.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Seats",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    PlayerId = table.Column<Guid>(nullable: true),
+                    Chips = table.Column<int>(nullable: false),
+                    TableId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Seats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Seats_Players_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "Players",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Seats_Tables_TableId",
+                        column: x => x.TableId,
+                        principalTable: "Tables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -188,6 +241,16 @@ namespace Poker.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Seats_PlayerId",
+                table: "Seats",
+                column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Seats_TableId",
+                table: "Seats",
+                column: "TableId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -208,10 +271,19 @@ namespace Poker.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Seats");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Players");
+
+            migrationBuilder.DropTable(
+                name: "Tables");
         }
     }
 }

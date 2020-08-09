@@ -12,7 +12,10 @@ namespace Poker.Models
 		{
 		}
 
-		public override string Name { get { return "Generic Base Poker Evaluation"; } }
+    protected List<Func<TableDealer, DisplayStage[]>> PhaseActions;
+    public override int PhaseCount => PhaseActions.Count;
+
+    public override string Name { get { return "Generic Base Poker Evaluation"; } }
     public override (int, uint) Evaluate(ulong cards)
     {
       return EvaluateHand(cards);
