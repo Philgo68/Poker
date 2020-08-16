@@ -1,17 +1,20 @@
 ﻿@inject IJSRuntime JSRuntime
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<Player> UserManager;
 
 @{
     @if (Table != null)
     {
-        var tSeat = Table.Seats.FirstOrDefault(s => s.Position == FromSeat);
-        var tHand = tSeat?.Hand as TaiwaneseHand;
-        if (tHand != null && !tHand.HandsLaidOut && tHand.CardsNeeded == 0 && !tSeat.Player.Computer)
+        <h1>Poker Table: @Table.Id</h1>
+        var tHand = playersSeat?.Hand as TaiwaneseHand;
+        if (tHand != null && !tHand.HandsLaidOut && tHand.CardsNeeded == 0 && !playersSeat.Player.Computer)
         {
             <div class="poker-table-holder">
-                <div id="poker_table" class="poker-table handed-@(Table.TotalSeats) @(Table.DisplayPhase) @(Table.PhaseTitle.Classify())">
+                <div id="poker_table" class="poker-table handed-@(Table.TotalSeats) @(Table.DisplayPhase) @(Table.DisplayPhase)">
                     <div class="layout-location">
                         <PokerHandLayoutComponent Hand=@tHand Deck=@Table.SampleDeck />
-                        <div class="col-auto my-auto"><PokerChipStackComponent Chips="@(Table.Hero().Chips)" /></div>
+                        <div class="col-auto my-auto"><PokerChipStackComponent Chips="@(playersSeat.Chips)" /></div>
                         <button class="btn btn-primary col-2 my-auto" @onclick="(e)=>LayoutSet(tHand)">Set Hand</button>
                     </div>
                 </div>
@@ -33,7 +36,7 @@
                                         <div class="cards">
                                             <PokerHandComponent Hand=@seat.Hand Deck=@Table.SampleDeck ShowBlanks=@true />
                                         </div>
-                                        <div class="player-name">@(seat.Player.Name)</div>
+                                        <div class="player-name">@(seat.Player.ScreenName)</div>
                                         <div class="chips">@(seat.Chips)</div>
                                     }
                                 </div>
@@ -74,17 +77,45 @@
 
 
 @code {
-  [Parameter]
-  public Table Table { get; set; }
-  [Parameter]
-  public int FromSeat { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-  private void LayoutSet(TaiwaneseHand tHand)
-  {
-      if (tHand != null)
-      {
-          tHand.CompleteManualLayout();
-          StateHasChanged();
-      }
-  }
+    [Parameter]
+    public Table Table { get; set; }
+    [Parameter]
+    public int FromSeat { get; set; }
+
+    private Player player;
+    private Seat playersSeat;
+
+    protected async override Task OnParametersSetAsync()
+    {
+        if (Table != null)
+        {
+            var authState = await authenticationStateTask;
+            var user = authState.User;
+            if (user.Identity.IsAuthenticated)
+            {
+                player = await UserManager.GetUserAsync(user);
+                playersSeat = Table.PlayerSeat(player);
+                if (playersSeat != null)
+                    FromSeat = playersSeat.Position;
+            }
+
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeVoidAsync("setTableSize");
+    }
+
+    private void LayoutSet(TaiwaneseHand tHand)
+    {
+        if (tHand != null)
+        {
+            tHand.CompleteManualLayout();
+            StateHasChanged();
+        }
+    }
 }

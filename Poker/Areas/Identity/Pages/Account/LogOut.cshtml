@@ -1,7 +1,8 @@
 ﻿@page
 @using Microsoft.AspNetCore.Identity
+@using Poker.Models
 @attribute [IgnoreAntiforgeryToken]
-@inject SignInManager<IdentityUser> SignInManager
+@inject SignInManager<Player> SignInManager
 @functions {
     public async Task<IActionResult> OnPost()
     {

@@ -21,6 +21,7 @@
     position: absolute;
     margin: 10%;
     --transition-time: 1s;
+    --table-size: 1045;
 
     .layout-location {
         position: absolute;
@@ -929,6 +930,7 @@ svg.playing-card {
 
 .chip-stack {
     display: inline-block;
+    transform: scale(calc(var(--table-size) / 1000));
 
     .chip {
         background-repeat: no-repeat;

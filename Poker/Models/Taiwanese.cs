@@ -179,7 +179,7 @@ namespace Poker.Models
       Console.WriteLine($"  Board: {table.Board.CardDescriptions}");
       foreach (var seat in table.SeatsWithHands())
       {
-        Console.WriteLine($"  Seat: {seat.Player.Name}  Cards: {seat.Hand.CardDescriptions}  Out: {seat.ChipsOut}  In: {seat.ChipsIn}");
+        Console.WriteLine($"  Seat: {seat.Player.ScreenName}  Cards: {seat.Hand.CardDescriptions}  Out: {seat.ChipsOut}  In: {seat.ChipsIn}");
       }
     }
 

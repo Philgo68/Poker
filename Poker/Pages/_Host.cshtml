@@ -14,7 +14,17 @@
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
-    <!--  For when Generating Chips
+    <script src="_content/BlazorStrap/blazorStrap.js"></script>
+    <!-- for resizing chips to match table -->
+    <script>
+        function setTableSize() {
+            const tables = document.querySelectorAll(".poker-table");
+            for (const table of tables) {
+                table.style.setProperty('--table-size', table.offsetWidth);
+            }
+        }
+    </script>
+    <!--  For Generating Chips
     <script type='text/javascript' src='https://www.x3dom.org/release/x3dom-full-physics.js'></script>
     <script>
         window.x3dom_reload = () => {
@@ -42,7 +52,7 @@
     -->
     <link href="css/TableStyle.css" rel="stylesheet" />
 </head>
-<body>
+<body onresize="setTableSize()">
     <app>
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>

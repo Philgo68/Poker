@@ -121,12 +121,17 @@ namespace Poker.Models
 
       if (openPosition != null)
       {
-        player ??= new Player() { Name = "Computer", Computer = true };
+        player ??= new Player() { ScreenName = $"Computer:{Guid.NewGuid()}", Computer = true };
         var seat = new Seat(openPosition.Value, player, chips);
         Seats.Add(seat);
         return seat;
       }
       return null;
+    }
+
+    public Seat PlayerSeat(Player player)
+    {
+      return Seats.FirstOrDefault(s => s.Player.Id == player.Id);
     }
 
     public IEnumerable<Seat> AllSeats()

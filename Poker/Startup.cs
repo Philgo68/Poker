@@ -16,7 +16,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Poker.Areas.Identity;
 using Poker.Data;
+using Poker.Models;
 using Microsoft.EntityFrameworkCore;
+using BlazorStrap;
 
 namespace Poker
 {
@@ -39,13 +41,17 @@ namespace Poker
       var db = new PokerDbContext(new DbContextOptionsBuilder<PokerDbContext>().UseSqlite(Configuration.GetConnectionString("PokerContextConnection")).Options);
       services.AddSingleton(db);
       //services.AddDbContext<PokerDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("PokerContextConnection")));
-      services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<PokerDbContext>();
+      services.AddDefaultIdentity<Player>(options => options.SignIn.RequireConfirmedAccount = true)
+        .AddEntityFrameworkStores<PokerDbContext>()
+        .AddUserValidator<ScreenNameValidator<Player>>();
       services.AddRazorPages();
       services.AddServerSideBlazor();
-      services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+      services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<Player>>();
       services.AddHttpClient();
       services.AddSingleton(new Helpers.SvgCards());
       services.AddSingleton(new Helpers.Dealers(db));
+
+      services.AddBootstrapCss();
 
       //SqlMapper.AddTypeHandler(new Helpers.MySqlGuidTypeHandler());
       //SqlMapper.RemoveTypeMap(typeof(Guid));

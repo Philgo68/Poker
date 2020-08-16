@@ -16,6 +16,7 @@
   position: absolute;
   margin: 10%;
   --transition-time: 1s;
+  --table-size: 1045;
   /* size & locations */
   /* styles */ }
   .poker-table .layout-location {
@@ -585,7 +586,8 @@ svg.playing-card {
   height: 96px; }
 
 .chip-stack {
-  display: inline-block; }
+  display: inline-block;
+  transform: scale(calc(var(--table-size) / 1000)); }
   .chip-stack .chip {
     background-repeat: no-repeat;
     background-size: 800% 100%;
