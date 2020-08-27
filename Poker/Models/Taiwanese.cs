@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Poker.Helpers;
-using Poker.Interfaces;
+﻿using Poker.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Poker.Models
 {
-  [Serializable]
   public class Taiwanese : PokerGame
   {
     public Taiwanese()
@@ -24,7 +23,18 @@ namespace Poker.Models
       PhaseActions.Add((tableDealer) =>
       {
         tableDealer.CleanTableForNewHand();
-        return new DisplayStage[] { };
+        // See if there are enough players to start a hand
+        // more than one player and at least one non-computer
+        if (tableDealer.Table.OccupiedSeats().Count() > 1 && tableDealer.Table.OccupiedSeats().Any(s => !s.Player.Computer))
+        {
+          return new DisplayStage[] { };
+        }
+        else
+        {
+          tableDealer.Table.PhaseTitle = "Waiting for Player(s)";
+          tableDealer.Table.PhaseMessage = "";
+          return null;
+        }
       });
 
       PhaseActions.Add((tableDealer) =>
@@ -44,7 +54,7 @@ namespace Poker.Models
         return new DisplayStage[] { DisplayStage.DealtCards };
       });
 
-      //Deal 1st Board
+      //Hands Laid Out
       PhaseActions.Add((tableDealer) =>
       {
         // Need to wait until all hands are laid out before continuing.
@@ -52,12 +62,27 @@ namespace Poker.Models
         {
           return null;
         }
+        // Reveal all hands when everyone has finished the Layout.
+        foreach (var s in tableDealer.Table.SeatsWithHands())
+        {
+          s.Hand.Revealed = true;
+          var tHand = s.Hand as TaiwaneseHand;
+        }
+
+        tableDealer.Table.PhaseTitle = "Hands Revealed";
+        tableDealer.Table.PhaseMessage = "";
+        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.DealtCards };
+      });
+
+      //Deal 1st Board
+      PhaseActions.Add((tableDealer) =>
+      {
         tableDealer.Table.PhaseTitle = "Board One";
         tableDealer.Table.PhaseMessage = "";
         var board = GetBoard();
         tableDealer.Deck.CompleteCards(board);
         tableDealer.Table.SetBoard(board);
-        return new DisplayStage[] { DisplayStage.DealtCards };
+        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.DealtCards };
       });
 
       //Play Top Hand
@@ -117,7 +142,7 @@ namespace Poker.Models
         var board = GetBoard();
         tableDealer.Deck.CompleteCards(board);
         tableDealer.Table.SetBoard(board);
-        return new DisplayStage[] { DisplayStage.DealtCards };
+        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.DealtCards };
       });
 
       //Play Top Hand
@@ -165,6 +190,25 @@ namespace Poker.Models
           return new DisplayStage[] { };
         }
       });
+
+      //Check For Pause
+      PhaseActions.Add((tableDealer) =>
+      {
+        tableDealer.Table.PhaseTitle = "Hand Review";
+        tableDealer.Table.PhaseMessage = "";
+        if (tableDealer.Table.SeatsWithHands().Any(s => s.PleasePause == 1))
+        {
+          tableDealer.CleanChips();
+          return null;
+        }
+
+        // Reset Pause request for all seats.
+        foreach (var s in tableDealer.Table.AllSeats())
+        {
+          s.PleasePause = Math.Abs(s.PleasePause);
+        }
+        return new DisplayStage[] { };
+      });
     }
 
     [OnDeserialized()]
@@ -200,7 +244,7 @@ namespace Poker.Models
       return PhaseActions[game_phase](tableDealer);
     }
 
-     public static int PointTopHand(int handType)
+    public static int PointTopHand(int handType)
     {
       return handType switch
       {
@@ -264,14 +308,14 @@ namespace Poker.Models
         }
       }
 
-      table.PhaseMessage = TexasHoldem.HandTypeDescriptions[bestType];
-
       int base_chips = 1;
       int bonus_chips = PointTopHand(bestType);
 
       int pot = 0;
       int winners = 0;
       int bestCard = 0;
+
+      table.PhaseMessage = $"{TexasHoldem.HandTypeDescriptions[bestType]} ({base_chips}{(bonus_chips > 0 ? $" + {bonus_chips}" : "")})";
 
       // Determine chips out and pot size and number of winners and the best card from the winners
       foreach (var seat in table.SeatsWithHands())
@@ -332,14 +376,14 @@ namespace Poker.Models
         }
       }
 
-      table.PhaseMessage = TexasHoldem.HandTypeDescriptions[bestType];
-
       int base_chips = 2;
       int bonus_chips = PointMiddleHand(bestType);
 
       int pot = 0;
       int winners = 0;
       int bestCard = 0;
+
+      table.PhaseMessage = $"{TexasHoldem.HandTypeDescriptions[bestType]} ({base_chips}{(bonus_chips > 0 ? $" + {bonus_chips}" : "")})";
 
       // Determine chips out and pot size and number of winners and the best card from the winners
       foreach (var seat in table.SeatsWithHands())
@@ -400,14 +444,14 @@ namespace Poker.Models
         }
       }
 
-      table.PhaseMessage = Omaha.HandTypeDescriptions[bestType];
-
       int base_chips = 3;
       int bonus_chips = PointBottomHand(bestType);
 
       int pot = 0;
       int winners = 0;
       int bestCard = 0;
+
+      table.PhaseMessage = $"{Omaha.HandTypeDescriptions[bestType]} ({base_chips}{(bonus_chips > 0 ? $" + {bonus_chips}" : "")})";
 
       // Determine chips out and pot size and number of winners and the best card from the winners
       foreach (var seat in table.SeatsWithHands())

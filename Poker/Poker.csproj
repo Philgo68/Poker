@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Chris Lasswell</Authors>
+    <Product>Home Game Poker</Product>
   </PropertyGroup>
 
   <ItemGroup>

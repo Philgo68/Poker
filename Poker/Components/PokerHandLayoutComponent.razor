@@ -43,21 +43,27 @@
         </div>
     }
 </div>
+<div class="col-auto my-auto"><PokerChipStackComponent Chips="@(Chips)" /></div>
+<button class="btn btn-primary col-2 my-auto" @onclick="(e)=>LayoutSet()">Set Hand</button>
 
 
 @code {
   [Parameter]
-  public TaiwaneseHand Hand { get; set; }
+  public Seat Seat { get; set; }
   [Parameter]
   public BaseDeck Deck { get; set; }
+  [Parameter]
+  public int Chips { get; set; }
 
+  private TaiwaneseHand Hand;
   private List<int> Cards;
   private int card_dragging;
-
   private BaseHand TopHand, MiddleHand, BottomHand;
+  private System.Threading.CancellationTokenSource giveThemTime;
 
   protected async override Task OnInitializedAsync()
   {
+      Hand = Seat.Hand as TaiwaneseHand;
       (TopHand, MiddleHand, BottomHand) = Hand.StartManualLayout();
 
       Random rnd = new Random();
@@ -66,6 +72,22 @@
       foreach (var card in Deck.CardNumbers(TopHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
       foreach (var card in Deck.CardNumbers(MiddleHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
       foreach (var card in Deck.CardNumbers(BottomHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
+
+      giveThemTime = new System.Threading.CancellationTokenSource();
+      Task WaitTask = Task.Delay(Convert.ToInt32(30 * 1000.0), giveThemTime.Token);
+      WaitTask.ContinueWith(t => TimedOut(), TaskContinuationOptions.OnlyOnRanToCompletion);
+  }
+
+  private void LayoutSet()
+  {
+      giveThemTime.Cancel();
+      Hand.CompleteManualLayout();
+  }
+
+  private void TimedOut()
+  {
+      Seat.SittingOut = true;
+      Hand.CompleteManualLayout();
   }
 
   private void Ondragstart(DragEventArgs e, int card)

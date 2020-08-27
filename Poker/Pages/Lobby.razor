@@ -1,9 +1,9 @@
-﻿@page "/lobby"
-@inject Poker.Data.PokerDbContext PokerDbContext
-@inject UserManager<Player> UserManager;
-@inject IJSRuntime JSRuntime
-
+﻿@page "/"
 @using Microsoft.AspNetCore.Identity;
+
+@inject Poker.Data.PokerDbContext PokerDbContext
+@inject UserManager<Player> UserManager
+@inject IJSRuntime JSRuntime
 
 <h1>Poker Lobby</h1>
 <hr />
@@ -30,7 +30,7 @@
                 <td scope="row"><a href="PokerTable/@(table.Id)">@table.Game.Name</a></td>
                 <td>1 Chip Per Point</td>
                 <td>@table.Seats.Count</td>
-                <td>@table.Seats.Single(s => s.Player.Id == Player.Id).Chips</td>
+                <td>@table.PlayerSeat(Player).Chips</td>
             </ItemTemplate>
         </BSDataTable>
         <br />
@@ -41,6 +41,7 @@
                     <th scope="col">Game</th>
                     <th scope="col">Stakes</th>
                     <th scope="col">Players</th>
+                    <th scope="col"></th>
                 </tr>
             </HeaderTemplate>
             <NoDataTemplate>
@@ -50,6 +51,7 @@
                 <td scope="row"><a href="#" @onclick="@(() => JoinTable(table.Id))">@table.Game.Name</a></td>
                 <td>1 Chip Per Point</td>
                 <td>@table.Seats.Count</td>
+                <td><a href="PokerTable/@(table.Id)">View</a></td>
             </ItemTemplate>
         </BSDataTable>
         <br />
@@ -72,105 +74,105 @@
     </Authorized>
     <NotAuthorized>
         <h1>You must login to enter the Poker Lobby</h1>
-        <a class="button" href="Identity/Account/Register">Register</a>
-        <a class="button" href="Identity/Account/Login">Log in</a>
+        <a class="btn btn-primary mr-2" href="Identity/Account/Register">Register</a>
+        <a class="btn btn-primary mr-2" href="Identity/Account/Login">Log in</a>
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
-  [CascadingParameter]
-  private Task<AuthenticationState> authenticationStateTask { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-  private Player Player = null;
-  private Dictionary<bool, List<Table>> Tables = null;
+    private Player Player = null;
+    private Dictionary<bool, List<Table>> Tables = null;
 
-  private int chips;
-  private string button;
+    private int chips;
+    private string button;
 
-  protected async override Task OnParametersSetAsync()
-  {
-      var user = (await authenticationStateTask).User;
-      if (user.Identity.IsAuthenticated)
-      {
-          Player = await UserManager.GetUserAsync(user);
-          FindTables();
-      }
-  }
+    protected async override Task OnParametersSetAsync()
+    {
+        var user = (await authenticationStateTask).User;
+        if (user.Identity.IsAuthenticated)
+        {
+            Player = await UserManager.GetUserAsync(user);
+            FindTables();
+        }
+    }
 
-  protected async void FindTables()
-  {
-      var tables = await PokerDbContext.Tables
-              .Include(table => table.Seats)
-                  .ThenInclude(s => s.Player)
-                  .ToListAsync();
-      Tables = tables.GroupBy(t => t.Seats.Any(s => s.Player.Id == Player.Id)).ToDictionary(k => k.Key, l => l.ToList());
-      // Make sure true and false values exist
-      if (!Tables.ContainsKey(true))
-      {
-          Tables.Add(true, new List<Table>());
-      }
-      if (!Tables.ContainsKey(false))
-      {
-          Tables.Add(false, new List<Table>());
-      }
-  }
-
-
-  async Task NewTable()
-  {
-      Guid? tableID = null;
-      switch (button)
-      {
-          case "Single":
-              tableID = await StartTable(new OneCardHoldem());
-              break;
-          case "Texas":
-              tableID = await StartTable(new TexasHoldem(), 6);
-              break;
-          case "Omaha":
-              tableID = await StartTable(new Omaha(), 6);
-              break;
-          case "Taiwanese":
-              tableID = await StartTable(new Taiwanese(), 6);
-              break;
-      };
-      button = null;
-      if (tableID != null)
-          await JSRuntime.InvokeAsync<object>("open", $"PokerTable/{tableID.Value}", "_blank");
-  }
-
-  async Task JoinTable(Guid tableID)
-  {
-      var table = await PokerDbContext.Tables.FindAsync(tableID);
-      if (table != null)
-      {
-          chips = Math.Min(chips, Player.Bankroll);
-          Player.Bankroll = Player.Bankroll - chips;
-          table.OccupySeat(Player, chips);
-          await JSRuntime.InvokeAsync<object>("open", $"PokerTable/{table.Id}", "_blank");
-      }
-  }
-
-  protected async Task<Guid> StartTable(BaseGame game, int seats = 9)
-  {
-      var table = new Table(game, seats);
-      PokerDbContext.Add<Table>(table);
-
-      chips = Math.Min(chips, Player.Bankroll);
-      Player.Bankroll = Player.Bankroll - chips;
-      table.OccupySeat(Player, chips);
-
-      await PokerDbContext.SaveChangesAsync();
-      MyChangeHandler();
-
-      return table.Id;
-  }
+    protected async void FindTables()
+    {
+        var tables = await PokerDbContext.Tables
+                .Include(table => table.Seats)
+                    .ThenInclude(s => s.Player)
+                    .ToListAsync();
+        Tables = tables.GroupBy(t => t.Seats.Any(s => s.Player.Id == Player?.Id)).ToDictionary(k => k.Key, l => l.ToList());
+        // Make sure true and false values exist
+        if (!Tables.ContainsKey(true))
+        {
+            Tables.Add(true, new List<Table>());
+        }
+        if (!Tables.ContainsKey(false))
+        {
+            Tables.Add(false, new List<Table>());
+        }
+    }
 
 
-  private async void MyChangeHandler()
-  {
-      FindTables();
-      await InvokeAsync(() => StateHasChanged());
-  }
+    async Task NewTable()
+    {
+        Guid? tableID = null;
+        switch (button)
+        {
+            case "Single":
+                tableID = await StartTable(new OneCardHoldem());
+                break;
+            case "Texas":
+                tableID = await StartTable(new TexasHoldem(), 6);
+                break;
+            case "Omaha":
+                tableID = await StartTable(new Omaha(), 6);
+                break;
+            case "Taiwanese":
+                tableID = await StartTable(new Taiwanese(), 6);
+                break;
+        };
+        button = null;
+        if (tableID != null)
+            await JSRuntime.InvokeAsync<object>("open", $"PokerTable/{tableID.Value}", "_blank");
+    }
+
+    async Task JoinTable(Guid tableID)
+    {
+        var table = await PokerDbContext.Tables.FindAsync(tableID);
+        if (table != null)
+        {
+            chips = Math.Min(chips, Player.Bankroll);
+            Player.Bankroll = Player.Bankroll - chips;
+            table.OccupySeat(Player, chips);
+            await JSRuntime.InvokeAsync<object>("open", $"PokerTable/{table.Id}", "_blank");
+        }
+    }
+
+    protected async Task<Guid> StartTable(BaseGame game, int seats = 9)
+    {
+        var table = new Table(game, seats);
+        PokerDbContext.Add<Table>(table);
+
+        chips = Math.Min(chips, Player.Bankroll);
+        Player.Bankroll = Player.Bankroll - chips;
+        table.OccupySeat(Player, chips);
+
+        await PokerDbContext.SaveChangesAsync();
+        MyChangeHandler();
+
+        return table.Id;
+    }
+
+
+    private async void MyChangeHandler()
+    {
+        FindTables();
+        await InvokeAsync(() => StateHasChanged());
+    }
 
 }

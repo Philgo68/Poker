@@ -1,18 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Poker.Data;
 using Poker.Helpers;
+using Poker.Interfaces;
 using System;
 using System.Collections.Generic;
-using Poker.Interfaces;
-using System.Linq;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Threading;
-using Microsoft.CodeAnalysis.Operations;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
 using System.ComponentModel.DataAnnotations.Schema;
-using Poker.Data;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace Poker.Models
@@ -49,6 +43,7 @@ namespace Poker.Models
       Seats = new List<Seat>();
 
       Board = null;
+      OldBoard = null;
       SampleDeck = Game.GetDeck();
     }
 
@@ -60,6 +55,7 @@ namespace Poker.Models
       Seats = new List<Seat>();
 
       Board = null;
+      OldBoard = null;
       SampleDeck = Game.GetDeck();
     }
 
@@ -76,8 +72,7 @@ namespace Poker.Models
     {
       foreach (var seat in AllSeats())
       {
-        if (seat?.Hand != null)
-          seat.Hand.StateHasChangedDelegate += StateHasChanged;
+        seat.StateHasChangedDelegate += StateHasChanged;
       }
     }
 
@@ -93,9 +88,14 @@ namespace Poker.Models
       NotifyStateChanged();
     }
 
+    [NotMapped]
+    public TableDealer Dealer;
 
     [NotMapped]
     public BaseHand Board { get; private set; }
+
+    [NotMapped]
+    public BaseHand OldBoard { get; private set; }
 
     [NotMapped]
     BaseHand IHandHolder.Hand => Board;
@@ -123,7 +123,10 @@ namespace Poker.Models
       {
         player ??= new Player() { ScreenName = $"Computer:{Guid.NewGuid()}", Computer = true };
         var seat = new Seat(openPosition.Value, player, chips);
+        if (Dealer != null)
+          seat.StateHasChangedDelegate += Dealer.StateHasChanged;
         Seats.Add(seat);
+        StateHasChanged();
         return seat;
       }
       return null;
@@ -146,7 +149,7 @@ namespace Poker.Models
     {
       foreach (var seat in Seats)
       {
-        if (seat != null && (seat.Chips > 0 || seat.ChipsOut > 0 || seat.ChipsIn > 0 || seat.ChipsMoving > 0))
+        if (seat != null && ((!seat.SittingOut && seat.Chips > 0) || seat.ChipsOut > 0 || seat.ChipsIn > 0 || seat.ChipsMoving > 0))
           yield return seat;
       }
     }
@@ -165,7 +168,7 @@ namespace Poker.Models
       return Seats.FirstOrDefault(s => s != null && s.Player != null && !s.Player.Computer);
     }
 
-    
+
     public IEnumerable<Seat> Opponents(int seat = 0)
     {
       for (var i = 0; i < TotalSeats; i++)
@@ -176,61 +179,72 @@ namespace Poker.Models
     }
 
 
-    public void SetBoard(BaseHand _board)
+    public void SetBoard(BaseHand board)
     {
-      Board = _board;
+      OldBoard = Board;
+      Board = board;
     }
-/*
-    public void Reset(ulong dealtCards)
-    {
-      Deck.Reset(dealtCards);
-    }
-*/
-/*
-    public void CompleteCards()
-    {
-      var _global_random = new Random();
-      for (var i = 0; i < TotalSeats; i++)
-      {
-        if (Seats[i] != null && Seats[i].Hand != null)
-          Deck.CompleteCards(Seats[i].Hand, _global_random);
-      }
-    }
-*/
-/*    public void LayoutHands(bool allTheHands = false)
-    {
-      for (var i = 0; i < TotalSeats; i++)
-      {
-        if (Seats[i] != null && Seats[i].Hand != null && (allTheHands || Seats[i].Player.Computer))
-          Seats[i].Hand.LayoutHand();
-      }
-    }*/
-/*
-    private void InitializeDeckFromTable()
-    {
-      var dealtCards = Board != null ? Board.CardsMask : 0UL;
-      foreach (var seat in Seats.Where(s => s != null && s.Hand != null))
-      {
-        dealtCards |= seat.Hand.CardsMask;
-      }
+    /*
+        public void Reset(ulong dealtCards)
+        {
+          Deck.Reset(dealtCards);
+        }
+    */
+    /*
+        public void CompleteCards()
+        {
+          var _global_random = new Random();
+          for (var i = 0; i < TotalSeats; i++)
+          {
+            if (Seats[i] != null && Seats[i].Hand != null)
+              Deck.CompleteCards(Seats[i].Hand, _global_random);
+          }
+        }
+    */
+    /*    public void LayoutHands(bool allTheHands = false)
+        {
+          for (var i = 0; i < TotalSeats; i++)
+          {
+            if (Seats[i] != null && Seats[i].Hand != null && (allTheHands || Seats[i].Player.Computer))
+              Seats[i].Hand.LayoutHand();
+          }
+        }*/
+    /*
+        private void InitializeDeckFromTable()
+        {
+          var dealtCards = Board != null ? Board.CardsMask : 0UL;
+          foreach (var seat in Seats.Where(s => s != null && s.Hand != null))
+          {
+            dealtCards |= seat.Hand.CardsMask;
+          }
 
-      Deck.Reset(dealtCards);
-    }
-*/
+          Deck.Reset(dealtCards);
+        }
+    */
   }
 
   public class TableDealer
   {
     const double standardTime = 2;
 
+    private bool _waiting_for_something = false;
+
     public TableDealer(PokerDbContext dbContext, Table table)
     {
       Table = table;
+      table.Dealer = this;
 
       Deck = Table.Game.GetDeck();
       _gamePhase = -1;
       _dbContext = dbContext;
-      
+
+      // Ask all the Seats to tell me when they have changed
+      foreach (var s in table.Seats)
+      {
+        s.StateHasChangedDelegate += StateHasChanged;
+      }
+
+
       SetupDisplayActions();
     }
 
@@ -318,10 +332,11 @@ namespace Poker.Models
       Table.StateHasChanged();
     }
 
-    private void StateHasChanged()
+    public void StateHasChanged()
     {
       NotifyStateChanged();
-      if (_displayStages == null) TransitionToNextPhase();
+      // Try to keep going if the table was waiting for something.
+      if (_waiting_for_something) TransitionToNextPhase();
     }
 
     public void SetBoard(BaseHand _board)
@@ -340,7 +355,7 @@ namespace Poker.Models
       foreach (var seat in Table.OccupiedSeats())
       {
         seat.Hand = Table.Game.GetHand();
-        seat.Hand.StateHasChangedDelegate += StateHasChanged;
+        seat.Hand.Revealed = false;
         Deck.CompleteCards(seat.Hand, _global_random);
       }
     }
@@ -356,7 +371,7 @@ namespace Poker.Models
 
     public void DisplayNextStage()
     {
-      if (_displayStages.Length > 0)
+      if (_displayStages != null && _displayStages.Length > 0)
       {
         var wait = _displayActions[_displayStages[0]]();
         _displayStages = _displayStages.Skip(1).ToArray();
@@ -395,10 +410,13 @@ namespace Poker.Models
       if (_displayStages == null)
       {
         // not ready for this phase quite yet, back up and try again
+        _waiting_for_something = true;
         _gamePhase--;
+        NotifyStateChanged();
       }
       else
       {
+        _waiting_for_something = false;
         DisplayNextStage();
       }
     }
@@ -436,7 +454,15 @@ namespace Poker.Models
       // Clear the Board
       SetBoard(null);
 
-      // Mark the Seats for the Next Hand
+      // Let players leave with their chips
+      foreach (var seat in Table.Seats.Where(s => s.Leaving))
+      {
+        seat.Player.Bankroll += seat.Chips;
+        seat.Chips = 0;
+      }
+      Table.Seats.RemoveAll(s => s.Leaving);
+
+      // Clean the Seat hands
       foreach (var seat in Table.AllSeats())
       {
         if (seat != null)
@@ -445,8 +471,12 @@ namespace Poker.Models
         }
       }
 
+      // Repaint the cleaned table
+      NotifyStateChanged();
+
       // Save to database
       StoreTable();
+
     }
   }
 

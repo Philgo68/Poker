@@ -1,11 +1,10 @@
 ﻿@page "/pokertableold"
-@inject Poker.Data.PokerDbContext PokerDbContext
-@inject Poker.Helpers.Dealers Dealers
-
 @using System.Diagnostics;
-@using System.Runtime.Serialization;
-@using System.Runtime.Serialization.Formatters.Binary;
-@using System.IO;
+@using Microsoft.AspNetCore.Identity;
+
+@inject Poker.Data.PokerDbContext PokerDbContext
+@inject UserManager<Player> UserManager
+@inject Poker.Helpers.Dealers Dealers
 
 <h1>Poker Table</h1>
 
@@ -75,6 +74,9 @@
 }
 
 @code {
+  [CascadingParameter]
+  private Task<AuthenticationState> authenticationStateTask { get; set; }
+
   string hand_1, hand_2, board_string, button;
   int? hand_cnt;
   BaseHand hero = null;
@@ -162,8 +164,15 @@
 
           hand_cnt = Math.Min(seats - 1, (hand_cnt ?? 1));
 
-          var heroSeat = table.OccupySeat(new Player() { ScreenName = "Hero", Computer = false });
-          fromSeat = heroSeat.Position;
+          var user = authenticationStateTask.Result.User;
+          if (user.Identity.IsAuthenticated)
+          {
+              var player = UserManager.GetUserAsync(user).Result;
+              var chips = Math.Min(500, player.Bankroll);
+              player.Bankroll = player.Bankroll - chips;
+              var heroSeat = table.OccupySeat(player, chips);
+              fromSeat = heroSeat.Position;
+          }
 
           hand_cnt = hand_cnt ?? 1;
           for (var i = 0; i < hand_cnt; i++)
@@ -288,7 +297,7 @@
                     .ThenInclude(s => s.Player)
                 .FirstOrDefault();
               Random rnd = new Random();
-              fromSeat = rnd.Next(table.TotalSeats-1) + 1;
+              fromSeat = rnd.Next(table.TotalSeats - 1) + 1;
               table.StateHasChangedDelegate += MyChangeHandler;
               return "Joined Table";
           }

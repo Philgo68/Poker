@@ -1,35 +1,81 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Poker.Helpers;
+﻿using Poker.Interfaces;
 using System;
-using System.Collections.Generic;
-using Poker.Interfaces;
-using System.Linq;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Threading;
-using Microsoft.CodeAnalysis.Operations;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Poker.Models
 {
   public class Entity
   {
-    //public Guid Id { get; set; } = Guid.NewGuid();
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
   }
 
   public class Seat : Entity, IHandHolder
   {
+    [NotMapped]
+    private BaseHand hand;
+    private bool sittingOut;
+    private bool leaving;
+    private int pleasePause;
+    private int startingChips;
+
+    public Table Table;
     public Player Player { get; set; }
     public int Chips { get; set; }
     public int Position { get; set; }
 
+    public int ChipDelta => Chips - startingChips;
+
+    public bool SittingOut
+    {
+      get => sittingOut;
+      set
+      {
+        sittingOut = value;
+        StateHasChanged();
+      }
+    }
+
     [NotMapped]
-    public BaseHand Hand { get; set; }
+    public bool Leaving
+    {
+      get => leaving;
+      set
+      {
+        leaving = value;
+        StateHasChanged();
+      }
+    }
+
+    [NotMapped]
+    public int PleasePause
+    {
+      get => pleasePause;
+      set
+      {
+        pleasePause = value;
+        StateHasChanged();
+      }
+    }
+
+    [NotMapped]
+    public BaseHand Hand
+    {
+      get
+      {
+        return hand;
+      }
+      set
+      {
+        hand = value;
+        // reset staringChips when a hand starts
+        startingChips = Chips;
+        // Ask the hand to tell the seat when it has changed.
+        if (hand != null)
+          hand.StateHasChangedDelegate += StateHasChanged;
+      }
+    }
+
     [NotMapped]
     public int ChipsMoving { get; set; }
 
@@ -50,16 +96,26 @@ namespace Poker.Models
       Player = null;
       Chips = 0;
       Button = false;
+      sittingOut = false;
+      leaving = false;
     }
 
-    public Seat(int position, Player player = null, int chips = 500)
+    public Seat(int position, Player player, int chips)
     {
       Position = position;
       Hand = null;
       Player = player;
       Chips = chips;
       Button = false;
+      sittingOut = (chips == 0);
+      leaving = false;
+    }
+
+    public event Action StateHasChangedDelegate;
+
+    protected void StateHasChanged()
+    {
+      StateHasChangedDelegate?.Invoke();
     }
   }
 }
-  
