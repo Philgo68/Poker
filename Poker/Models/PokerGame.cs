@@ -1,16 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Poker.Helpers;
+﻿using Poker.Helpers;
 using System;
 using System.Collections.Generic;
 
 namespace Poker.Models
 {
-  [Serializable]
-	public abstract class PokerGame : BaseGame
-	{
-		public PokerGame()
-		{
-		}
+  public abstract class PokerGame : BaseGame
+  {
+    public PokerGame()
+    {
+    }
 
     protected List<Func<TableDealer, DisplayStage[]>> PhaseActions;
     public override int PhaseCount => PhaseActions.Count;

@@ -1,432 +1,628 @@
-using System;using Tools;
+using Tools;
 #pragma warning disable 0162
 #pragma warning disable 1591
 //%Card+3
 /// <exclude/>
-public class Card : TOKEN{ public override string yyname { get { return "Card";}}
-/// <exclude/>
-public override int yynum { get { return 3; }}
-/// <exclude/>
- public Card(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Card_1 : Card {
+public class Card : TOKEN
+{
+  public override string yyname { get { return "Card"; } }
   /// <exclude/>
-  public Card_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 3; } }
+  /// <exclude/>
+  public Card(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Card_1 : Card
+{
+  /// <exclude/>
+  public Card_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Card169+5
 /// <exclude/>
-public class Card169 : TOKEN{ public override string yyname { get { return "Card169";}}
-/// <exclude/>
-public override int yynum { get { return 5; }}
-/// <exclude/>
- public Card169(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Card169_1 : Card169 {
+public class Card169 : TOKEN
+{
+  public override string yyname { get { return "Card169"; } }
   /// <exclude/>
-  public Card169_1(Lexer yym):base(yym) 	{yylval = yytext.Clone();}}
+  public override int yynum { get { return 5; } }
+  /// <exclude/>
+  public Card169(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Card169_1 : Card169
+{
+  /// <exclude/>
+  public Card169_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Card169Wild+7
 /// <exclude/>
-public class Card169Wild : TOKEN{ public override string yyname { get { return "Card169Wild";}}
-/// <exclude/>
-public override int yynum { get { return 7; }}
-/// <exclude/>
- public Card169Wild(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Card169Wild_1 : Card169Wild {
+public class Card169Wild : TOKEN
+{
+  public override string yyname { get { return "Card169Wild"; } }
   /// <exclude/>
-  public Card169Wild_1(Lexer yym):base(yym)  {yylval = yytext.Clone();}}
+  public override int yynum { get { return 7; } }
+  /// <exclude/>
+  public Card169Wild(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Card169Wild_1 : Card169Wild
+{
+  /// <exclude/>
+  public Card169Wild_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Percent+9
 /// <exclude/>
-public class Percent : TOKEN{ public override string yyname { get { return "Percent";}}
-/// <exclude/>
-public override int yynum { get { return 9; }}
-/// <exclude/>
- public Percent(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Percent_1 : Percent {
+public class Percent : TOKEN
+{
+  public override string yyname { get { return "Percent"; } }
   /// <exclude/>
-  public Percent_1(Lexer yym):base(yym) 	{yylval = yytext.Substring(0, yytext.Length-1);}}
+  public override int yynum { get { return 9; } }
+  /// <exclude/>
+  public Percent(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Percent_1 : Percent
+{
+  /// <exclude/>
+  public Percent_1(Lexer yym) : base(yym) { yylval = yytext.Substring(0, yytext.Length - 1); }
+}
 //%Number+11
 /// <exclude/>
-public class Number : TOKEN{ public override string yyname { get { return "Number";}}
-/// <exclude/>
-public override int yynum { get { return 11; }}
-/// <exclude/>
- public Number(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Number_1 : Number {
+public class Number : TOKEN
+{
+  public override string yyname { get { return "Number"; } }
   /// <exclude/>
-  public Number_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 11; } }
+  /// <exclude/>
+  public Number(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Number_1 : Number
+{
+  /// <exclude/>
+  public Number_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Any+13
 /// <exclude/>
-public class Any : TOKEN{ public override string yyname { get { return "Any";}}
-/// <exclude/>
-public override int yynum { get { return 13; }}
-/// <exclude/>
- public Any(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Any_1 : Any {
+public class Any : TOKEN
+{
+  public override string yyname { get { return "Any"; } }
   /// <exclude/>
-  public Any_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 13; } }
+  /// <exclude/>
+  public Any(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Any_1 : Any
+{
+  /// <exclude/>
+  public Any_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Gapped+15
 /// <exclude/>
-public class Gapped : TOKEN{ public override string yyname { get { return "Gapped";}}
-/// <exclude/>
-public override int yynum { get { return 15; }}
-/// <exclude/>
- public Gapped(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Gapped_1 : Gapped {
+public class Gapped : TOKEN
+{
+  public override string yyname { get { return "Gapped"; } }
   /// <exclude/>
-  public Gapped_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 15; } }
+  /// <exclude/>
+  public Gapped(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Gapped_1 : Gapped
+{
+  /// <exclude/>
+  public Gapped_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Gapped1+17
 /// <exclude/>
-public class Gapped1 : TOKEN{ public override string yyname { get { return "Gapped1";}}
-/// <exclude/>
-public override int yynum { get { return 17; }}
-/// <exclude/>
- public Gapped1(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Gapped1_1 : Gapped1 {
+public class Gapped1 : TOKEN
+{
+  public override string yyname { get { return "Gapped1"; } }
   /// <exclude/>
-  public Gapped1_1(Lexer yym):base(yym) 	{yylval = yytext.Clone();}}
+  public override int yynum { get { return 17; } }
+  /// <exclude/>
+  public Gapped1(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Gapped1_1 : Gapped1
+{
+  /// <exclude/>
+  public Gapped1_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Gapped2+19
 /// <exclude/>
-public class Gapped2 : TOKEN{ public override string yyname { get { return "Gapped2";}}
-/// <exclude/>
-public override int yynum { get { return 19; }}
-/// <exclude/>
- public Gapped2(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Gapped2_1 : Gapped2 {
+public class Gapped2 : TOKEN
+{
+  public override string yyname { get { return "Gapped2"; } }
   /// <exclude/>
-  public Gapped2_1(Lexer yym):base(yym) 	{yylval = yytext.Clone();}}
+  public override int yynum { get { return 19; } }
+  /// <exclude/>
+  public Gapped2(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Gapped2_1 : Gapped2
+{
+  /// <exclude/>
+  public Gapped2_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Gapped3+21
 /// <exclude/>
-public class Gapped3 : TOKEN{ public override string yyname { get { return "Gapped3";}}
-/// <exclude/>
-public override int yynum { get { return 21; }}
-/// <exclude/>
- public Gapped3(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Gapped3_1 : Gapped3 {
+public class Gapped3 : TOKEN
+{
+  public override string yyname { get { return "Gapped3"; } }
   /// <exclude/>
-  public Gapped3_1(Lexer yym):base(yym) 	{yylval = yytext.Clone();}}
+  public override int yynum { get { return 21; } }
+  /// <exclude/>
+  public Gapped3(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Gapped3_1 : Gapped3
+{
+  /// <exclude/>
+  public Gapped3_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%To+23
 /// <exclude/>
-public class To : TOKEN{ public override string yyname { get { return "To";}}
-/// <exclude/>
-public override int yynum { get { return 23; }}
-/// <exclude/>
- public To(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class To_1 : To {
+public class To : TOKEN
+{
+  public override string yyname { get { return "To"; } }
   /// <exclude/>
-  public To_1(Lexer yym):base(yym) 			{yylval = yytext.Clone();}}
-/// <exclude/>
-public class To_2 : To {
+  public override int yynum { get { return 23; } }
   /// <exclude/>
-  public To_2(Lexer yym):base(yym) 			{yylval = yytext.Clone();}}
+  public To(Lexer yyl) : base(yyl) { }
+}
 /// <exclude/>
-public class To_3 : To {
+public class To_1 : To
+{
   /// <exclude/>
-  public To_3(Lexer yym):base(yym) 			{yylval = yytext.Clone();}}
+  public To_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
+/// <exclude/>
+public class To_2 : To
+{
+  /// <exclude/>
+  public To_2(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
+/// <exclude/>
+public class To_3 : To
+{
+  /// <exclude/>
+  public To_3(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Pair+27
 /// <exclude/>
-public class Pair : TOKEN{ public override string yyname { get { return "Pair";}}
-/// <exclude/>
-public override int yynum { get { return 27; }}
-/// <exclude/>
- public Pair(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Pair_1 : Pair {
+public class Pair : TOKEN
+{
+  public override string yyname { get { return "Pair"; } }
   /// <exclude/>
-  public Pair_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 27; } }
+  /// <exclude/>
+  public Pair(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Pair_1 : Pair
+{
+  /// <exclude/>
+  public Pair_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Not+29
 /// <exclude/>
-public class Not : TOKEN{ public override string yyname { get { return "Not";}}
-/// <exclude/>
-public override int yynum { get { return 29; }}
-/// <exclude/>
- public Not(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Not_1 : Not {
+public class Not : TOKEN
+{
+  public override string yyname { get { return "Not"; } }
   /// <exclude/>
-  public Not_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
-/// <exclude/>
-public class Not_2 : Not {
+  public override int yynum { get { return 29; } }
   /// <exclude/>
-  public Not_2(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public Not(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Not_1 : Not
+{
+  /// <exclude/>
+  public Not_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
+/// <exclude/>
+public class Not_2 : Not
+{
+  /// <exclude/>
+  public Not_2(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%But+32
 /// <exclude/>
-public class But : TOKEN{ public override string yyname { get { return "But";}}
-/// <exclude/>
-public override int yynum { get { return 32; }}
-/// <exclude/>
- public But(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class But_1 : But {
+public class But : TOKEN
+{
+  public override string yyname { get { return "But"; } }
   /// <exclude/>
-  public But_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 32; } }
+  /// <exclude/>
+  public But(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class But_1 : But
+{
+  /// <exclude/>
+  public But_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Connected+34
 /// <exclude/>
-public class Connected : TOKEN{ public override string yyname { get { return "Connected";}}
-/// <exclude/>
-public override int yynum { get { return 34; }}
-/// <exclude/>
- public Connected(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Connected_1 : Connected {
+public class Connected : TOKEN
+{
+  public override string yyname { get { return "Connected"; } }
   /// <exclude/>
-  public Connected_1(Lexer yym):base(yym) 	{yylval = yytext.Clone();}}
+  public override int yynum { get { return 34; } }
+  /// <exclude/>
+  public Connected(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Connected_1 : Connected
+{
+  /// <exclude/>
+  public Connected_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Suited+36
 /// <exclude/>
-public class Suited : TOKEN{ public override string yyname { get { return "Suited";}}
-/// <exclude/>
-public override int yynum { get { return 36; }}
-/// <exclude/>
- public Suited(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Suited_1 : Suited {
+public class Suited : TOKEN
+{
+  public override string yyname { get { return "Suited"; } }
   /// <exclude/>
-  public Suited_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 36; } }
+  /// <exclude/>
+  public Suited(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Suited_1 : Suited
+{
+  /// <exclude/>
+  public Suited_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Offsuit+38
 /// <exclude/>
-public class Offsuit : TOKEN{ public override string yyname { get { return "Offsuit";}}
-/// <exclude/>
-public override int yynum { get { return 38; }}
-/// <exclude/>
- public Offsuit(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Offsuit_1 : Offsuit {
+public class Offsuit : TOKEN
+{
+  public override string yyname { get { return "Offsuit"; } }
   /// <exclude/>
-  public Offsuit_1(Lexer yym):base(yym) 	{yylval = yytext.Clone();}}
+  public override int yynum { get { return 38; } }
+  /// <exclude/>
+  public Offsuit(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Offsuit_1 : Offsuit
+{
+  /// <exclude/>
+  public Offsuit_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%LE+40
 /// <exclude/>
-public class LE : TOKEN{ public override string yyname { get { return "LE";}}
-/// <exclude/>
-public override int yynum { get { return 40; }}
-/// <exclude/>
- public LE(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class LE_1 : LE {
+public class LE : TOKEN
+{
+  public override string yyname { get { return "LE"; } }
   /// <exclude/>
-  public LE_1(Lexer yym):base(yym) 			{yylval = yytext.Clone();}}
+  public override int yynum { get { return 40; } }
+  /// <exclude/>
+  public LE(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class LE_1 : LE
+{
+  /// <exclude/>
+  public LE_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%LT+42
 /// <exclude/>
-public class LT : TOKEN{ public override string yyname { get { return "LT";}}
-/// <exclude/>
-public override int yynum { get { return 42; }}
-/// <exclude/>
- public LT(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class LT_1 : LT {
+public class LT : TOKEN
+{
+  public override string yyname { get { return "LT"; } }
   /// <exclude/>
-  public LT_1(Lexer yym):base(yym) 			{yylval = yytext.Clone();}}
+  public override int yynum { get { return 42; } }
+  /// <exclude/>
+  public LT(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class LT_1 : LT
+{
+  /// <exclude/>
+  public LT_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%GE+44
 /// <exclude/>
-public class GE : TOKEN{ public override string yyname { get { return "GE";}}
-/// <exclude/>
-public override int yynum { get { return 44; }}
-/// <exclude/>
- public GE(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class GE_1 : GE {
+public class GE : TOKEN
+{
+  public override string yyname { get { return "GE"; } }
   /// <exclude/>
-  public GE_1(Lexer yym):base(yym) 			{yylval = yytext.Clone();}}
+  public override int yynum { get { return 44; } }
+  /// <exclude/>
+  public GE(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class GE_1 : GE
+{
+  /// <exclude/>
+  public GE_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%GT+46
 /// <exclude/>
-public class GT : TOKEN{ public override string yyname { get { return "GT";}}
-/// <exclude/>
-public override int yynum { get { return 46; }}
-/// <exclude/>
- public GT(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class GT_1 : GT {
+public class GT : TOKEN
+{
+  public override string yyname { get { return "GT"; } }
   /// <exclude/>
-  public GT_1(Lexer yym):base(yym) 			{yylval = yytext.Clone();}}
+  public override int yynum { get { return 46; } }
+  /// <exclude/>
+  public GT(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class GT_1 : GT
+{
+  /// <exclude/>
+  public GT_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%OR+48
 /// <exclude/>
-public class OR : TOKEN{ public override string yyname { get { return "OR";}}
-/// <exclude/>
-public override int yynum { get { return 48; }}
-/// <exclude/>
- public OR(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class OR_1 : OR {
+public class OR : TOKEN
+{
+  public override string yyname { get { return "OR"; } }
   /// <exclude/>
-  public OR_1(Lexer yym):base(yym) 			{yylval = yytext.Clone();}}
-/// <exclude/>
-public class OR_2 : OR {
+  public override int yynum { get { return 48; } }
   /// <exclude/>
-  public OR_2(Lexer yym):base(yym) 			{yylval = yytext.Clone();}}
+  public OR(Lexer yyl) : base(yyl) { }
+}
 /// <exclude/>
-public class OR_3 : OR {
+public class OR_1 : OR
+{
   /// <exclude/>
-  public OR_3(Lexer yym):base(yym) 			{yylval = yytext.Clone();}}
+  public OR_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 /// <exclude/>
-public class OR_4 : OR {
+public class OR_2 : OR
+{
   /// <exclude/>
-  public OR_4(Lexer yym):base(yym) 			{yylval = yytext.Clone();}}
+  public OR_2(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
+/// <exclude/>
+public class OR_3 : OR
+{
+  /// <exclude/>
+  public OR_3(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
+/// <exclude/>
+public class OR_4 : OR
+{
+  /// <exclude/>
+  public OR_4(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%AND+53
 /// <exclude/>
-public class AND : TOKEN{ public override string yyname { get { return "AND";}}
-/// <exclude/>
-public override int yynum { get { return 53; }}
-/// <exclude/>
- public AND(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class AND_1 : AND {
+public class AND : TOKEN
+{
+  public override string yyname { get { return "AND"; } }
   /// <exclude/>
-  public AND_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
-/// <exclude/>
-public class AND_2 : AND {
+  public override int yynum { get { return 53; } }
   /// <exclude/>
-  public AND_2(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public AND(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class AND_1 : AND
+{
+  /// <exclude/>
+  public AND_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
+/// <exclude/>
+public class AND_2 : AND
+{
+  /// <exclude/>
+  public AND_2(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%IN+56
 /// <exclude/>
-public class IN : TOKEN{ public override string yyname { get { return "IN";}}
-/// <exclude/>
-public override int yynum { get { return 56; }}
-/// <exclude/>
- public IN(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class IN_1 : IN {
+public class IN : TOKEN
+{
+  public override string yyname { get { return "IN"; } }
   /// <exclude/>
-  public IN_1(Lexer yym):base(yym) 			{yylval = yytext.Clone();}}
-/// <exclude/>
-public class AND_3 : AND {
+  public override int yynum { get { return 56; } }
   /// <exclude/>
-  public AND_3(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public IN(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class IN_1 : IN
+{
+  /// <exclude/>
+  public IN_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
+/// <exclude/>
+public class AND_3 : AND
+{
+  /// <exclude/>
+  public AND_3(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%LParen+59
 /// <exclude/>
-public class LParen : TOKEN{ public override string yyname { get { return "LParen";}}
-/// <exclude/>
-public override int yynum { get { return 59; }}
-/// <exclude/>
- public LParen(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class LParen_1 : LParen {
+public class LParen : TOKEN
+{
+  public override string yyname { get { return "LParen"; } }
   /// <exclude/>
-  public LParen_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 59; } }
+  /// <exclude/>
+  public LParen(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class LParen_1 : LParen
+{
+  /// <exclude/>
+  public LParen_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%RParen+61
 /// <exclude/>
-public class RParen : TOKEN{ public override string yyname { get { return "RParen";}}
-/// <exclude/>
-public override int yynum { get { return 61; }}
-/// <exclude/>
- public RParen(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class RParen_1 : RParen {
+public class RParen : TOKEN
+{
+  public override string yyname { get { return "RParen"; } }
   /// <exclude/>
-  public RParen_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 61; } }
+  /// <exclude/>
+  public RParen(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class RParen_1 : RParen
+{
+  /// <exclude/>
+  public RParen_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Group8+63
 /// <exclude/>
-public class Group8 : TOKEN{ public override string yyname { get { return "Group8";}}
-/// <exclude/>
-public override int yynum { get { return 63; }}
-/// <exclude/>
- public Group8(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Group8_1 : Group8 {
+public class Group8 : TOKEN
+{
+  public override string yyname { get { return "Group8"; } }
   /// <exclude/>
-  public Group8_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 63; } }
+  /// <exclude/>
+  public Group8(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Group8_1 : Group8
+{
+  /// <exclude/>
+  public Group8_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Group7+65
 /// <exclude/>
-public class Group7 : TOKEN{ public override string yyname { get { return "Group7";}}
-/// <exclude/>
-public override int yynum { get { return 65; }}
-/// <exclude/>
- public Group7(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Group7_1 : Group7 {
+public class Group7 : TOKEN
+{
+  public override string yyname { get { return "Group7"; } }
   /// <exclude/>
-  public Group7_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 65; } }
+  /// <exclude/>
+  public Group7(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Group7_1 : Group7
+{
+  /// <exclude/>
+  public Group7_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Group6+67
 /// <exclude/>
-public class Group6 : TOKEN{ public override string yyname { get { return "Group6";}}
-/// <exclude/>
-public override int yynum { get { return 67; }}
-/// <exclude/>
- public Group6(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Group6_1 : Group6 {
+public class Group6 : TOKEN
+{
+  public override string yyname { get { return "Group6"; } }
   /// <exclude/>
-  public Group6_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 67; } }
+  /// <exclude/>
+  public Group6(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Group6_1 : Group6
+{
+  /// <exclude/>
+  public Group6_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Group5+69
 /// <exclude/>
-public class Group5 : TOKEN{ public override string yyname { get { return "Group5";}}
-/// <exclude/>
-public override int yynum { get { return 69; }}
-/// <exclude/>
- public Group5(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Group5_1 : Group5 {
+public class Group5 : TOKEN
+{
+  public override string yyname { get { return "Group5"; } }
   /// <exclude/>
-  public Group5_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 69; } }
+  /// <exclude/>
+  public Group5(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Group5_1 : Group5
+{
+  /// <exclude/>
+  public Group5_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Group4+71
 /// <exclude/>
-public class Group4 : TOKEN{ public override string yyname { get { return "Group4";}}
-/// <exclude/>
-public override int yynum { get { return 71; }}
-/// <exclude/>
- public Group4(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Group4_1 : Group4 {
+public class Group4 : TOKEN
+{
+  public override string yyname { get { return "Group4"; } }
   /// <exclude/>
-  public Group4_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 71; } }
+  /// <exclude/>
+  public Group4(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Group4_1 : Group4
+{
+  /// <exclude/>
+  public Group4_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Group3+73
 /// <exclude/>
-public class Group3 : TOKEN{ public override string yyname { get { return "Group3";}}
-/// <exclude/>
-public override int yynum { get { return 73; }}
-/// <exclude/>
- public Group3(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Group3_1 : Group3 {
+public class Group3 : TOKEN
+{
+  public override string yyname { get { return "Group3"; } }
   /// <exclude/>
-  public Group3_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 73; } }
+  /// <exclude/>
+  public Group3(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Group3_1 : Group3
+{
+  /// <exclude/>
+  public Group3_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Group2+75
 /// <exclude/>
-public class Group2 : TOKEN{ public override string yyname { get { return "Group2";}}
-/// <exclude/>
-public override int yynum { get { return 75; }}
-/// <exclude/>
- public Group2(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Group2_1 : Group2 {
+public class Group2 : TOKEN
+{
+  public override string yyname { get { return "Group2"; } }
   /// <exclude/>
-  public Group2_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 75; } }
+  /// <exclude/>
+  public Group2(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Group2_1 : Group2
+{
+  /// <exclude/>
+  public Group2_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Group1+77
 /// <exclude/>
-public class Group1 : TOKEN{ public override string yyname { get { return "Group1";}}
-/// <exclude/>
-public override int yynum { get { return 77; }}
-/// <exclude/>
- public Group1(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Group1_1 : Group1 {
+public class Group1 : TOKEN
+{
+  public override string yyname { get { return "Group1"; } }
   /// <exclude/>
-  public Group1_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public override int yynum { get { return 77; } }
+  /// <exclude/>
+  public Group1(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Group1_1 : Group1
+{
+  /// <exclude/>
+  public Group1_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%Group9+79
 /// <exclude/>
-public class Group9 : TOKEN{ public override string yyname { get { return "Group9";}}
-/// <exclude/>
-public override int yynum { get { return 79; }}
-/// <exclude/>
- public Group9(Lexer yyl):base(yyl) {}}
-/// <exclude/>
-public class Group9_1 : Group9 {
+public class Group9 : TOKEN
+{
+  public override string yyname { get { return "Group9"; } }
   /// <exclude/>
-  public Group9_1(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
-/// <exclude/>
-public class Group9_2 : Group9 {
+  public override int yynum { get { return 79; } }
   /// <exclude/>
-  public Group9_2(Lexer yym):base(yym) 		{yylval = yytext.Clone();}}
+  public Group9(Lexer yyl) : base(yyl) { }
+}
+/// <exclude/>
+public class Group9_1 : Group9
+{
+  /// <exclude/>
+  public Group9_1(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
+/// <exclude/>
+public class Group9_2 : Group9
+{
+  /// <exclude/>
+  public Group9_2(Lexer yym) : base(yym) { yylval = yytext.Clone(); }
+}
 //%|Exam
 /// <exclude/>
-public class yyExam : YyLexer {
-/// <exclude/>
- public yyExam(ErrorHandler eh):base(eh) { arr = new int[] { 
+public class yyExam : YyLexer
+{
+  /// <exclude/>
+  public yyExam(ErrorHandler eh) : base(eh)
+  {
+    arr = new int[] {
 101,4,6,52,0,
 46,0,53,0,6,
 102,4,16,117,0,
@@ -1512,260 +1708,265 @@ public class yyExam : YyLexer {
 0,111,0,612,10,
 611,1,23,613,5,
 0,0};
- new Tfactory(this,"Group3_1",new TCreator(Group3_1_factory));
- new Tfactory(this,"LT",new TCreator(LT_factory));
- new Tfactory(this,"Group2",new TCreator(Group2_factory));
- new Tfactory(this,"OR_4",new TCreator(OR_4_factory));
- new Tfactory(this,"Group6_1",new TCreator(Group6_1_factory));
- new Tfactory(this,"Card169_1",new TCreator(Card169_1_factory));
- new Tfactory(this,"Gapped2",new TCreator(Gapped2_factory));
- new Tfactory(this,"Group5",new TCreator(Group5_factory));
- new Tfactory(this,"GT",new TCreator(GT_factory));
- new Tfactory(this,"IN",new TCreator(IN_factory));
- new Tfactory(this,"Group9_1",new TCreator(Group9_1_factory));
- new Tfactory(this,"Group8",new TCreator(Group8_factory));
- new Tfactory(this,"LParen",new TCreator(LParen_factory));
- new Tfactory(this,"To_3",new TCreator(To_3_factory));
- new Tfactory(this,"Not",new TCreator(Not_factory));
- new Tfactory(this,"Suited_1",new TCreator(Suited_1_factory));
- new Tfactory(this,"Group2_1",new TCreator(Group2_1_factory));
- new Tfactory(this,"RParen",new TCreator(RParen_factory));
- new Tfactory(this,"LParen_1",new TCreator(LParen_1_factory));
- new Tfactory(this,"Group1",new TCreator(Group1_factory));
- new Tfactory(this,"AND",new TCreator(AND_factory));
- new Tfactory(this,"LE_1",new TCreator(LE_1_factory));
- new Tfactory(this,"Percent_1",new TCreator(Percent_1_factory));
- new Tfactory(this,"Gapped_1",new TCreator(Gapped_1_factory));
- new Tfactory(this,"Group5_1",new TCreator(Group5_1_factory));
- new Tfactory(this,"But_1",new TCreator(But_1_factory));
- new Tfactory(this,"Group4",new TCreator(Group4_factory));
- new Tfactory(this,"GE_1",new TCreator(GE_1_factory));
- new Tfactory(this,"AND_2",new TCreator(AND_2_factory));
- new Tfactory(this,"AND_1",new TCreator(AND_1_factory));
- new Tfactory(this,"Group8_1",new TCreator(Group8_1_factory));
- new Tfactory(this,"Gapped3",new TCreator(Gapped3_factory));
- new Tfactory(this,"RParen_1",new TCreator(RParen_1_factory));
- new Tfactory(this,"Pair_1",new TCreator(Pair_1_factory));
- new Tfactory(this,"Pair",new TCreator(Pair_factory));
- new Tfactory(this,"Number_1",new TCreator(Number_1_factory));
- new Tfactory(this,"Connected_1",new TCreator(Connected_1_factory));
- new Tfactory(this,"Gapped1_1",new TCreator(Gapped1_1_factory));
- new Tfactory(this,"Offsuit",new TCreator(Offsuit_factory));
- new Tfactory(this,"Group4_1",new TCreator(Group4_1_factory));
- new Tfactory(this,"But",new TCreator(But_factory));
- new Tfactory(this,"Number",new TCreator(Number_factory));
- new Tfactory(this,"Percent",new TCreator(Percent_factory));
- new Tfactory(this,"Gapped2_1",new TCreator(Gapped2_1_factory));
- new Tfactory(this,"AND_3",new TCreator(AND_3_factory));
- new Tfactory(this,"OR_2",new TCreator(OR_2_factory));
- new Tfactory(this,"Card",new TCreator(Card_factory));
- new Tfactory(this,"LE",new TCreator(LE_factory));
- new Tfactory(this,"OR",new TCreator(OR_factory));
- new Tfactory(this,"Any",new TCreator(Any_factory));
- new Tfactory(this,"GE",new TCreator(GE_factory));
- new Tfactory(this,"Connected",new TCreator(Connected_factory));
- new Tfactory(this,"To_1",new TCreator(To_1_factory));
- new Tfactory(this,"Group7",new TCreator(Group7_factory));
- new Tfactory(this,"Any_1",new TCreator(Any_1_factory));
- new Tfactory(this,"LT_1",new TCreator(LT_1_factory));
- new Tfactory(this,"GT_1",new TCreator(GT_1_factory));
- new Tfactory(this,"Gapped3_1",new TCreator(Gapped3_1_factory));
- new Tfactory(this,"IN_1",new TCreator(IN_1_factory));
- new Tfactory(this,"Card169Wild_1",new TCreator(Card169Wild_1_factory));
- new Tfactory(this,"OR_3",new TCreator(OR_3_factory));
- new Tfactory(this,"Not_1",new TCreator(Not_1_factory));
- new Tfactory(this,"Not_2",new TCreator(Not_2_factory));
- new Tfactory(this,"Gapped1",new TCreator(Gapped1_factory));
- new Tfactory(this,"Offsuit_1",new TCreator(Offsuit_1_factory));
- new Tfactory(this,"Group1_1",new TCreator(Group1_1_factory));
- new Tfactory(this,"Group3",new TCreator(Group3_factory));
- new Tfactory(this,"Group7_1",new TCreator(Group7_1_factory));
- new Tfactory(this,"Group9_2",new TCreator(Group9_2_factory));
- new Tfactory(this,"Group6",new TCreator(Group6_factory));
- new Tfactory(this,"OR_1",new TCreator(OR_1_factory));
- new Tfactory(this,"To_2",new TCreator(To_2_factory));
- new Tfactory(this,"Group9",new TCreator(Group9_factory));
- new Tfactory(this,"Suited",new TCreator(Suited_factory));
- new Tfactory(this,"Gapped",new TCreator(Gapped_factory));
- new Tfactory(this,"Card169",new TCreator(Card169_factory));
- new Tfactory(this,"Card169Wild",new TCreator(Card169Wild_factory));
- new Tfactory(this,"Card_1",new TCreator(Card_1_factory));
- new Tfactory(this,"To",new TCreator(To_factory));
+    new Tfactory(this, "Group3_1", new TCreator(Group3_1_factory));
+    new Tfactory(this, "LT", new TCreator(LT_factory));
+    new Tfactory(this, "Group2", new TCreator(Group2_factory));
+    new Tfactory(this, "OR_4", new TCreator(OR_4_factory));
+    new Tfactory(this, "Group6_1", new TCreator(Group6_1_factory));
+    new Tfactory(this, "Card169_1", new TCreator(Card169_1_factory));
+    new Tfactory(this, "Gapped2", new TCreator(Gapped2_factory));
+    new Tfactory(this, "Group5", new TCreator(Group5_factory));
+    new Tfactory(this, "GT", new TCreator(GT_factory));
+    new Tfactory(this, "IN", new TCreator(IN_factory));
+    new Tfactory(this, "Group9_1", new TCreator(Group9_1_factory));
+    new Tfactory(this, "Group8", new TCreator(Group8_factory));
+    new Tfactory(this, "LParen", new TCreator(LParen_factory));
+    new Tfactory(this, "To_3", new TCreator(To_3_factory));
+    new Tfactory(this, "Not", new TCreator(Not_factory));
+    new Tfactory(this, "Suited_1", new TCreator(Suited_1_factory));
+    new Tfactory(this, "Group2_1", new TCreator(Group2_1_factory));
+    new Tfactory(this, "RParen", new TCreator(RParen_factory));
+    new Tfactory(this, "LParen_1", new TCreator(LParen_1_factory));
+    new Tfactory(this, "Group1", new TCreator(Group1_factory));
+    new Tfactory(this, "AND", new TCreator(AND_factory));
+    new Tfactory(this, "LE_1", new TCreator(LE_1_factory));
+    new Tfactory(this, "Percent_1", new TCreator(Percent_1_factory));
+    new Tfactory(this, "Gapped_1", new TCreator(Gapped_1_factory));
+    new Tfactory(this, "Group5_1", new TCreator(Group5_1_factory));
+    new Tfactory(this, "But_1", new TCreator(But_1_factory));
+    new Tfactory(this, "Group4", new TCreator(Group4_factory));
+    new Tfactory(this, "GE_1", new TCreator(GE_1_factory));
+    new Tfactory(this, "AND_2", new TCreator(AND_2_factory));
+    new Tfactory(this, "AND_1", new TCreator(AND_1_factory));
+    new Tfactory(this, "Group8_1", new TCreator(Group8_1_factory));
+    new Tfactory(this, "Gapped3", new TCreator(Gapped3_factory));
+    new Tfactory(this, "RParen_1", new TCreator(RParen_1_factory));
+    new Tfactory(this, "Pair_1", new TCreator(Pair_1_factory));
+    new Tfactory(this, "Pair", new TCreator(Pair_factory));
+    new Tfactory(this, "Number_1", new TCreator(Number_1_factory));
+    new Tfactory(this, "Connected_1", new TCreator(Connected_1_factory));
+    new Tfactory(this, "Gapped1_1", new TCreator(Gapped1_1_factory));
+    new Tfactory(this, "Offsuit", new TCreator(Offsuit_factory));
+    new Tfactory(this, "Group4_1", new TCreator(Group4_1_factory));
+    new Tfactory(this, "But", new TCreator(But_factory));
+    new Tfactory(this, "Number", new TCreator(Number_factory));
+    new Tfactory(this, "Percent", new TCreator(Percent_factory));
+    new Tfactory(this, "Gapped2_1", new TCreator(Gapped2_1_factory));
+    new Tfactory(this, "AND_3", new TCreator(AND_3_factory));
+    new Tfactory(this, "OR_2", new TCreator(OR_2_factory));
+    new Tfactory(this, "Card", new TCreator(Card_factory));
+    new Tfactory(this, "LE", new TCreator(LE_factory));
+    new Tfactory(this, "OR", new TCreator(OR_factory));
+    new Tfactory(this, "Any", new TCreator(Any_factory));
+    new Tfactory(this, "GE", new TCreator(GE_factory));
+    new Tfactory(this, "Connected", new TCreator(Connected_factory));
+    new Tfactory(this, "To_1", new TCreator(To_1_factory));
+    new Tfactory(this, "Group7", new TCreator(Group7_factory));
+    new Tfactory(this, "Any_1", new TCreator(Any_1_factory));
+    new Tfactory(this, "LT_1", new TCreator(LT_1_factory));
+    new Tfactory(this, "GT_1", new TCreator(GT_1_factory));
+    new Tfactory(this, "Gapped3_1", new TCreator(Gapped3_1_factory));
+    new Tfactory(this, "IN_1", new TCreator(IN_1_factory));
+    new Tfactory(this, "Card169Wild_1", new TCreator(Card169Wild_1_factory));
+    new Tfactory(this, "OR_3", new TCreator(OR_3_factory));
+    new Tfactory(this, "Not_1", new TCreator(Not_1_factory));
+    new Tfactory(this, "Not_2", new TCreator(Not_2_factory));
+    new Tfactory(this, "Gapped1", new TCreator(Gapped1_factory));
+    new Tfactory(this, "Offsuit_1", new TCreator(Offsuit_1_factory));
+    new Tfactory(this, "Group1_1", new TCreator(Group1_1_factory));
+    new Tfactory(this, "Group3", new TCreator(Group3_factory));
+    new Tfactory(this, "Group7_1", new TCreator(Group7_1_factory));
+    new Tfactory(this, "Group9_2", new TCreator(Group9_2_factory));
+    new Tfactory(this, "Group6", new TCreator(Group6_factory));
+    new Tfactory(this, "OR_1", new TCreator(OR_1_factory));
+    new Tfactory(this, "To_2", new TCreator(To_2_factory));
+    new Tfactory(this, "Group9", new TCreator(Group9_factory));
+    new Tfactory(this, "Suited", new TCreator(Suited_factory));
+    new Tfactory(this, "Gapped", new TCreator(Gapped_factory));
+    new Tfactory(this, "Card169", new TCreator(Card169_factory));
+    new Tfactory(this, "Card169Wild", new TCreator(Card169Wild_factory));
+    new Tfactory(this, "Card_1", new TCreator(Card_1_factory));
+    new Tfactory(this, "To", new TCreator(To_factory));
+  }
+  /// <exclude/>
+  public static object Group3_1_factory(Lexer yyl) { return new Group3_1(yyl); }
+  /// <exclude/>
+  public static object LT_factory(Lexer yyl) { return new LT(yyl); }
+  /// <exclude/>
+  public static object Group2_factory(Lexer yyl) { return new Group2(yyl); }
+  /// <exclude/>
+  public static object OR_4_factory(Lexer yyl) { return new OR_4(yyl); }
+  /// <exclude/>
+  public static object Group6_1_factory(Lexer yyl) { return new Group6_1(yyl); }
+  /// <exclude/>
+  public static object Card169_1_factory(Lexer yyl) { return new Card169_1(yyl); }
+  /// <exclude/>
+  public static object Gapped2_factory(Lexer yyl) { return new Gapped2(yyl); }
+  /// <exclude/>
+  public static object Group5_factory(Lexer yyl) { return new Group5(yyl); }
+  /// <exclude/>
+  public static object GT_factory(Lexer yyl) { return new GT(yyl); }
+  /// <exclude/>
+  public static object IN_factory(Lexer yyl) { return new IN(yyl); }
+  /// <exclude/>
+  public static object Group9_1_factory(Lexer yyl) { return new Group9_1(yyl); }
+  /// <exclude/>
+  public static object Group8_factory(Lexer yyl) { return new Group8(yyl); }
+  /// <exclude/>
+  public static object LParen_factory(Lexer yyl) { return new LParen(yyl); }
+  /// <exclude/>
+  public static object To_3_factory(Lexer yyl) { return new To_3(yyl); }
+  /// <exclude/>
+  public static object Not_factory(Lexer yyl) { return new Not(yyl); }
+  /// <exclude/>
+  public static object Suited_1_factory(Lexer yyl) { return new Suited_1(yyl); }
+  /// <exclude/>
+  public static object Group2_1_factory(Lexer yyl) { return new Group2_1(yyl); }
+  /// <exclude/>
+  public static object RParen_factory(Lexer yyl) { return new RParen(yyl); }
+  /// <exclude/>
+  public static object LParen_1_factory(Lexer yyl) { return new LParen_1(yyl); }
+  /// <exclude/>
+  public static object Group1_factory(Lexer yyl) { return new Group1(yyl); }
+  /// <exclude/>
+  public static object AND_factory(Lexer yyl) { return new AND(yyl); }
+  /// <exclude/>
+  public static object LE_1_factory(Lexer yyl) { return new LE_1(yyl); }
+  /// <exclude/>
+  public static object Percent_1_factory(Lexer yyl) { return new Percent_1(yyl); }
+  /// <exclude/>
+  public static object Gapped_1_factory(Lexer yyl) { return new Gapped_1(yyl); }
+  /// <exclude/>
+  public static object Group5_1_factory(Lexer yyl) { return new Group5_1(yyl); }
+  /// <exclude/>
+  public static object But_1_factory(Lexer yyl) { return new But_1(yyl); }
+  /// <exclude/>
+  public static object Group4_factory(Lexer yyl) { return new Group4(yyl); }
+  /// <exclude/>
+  public static object GE_1_factory(Lexer yyl) { return new GE_1(yyl); }
+  /// <exclude/>
+  public static object AND_2_factory(Lexer yyl) { return new AND_2(yyl); }
+  /// <exclude/>
+  public static object AND_1_factory(Lexer yyl) { return new AND_1(yyl); }
+  /// <exclude/>
+  public static object Group8_1_factory(Lexer yyl) { return new Group8_1(yyl); }
+  /// <exclude/>
+  public static object Gapped3_factory(Lexer yyl) { return new Gapped3(yyl); }
+  /// <exclude/>
+  public static object RParen_1_factory(Lexer yyl) { return new RParen_1(yyl); }
+  /// <exclude/>
+  public static object Pair_1_factory(Lexer yyl) { return new Pair_1(yyl); }
+  /// <exclude/>
+  public static object Pair_factory(Lexer yyl) { return new Pair(yyl); }
+  /// <exclude/>
+  public static object Number_1_factory(Lexer yyl) { return new Number_1(yyl); }
+  /// <exclude/>
+  public static object Connected_1_factory(Lexer yyl) { return new Connected_1(yyl); }
+  /// <exclude/>
+  public static object Gapped1_1_factory(Lexer yyl) { return new Gapped1_1(yyl); }
+  /// <exclude/>
+  public static object Offsuit_factory(Lexer yyl) { return new Offsuit(yyl); }
+  /// <exclude/>
+  public static object Group4_1_factory(Lexer yyl) { return new Group4_1(yyl); }
+  /// <exclude/>
+  public static object But_factory(Lexer yyl) { return new But(yyl); }
+  /// <exclude/>
+  public static object Number_factory(Lexer yyl) { return new Number(yyl); }
+  /// <exclude/>
+  public static object Percent_factory(Lexer yyl) { return new Percent(yyl); }
+  /// <exclude/>
+  public static object Gapped2_1_factory(Lexer yyl) { return new Gapped2_1(yyl); }
+  /// <exclude/>
+  public static object AND_3_factory(Lexer yyl) { return new AND_3(yyl); }
+  /// <exclude/>
+  public static object OR_2_factory(Lexer yyl) { return new OR_2(yyl); }
+  /// <exclude/>
+  public static object Card_factory(Lexer yyl) { return new Card(yyl); }
+  /// <exclude/>
+  public static object LE_factory(Lexer yyl) { return new LE(yyl); }
+  /// <exclude/>
+  public static object OR_factory(Lexer yyl) { return new OR(yyl); }
+  /// <exclude/>
+  public static object Any_factory(Lexer yyl) { return new Any(yyl); }
+  /// <exclude/>
+  public static object GE_factory(Lexer yyl) { return new GE(yyl); }
+  /// <exclude/>
+  public static object Connected_factory(Lexer yyl) { return new Connected(yyl); }
+  /// <exclude/>
+  public static object To_1_factory(Lexer yyl) { return new To_1(yyl); }
+  /// <exclude/>
+  public static object Group7_factory(Lexer yyl) { return new Group7(yyl); }
+  /// <exclude/>
+  public static object Any_1_factory(Lexer yyl) { return new Any_1(yyl); }
+  /// <exclude/>
+  public static object LT_1_factory(Lexer yyl) { return new LT_1(yyl); }
+  /// <exclude/>
+  public static object GT_1_factory(Lexer yyl) { return new GT_1(yyl); }
+  /// <exclude/>
+  public static object Gapped3_1_factory(Lexer yyl) { return new Gapped3_1(yyl); }
+  /// <exclude/>
+  public static object IN_1_factory(Lexer yyl) { return new IN_1(yyl); }
+  /// <exclude/>
+  public static object Card169Wild_1_factory(Lexer yyl) { return new Card169Wild_1(yyl); }
+  /// <exclude/>
+  public static object OR_3_factory(Lexer yyl) { return new OR_3(yyl); }
+  /// <exclude/>
+  public static object Not_1_factory(Lexer yyl) { return new Not_1(yyl); }
+  /// <exclude/>
+  public static object Not_2_factory(Lexer yyl) { return new Not_2(yyl); }
+  /// <exclude/>
+  public static object Gapped1_factory(Lexer yyl) { return new Gapped1(yyl); }
+  /// <exclude/>
+  public static object Offsuit_1_factory(Lexer yyl) { return new Offsuit_1(yyl); }
+  /// <exclude/>
+  public static object Group1_1_factory(Lexer yyl) { return new Group1_1(yyl); }
+  /// <exclude/>
+  public static object Group3_factory(Lexer yyl) { return new Group3(yyl); }
+  /// <exclude/>
+  public static object Group7_1_factory(Lexer yyl) { return new Group7_1(yyl); }
+  /// <exclude/>
+  public static object Group9_2_factory(Lexer yyl) { return new Group9_2(yyl); }
+  /// <exclude/>
+  public static object Group6_factory(Lexer yyl) { return new Group6(yyl); }
+  /// <exclude/>
+  public static object OR_1_factory(Lexer yyl) { return new OR_1(yyl); }
+  /// <exclude/>
+  public static object To_2_factory(Lexer yyl) { return new To_2(yyl); }
+  /// <exclude/>
+  public static object Group9_factory(Lexer yyl) { return new Group9(yyl); }
+  /// <exclude/>
+  public static object Suited_factory(Lexer yyl) { return new Suited(yyl); }
+  /// <exclude/>
+  public static object Gapped_factory(Lexer yyl) { return new Gapped(yyl); }
+  /// <exclude/>
+  public static object Card169_factory(Lexer yyl) { return new Card169(yyl); }
+  /// <exclude/>
+  public static object Card169Wild_factory(Lexer yyl) { return new Card169Wild(yyl); }
+  /// <exclude/>
+  public static object Card_1_factory(Lexer yyl) { return new Card_1(yyl); }
+  /// <exclude/>
+  public static object To_factory(Lexer yyl) { return new To(yyl); }
+  /// <exclude/>
+  public override TOKEN OldAction(Lexer yym, ref string yytext, int action, ref bool reject)
+  {
+    switch (action)
+    {
+      case -1: break;
+      case 1169:
+        ;
+        break;
+    }
+    return null;
+  }
 }
 /// <exclude/>
-public static object Group3_1_factory(Lexer yyl) { return new Group3_1(yyl);}
-/// <exclude/>
-public static object LT_factory(Lexer yyl) { return new LT(yyl);}
-/// <exclude/>
-public static object Group2_factory(Lexer yyl) { return new Group2(yyl);}
-/// <exclude/>
-public static object OR_4_factory(Lexer yyl) { return new OR_4(yyl);}
-/// <exclude/>
-public static object Group6_1_factory(Lexer yyl) { return new Group6_1(yyl);}
-/// <exclude/>
-public static object Card169_1_factory(Lexer yyl) { return new Card169_1(yyl);}
-/// <exclude/>
-public static object Gapped2_factory(Lexer yyl) { return new Gapped2(yyl);}
-/// <exclude/>
-public static object Group5_factory(Lexer yyl) { return new Group5(yyl);}
-/// <exclude/>
-public static object GT_factory(Lexer yyl) { return new GT(yyl);}
-/// <exclude/>
-public static object IN_factory(Lexer yyl) { return new IN(yyl);}
-/// <exclude/>
-public static object Group9_1_factory(Lexer yyl) { return new Group9_1(yyl);}
-/// <exclude/>
-public static object Group8_factory(Lexer yyl) { return new Group8(yyl);}
-/// <exclude/>
-public static object LParen_factory(Lexer yyl) { return new LParen(yyl);}
-/// <exclude/>
-public static object To_3_factory(Lexer yyl) { return new To_3(yyl);}
-/// <exclude/>
-public static object Not_factory(Lexer yyl) { return new Not(yyl);}
-/// <exclude/>
-public static object Suited_1_factory(Lexer yyl) { return new Suited_1(yyl);}
-/// <exclude/>
-public static object Group2_1_factory(Lexer yyl) { return new Group2_1(yyl);}
-/// <exclude/>
-public static object RParen_factory(Lexer yyl) { return new RParen(yyl);}
-/// <exclude/>
-public static object LParen_1_factory(Lexer yyl) { return new LParen_1(yyl);}
-/// <exclude/>
-public static object Group1_factory(Lexer yyl) { return new Group1(yyl);}
-/// <exclude/>
-public static object AND_factory(Lexer yyl) { return new AND(yyl);}
-/// <exclude/>
-public static object LE_1_factory(Lexer yyl) { return new LE_1(yyl);}
-/// <exclude/>
-public static object Percent_1_factory(Lexer yyl) { return new Percent_1(yyl);}
-/// <exclude/>
-public static object Gapped_1_factory(Lexer yyl) { return new Gapped_1(yyl);}
-/// <exclude/>
-public static object Group5_1_factory(Lexer yyl) { return new Group5_1(yyl);}
-/// <exclude/>
-public static object But_1_factory(Lexer yyl) { return new But_1(yyl);}
-/// <exclude/>
-public static object Group4_factory(Lexer yyl) { return new Group4(yyl);}
-/// <exclude/>
-public static object GE_1_factory(Lexer yyl) { return new GE_1(yyl);}
-/// <exclude/>
-public static object AND_2_factory(Lexer yyl) { return new AND_2(yyl);}
-/// <exclude/>
-public static object AND_1_factory(Lexer yyl) { return new AND_1(yyl);}
-/// <exclude/>
-public static object Group8_1_factory(Lexer yyl) { return new Group8_1(yyl);}
-/// <exclude/>
-public static object Gapped3_factory(Lexer yyl) { return new Gapped3(yyl);}
-/// <exclude/>
-public static object RParen_1_factory(Lexer yyl) { return new RParen_1(yyl);}
-/// <exclude/>
-public static object Pair_1_factory(Lexer yyl) { return new Pair_1(yyl);}
-/// <exclude/>
-public static object Pair_factory(Lexer yyl) { return new Pair(yyl);}
-/// <exclude/>
-public static object Number_1_factory(Lexer yyl) { return new Number_1(yyl);}
-/// <exclude/>
-public static object Connected_1_factory(Lexer yyl) { return new Connected_1(yyl);}
-/// <exclude/>
-public static object Gapped1_1_factory(Lexer yyl) { return new Gapped1_1(yyl);}
-/// <exclude/>
-public static object Offsuit_factory(Lexer yyl) { return new Offsuit(yyl);}
-/// <exclude/>
-public static object Group4_1_factory(Lexer yyl) { return new Group4_1(yyl);}
-/// <exclude/>
-public static object But_factory(Lexer yyl) { return new But(yyl);}
-/// <exclude/>
-public static object Number_factory(Lexer yyl) { return new Number(yyl);}
-/// <exclude/>
-public static object Percent_factory(Lexer yyl) { return new Percent(yyl);}
-/// <exclude/>
-public static object Gapped2_1_factory(Lexer yyl) { return new Gapped2_1(yyl);}
-/// <exclude/>
-public static object AND_3_factory(Lexer yyl) { return new AND_3(yyl);}
-/// <exclude/>
-public static object OR_2_factory(Lexer yyl) { return new OR_2(yyl);}
-/// <exclude/>
-public static object Card_factory(Lexer yyl) { return new Card(yyl);}
-/// <exclude/>
-public static object LE_factory(Lexer yyl) { return new LE(yyl);}
-/// <exclude/>
-public static object OR_factory(Lexer yyl) { return new OR(yyl);}
-/// <exclude/>
-public static object Any_factory(Lexer yyl) { return new Any(yyl);}
-/// <exclude/>
-public static object GE_factory(Lexer yyl) { return new GE(yyl);}
-/// <exclude/>
-public static object Connected_factory(Lexer yyl) { return new Connected(yyl);}
-/// <exclude/>
-public static object To_1_factory(Lexer yyl) { return new To_1(yyl);}
-/// <exclude/>
-public static object Group7_factory(Lexer yyl) { return new Group7(yyl);}
-/// <exclude/>
-public static object Any_1_factory(Lexer yyl) { return new Any_1(yyl);}
-/// <exclude/>
-public static object LT_1_factory(Lexer yyl) { return new LT_1(yyl);}
-/// <exclude/>
-public static object GT_1_factory(Lexer yyl) { return new GT_1(yyl);}
-/// <exclude/>
-public static object Gapped3_1_factory(Lexer yyl) { return new Gapped3_1(yyl);}
-/// <exclude/>
-public static object IN_1_factory(Lexer yyl) { return new IN_1(yyl);}
-/// <exclude/>
-public static object Card169Wild_1_factory(Lexer yyl) { return new Card169Wild_1(yyl);}
-/// <exclude/>
-public static object OR_3_factory(Lexer yyl) { return new OR_3(yyl);}
-/// <exclude/>
-public static object Not_1_factory(Lexer yyl) { return new Not_1(yyl);}
-/// <exclude/>
-public static object Not_2_factory(Lexer yyl) { return new Not_2(yyl);}
-/// <exclude/>
-public static object Gapped1_factory(Lexer yyl) { return new Gapped1(yyl);}
-/// <exclude/>
-public static object Offsuit_1_factory(Lexer yyl) { return new Offsuit_1(yyl);}
-/// <exclude/>
-public static object Group1_1_factory(Lexer yyl) { return new Group1_1(yyl);}
-/// <exclude/>
-public static object Group3_factory(Lexer yyl) { return new Group3(yyl);}
-/// <exclude/>
-public static object Group7_1_factory(Lexer yyl) { return new Group7_1(yyl);}
-/// <exclude/>
-public static object Group9_2_factory(Lexer yyl) { return new Group9_2(yyl);}
-/// <exclude/>
-public static object Group6_factory(Lexer yyl) { return new Group6(yyl);}
-/// <exclude/>
-public static object OR_1_factory(Lexer yyl) { return new OR_1(yyl);}
-/// <exclude/>
-public static object To_2_factory(Lexer yyl) { return new To_2(yyl);}
-/// <exclude/>
-public static object Group9_factory(Lexer yyl) { return new Group9(yyl);}
-/// <exclude/>
-public static object Suited_factory(Lexer yyl) { return new Suited(yyl);}
-/// <exclude/>
-public static object Gapped_factory(Lexer yyl) { return new Gapped(yyl);}
-/// <exclude/>
-public static object Card169_factory(Lexer yyl) { return new Card169(yyl);}
-/// <exclude/>
-public static object Card169Wild_factory(Lexer yyl) { return new Card169Wild(yyl);}
-/// <exclude/>
-public static object Card_1_factory(Lexer yyl) { return new Card_1(yyl);}
-/// <exclude/>
-public static object To_factory(Lexer yyl) { return new To(yyl);}
-/// <exclude/>
-public override TOKEN OldAction(Lexer yym,ref string yytext,int action, ref bool reject) {
-  switch(action) {
-  case -1: break;
-   case 1169: ;
-      break;
-  }
-  return null;
-}}
-/// <exclude/>
-public class Exam:Lexer {
-/// <exclude/>
-public Exam():base(new yyExam(new ErrorHandler(false))) {}
-/// <exclude/>
-public Exam(ErrorHandler eh):base(new yyExam(eh)) {}
-/// <exclude/>
-public Exam(YyLexer tks):base(tks){}
+public class Exam : Lexer
+{
+  /// <exclude/>
+  public Exam() : base(new yyExam(new ErrorHandler(false))) { }
+  /// <exclude/>
+  public Exam(ErrorHandler eh) : base(new yyExam(eh)) { }
+  /// <exclude/>
+  public Exam(YyLexer tks) : base(tks) { }
 
- }
+}

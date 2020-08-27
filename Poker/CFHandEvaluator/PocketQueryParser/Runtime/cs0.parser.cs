@@ -1,414 +1,642 @@
-using System;using Tools;
+using Tools;
 #pragma warning disable 1591
-namespace YYClass {
-//%+GStuff+16
-/// <exclude/>
-public class GStuff : TOKEN{
-/// <exclude/>
-public override string yyname { get { return "GStuff"; }}
-/// <exclude/>
-public override int yynum { get { return 16; }}
-/// <exclude/>
-public GStuff(Parser yyq):base(yyq){ }}
-//%+Stuff+17
-/// <exclude/>
-public class Stuff : TOKEN{
-/// <exclude/>
-public override string yyname { get { return "Stuff"; }}
-/// <exclude/>
-public override int yynum { get { return 17; }}
-/// <exclude/>
-public Stuff(Parser yyq):base(yyq){ }}
-//%+Item+18
-/// <exclude/>
-public class Item : TOKEN{
-/// <exclude/>
-public override string yyname { get { return "Item"; }}
-/// <exclude/>
-public override int yynum { get { return 18; }}
-/// <exclude/>
-public Item(Parser yyq):base(yyq){ }}
-/// <exclude/>
-//%+ClassBody+19
-public class ClassBody : TOKEN{
-/// <exclude/>
-public override string yyname { get { return "ClassBody"; }}
-/// <exclude/>
-public override int yynum { get { return 19; }}
-/// <exclude/>
-public ClassBody(Parser yyq):base(yyq){ }}
-//%+Cons+20
-/// <exclude/>
-public class Cons : TOKEN{
-/// <exclude/>
-public override string yyname { get { return "Cons"; }}
-/// <exclude/>
-public override int yynum { get { return 20; }}
-/// <exclude/>
-public Cons(Parser yyq):base(yyq){ }}
-//%+Call+21
-/// <exclude/>
-public class Call : TOKEN{
-/// <exclude/>
-public override string yyname { get { return "Call"; }}
-/// <exclude/>
-public override int yynum { get { return 21; }}
-/// <exclude/>
-public Call(Parser yyq):base(yyq){ }}
-//%+BaseCall+22
-/// <exclude/>
-public class BaseCall : TOKEN{
-/// <exclude/>
-public override string yyname { get { return "BaseCall"; }}
-/// <exclude/>
-public override int yynum { get { return 22; }}
-/// <exclude/>
-public BaseCall(Parser yyq):base(yyq){ }}
-//%+Name+23
-/// <exclude/>
-public class Name : TOKEN{
-/// <exclude/>
-public override string yyname { get { return "Name"; }}
-/// <exclude/>
-public override int yynum { get { return 23; }}
-/// <exclude/>
-public Name(Parser yyq):base(yyq){ }}
-/// <exclude/>
-public class ClassBody_1 : ClassBody {
+namespace YYClass
+{
+  //%+GStuff+16
   /// <exclude/>
-  public ClassBody_1(Parser yyq):base(yyq){}}
+  public class GStuff : TOKEN
+  {
+    /// <exclude/>
+    public override string yyname { get { return "GStuff"; } }
+    /// <exclude/>
+    public override int yynum { get { return 16; } }
+    /// <exclude/>
+    public GStuff(Parser yyq) : base(yyq) { }
+  }
+  //%+Stuff+17
   /// <exclude/>
-public class ClassBody_2 : ClassBody {
+  public class Stuff : TOKEN
+  {
+    /// <exclude/>
+    public override string yyname { get { return "Stuff"; } }
+    /// <exclude/>
+    public override int yynum { get { return 17; } }
+    /// <exclude/>
+    public Stuff(Parser yyq) : base(yyq) { }
+  }
+  //%+Item+18
   /// <exclude/>
-  public ClassBody_2(Parser yyq):base(yyq){}}
+  public class Item : TOKEN
+  {
+    /// <exclude/>
+    public override string yyname { get { return "Item"; } }
+    /// <exclude/>
+    public override int yynum { get { return 18; } }
+    /// <exclude/>
+    public Item(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  //%+ClassBody+19
+  public class ClassBody : TOKEN
+  {
+    /// <exclude/>
+    public override string yyname { get { return "ClassBody"; } }
+    /// <exclude/>
+    public override int yynum { get { return 19; } }
+    /// <exclude/>
+    public ClassBody(Parser yyq) : base(yyq) { }
+  }
+  //%+Cons+20
+  /// <exclude/>
+  public class Cons : TOKEN
+  {
+    /// <exclude/>
+    public override string yyname { get { return "Cons"; } }
+    /// <exclude/>
+    public override int yynum { get { return 20; } }
+    /// <exclude/>
+    public Cons(Parser yyq) : base(yyq) { }
+  }
+  //%+Call+21
+  /// <exclude/>
+  public class Call : TOKEN
+  {
+    /// <exclude/>
+    public override string yyname { get { return "Call"; } }
+    /// <exclude/>
+    public override int yynum { get { return 21; } }
+    /// <exclude/>
+    public Call(Parser yyq) : base(yyq) { }
+  }
+  //%+BaseCall+22
+  /// <exclude/>
+  public class BaseCall : TOKEN
+  {
+    /// <exclude/>
+    public override string yyname { get { return "BaseCall"; } }
+    /// <exclude/>
+    public override int yynum { get { return 22; } }
+    /// <exclude/>
+    public BaseCall(Parser yyq) : base(yyq) { }
+  }
+  //%+Name+23
+  /// <exclude/>
+  public class Name : TOKEN
+  {
+    /// <exclude/>
+    public override string yyname { get { return "Name"; } }
+    /// <exclude/>
+    public override int yynum { get { return 23; } }
+    /// <exclude/>
+    public Name(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class ClassBody_1 : ClassBody
+  {
+    /// <exclude/>
+    public ClassBody_1(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class ClassBody_2 : ClassBody
+  {
+    /// <exclude/>
+    public ClassBody_2(Parser yyq) : base(yyq) { }
+  }
 
-/// <exclude/>
-public class ClassBody_2_1 : ClassBody_2 {
   /// <exclude/>
-  public ClassBody_2_1(Parser yyq):base(yyq){ yytext=
-	((GStuff)(yyq.StackAt(1).m_value))
-	.yytext; }}
-/// <exclude/>
-public class GStuff_1 : GStuff {
+  public class ClassBody_2_1 : ClassBody_2
+  {
+    /// <exclude/>
+    public ClassBody_2_1(Parser yyq) : base(yyq)
+    {
+      yytext =
+((GStuff)(yyq.StackAt(1).m_value))
+.yytext;
+    }
+  }
   /// <exclude/>
-  public GStuff_1(Parser yyq):base(yyq){}}
-/// <exclude/>
-public class GStuff_2 : GStuff {
-  public GStuff_2(Parser yyq):base(yyq){}}
+  public class GStuff_1 : GStuff
+  {
+    /// <exclude/>
+    public GStuff_1(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class GStuff_2 : GStuff
+  {
+    public GStuff_2(Parser yyq) : base(yyq) { }
+  }
 
   /// <exclude/>
-public class GStuff_2_1 : GStuff_2 {
-  public GStuff_2_1(Parser yyq):base(yyq){ yytext=""; }}
+  public class GStuff_2_1 : GStuff_2
+  {
+    public GStuff_2_1(Parser yyq) : base(yyq) { yytext = ""; }
+  }
   /// <exclude/>
-public class GStuff_3 : GStuff {
-  public GStuff_3(Parser yyq):base(yyq){}}
+  public class GStuff_3 : GStuff
+  {
+    public GStuff_3(Parser yyq) : base(yyq) { }
+  }
   /// <exclude/>
-public class GStuff_4 : GStuff {
-  public GStuff_4(Parser yyq):base(yyq){}}
+  public class GStuff_4 : GStuff
+  {
+    public GStuff_4(Parser yyq) : base(yyq) { }
+  }
   /// <exclude/>
-public class GStuff_4_1 : GStuff_4 {
-  public GStuff_4_1(Parser yyq):base(yyq){ yytext=
-	((GStuff)(yyq.StackAt(1).m_value))
-	.yytext+
-	((Cons)(yyq.StackAt(0).m_value))
-	.yytext; }}
+  public class GStuff_4_1 : GStuff_4
+  {
+    public GStuff_4_1(Parser yyq) : base(yyq)
+    {
+      yytext =
+((GStuff)(yyq.StackAt(1).m_value))
+.yytext +
+((Cons)(yyq.StackAt(0).m_value))
+.yytext;
+    }
+  }
+  /// <exclude/>
+  public class GStuff_5 : GStuff
+  {
+    public GStuff_5(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class GStuff_6 : GStuff
+  {
+    public GStuff_6(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class GStuff_6_1 : GStuff_6
+  {
+    public GStuff_6_1(Parser yyq) : base(yyq)
+    {
+      yytext =
+((GStuff)(yyq.StackAt(1).m_value))
+.yytext +
+((Item)(yyq.StackAt(0).m_value))
+.yytext;
+    }
+  }
+  /// <exclude/>
+  public class Stuff_1 : Stuff
+  {
+    public Stuff_1(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Stuff_2 : Stuff
+  {
+    public Stuff_2(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Stuff_2_1 : Stuff_2
+  {
+    public Stuff_2_1(Parser yyq) : base(yyq) { yytext = ""; }
+  }
+  /// <exclude/>
+  public class Stuff_3 : Stuff
+  {
+    public Stuff_3(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Stuff_4 : Stuff
+  {
+    public Stuff_4(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Stuff_4_1 : Stuff_4
+  {
+    public Stuff_4_1(Parser yyq) : base(yyq)
+    {
+      yytext =
+((Stuff)(yyq.StackAt(1).m_value))
+.yytext +
+((Item)(yyq.StackAt(0).m_value))
+.yytext;
+    }
+  }
+  /// <exclude/>
+  public class Cons_1 : Cons
+  {
+    public Cons_1(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Cons_2 : Cons
+  {
+    public Cons_2(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Cons_2_1 : Cons_2
+  {
+    public Cons_2_1(Parser yyq) : base(yyq)
+    {
+      cs0syntax yy = (cs0syntax)yyq;
+      if (
+  ((Name)(yyq.StackAt(4).m_value))
+  .yytext.Trim() != yy.Cls)
+        yytext =
+((Name)(yyq.StackAt(4).m_value))
+.yytext + "(" +
+((Stuff)(yyq.StackAt(2).m_value))
+.yytext + ")";
+      else
+      {
+        if (
+  ((Stuff)(yyq.StackAt(2).m_value))
+  .yytext.Length == 0)
+        {
+          yytext =
+  ((Name)(yyq.StackAt(4).m_value))
+  .yytext + "(" + yy.Ctx + ")"; yy.defconseen = true;
+        }
+        else
+          yytext =
+  ((Name)(yyq.StackAt(4).m_value))
+  .yytext + "(" + yy.Ctx + "," +
+  ((Stuff)(yyq.StackAt(2).m_value))
+  .yytext + ")";
+        if (
+  ((BaseCall)(yyq.StackAt(0).m_value))
+  .yytext.Length == 0)
+          yytext += ":base(" + yy.Par + ")";
+        else
+          yytext += ":" +
+  ((BaseCall)(yyq.StackAt(0).m_value))
+  .yytext.Substring(0, 4) + "(" + yy.Par + "," +
+  ((BaseCall)(yyq.StackAt(0).m_value))
+  .yytext.Substring(4) + ")";
+      }
+    }
+  }
+  /// <exclude/>
+  public class Call_1 : Call
+  {
+    public Call_1(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Call_2 : Call
+  {
+    public Call_2(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Call_2_1 : Call_2
+  {
+    public Call_2_1(Parser yyq) : base(yyq)
+    {
+      if (
+  ((Name)(yyq.StackAt(3).m_value))
+  .yytext.Trim() != ((cs0syntax)yyq).Cls)
+        yytext =
+((Name)(yyq.StackAt(3).m_value))
+.yytext + "(" +
+((Stuff)(yyq.StackAt(1).m_value))
+.yytext + ")";
+      else
+      {
+        if (
+  ((Stuff)(yyq.StackAt(1).m_value))
+  .yytext.Length == 0)
+          yytext =
+  ((Name)(yyq.StackAt(3).m_value))
+  .yytext + "(" + ((cs0syntax)yyq).Par + ")";
+        else
+          yytext =
+  ((Name)(yyq.StackAt(3).m_value))
+  .yytext + "(" + ((cs0syntax)yyq).Par + "," +
+  ((Stuff)(yyq.StackAt(1).m_value))
+  .yytext + ")";
+      }
+    }
+  }
+  /// <exclude/>
+  public class BaseCall_1 : BaseCall
+  {
+    public BaseCall_1(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class BaseCall_2 : BaseCall
+  {
+    public BaseCall_2(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class BaseCall_2_1 : BaseCall_2
+  {
+    public BaseCall_2_1(Parser yyq) : base(yyq) { yytext = ""; }
+  }
+  /// <exclude/>
+  public class BaseCall_3 : BaseCall
+  {
+    public BaseCall_3(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class BaseCall_4 : BaseCall
+  {
+    public BaseCall_4(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class BaseCall_4_1 : BaseCall_4
+  {
+    public BaseCall_4_1(Parser yyq) : base(yyq)
+    {
+      yytext = "base" +
+((Stuff)(yyq.StackAt(1).m_value))
+.yytext;
+    }
+  }
+  /// <exclude/>
+  public class BaseCall_5 : BaseCall
+  {
+    public BaseCall_5(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class BaseCall_6 : BaseCall
+  {
+    public BaseCall_6(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class BaseCall_6_1 : BaseCall_6
+  {
+    public BaseCall_6_1(Parser yyq) : base(yyq)
+    {
+      yytext = "this" +
+((Stuff)(yyq.StackAt(1).m_value))
+.yytext;
+    }
+  }
+  /// <exclude/>
+  public class Name_1 : Name
+  {
+    public Name_1(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Name_2 : Name
+  {
+    public Name_2(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Name_2_1 : Name_2
+  {
+    public Name_2_1(Parser yyq) : base(yyq)
+    {
+      yytext = " " +
+((ID)(yyq.StackAt(0).m_value))
+.yytext + " ";
+    }
+  }
+  /// <exclude/>
+  public class Name_3 : Name
+  {
+    public Name_3(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Name_4 : Name
+  {
+    public Name_4(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Name_4_1 : Name_4
+  {
+    public Name_4_1(Parser yyq) : base(yyq)
+    {
+      yytext =
+((ID)(yyq.StackAt(3).m_value))
+.yytext + "[" +
+((Stuff)(yyq.StackAt(1).m_value))
+.yytext + "]";
+    }
+  }
+  /// <exclude/>
+  public class Item_1 : Item
+  {
+    public Item_1(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_2 : Item
+  {
+    public Item_2(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_2_1 : Item_2
+  {
+    public Item_2_1(Parser yyq) : base(yyq)
+    {
+      yytext =
+((ANY)(yyq.StackAt(0).m_value))
+.yytext;
+    }
+  }
+  /// <exclude/>
+  public class Item_3 : Item
+  {
+    public Item_3(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_4 : Item
+  {
+    public Item_4(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_4_1 : Item_4
+  {
+    public Item_4_1(Parser yyq) : base(yyq)
+    {
+      yytext =
+((Name)(yyq.StackAt(0).m_value))
+.yytext;
+    }
+  }
+  /// <exclude/>
+  public class Item_5 : Item
+  {
+    public Item_5(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_6 : Item
+  {
+    public Item_6(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_6_1 : Item_6
+  {
+    public Item_6_1(Parser yyq) : base(yyq) { yytext = ";\n"; }
+  }
+  /// <exclude/>
+  public class Item_7 : Item
+  {
+    public Item_7(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_8 : Item
+  {
+    public Item_8(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_8_1 : Item_8
+  {
+    public Item_8_1(Parser yyq) : base(yyq) { yytext = " base "; }
+  }
+  /// <exclude/>
+  public class Item_9 : Item
+  {
+    public Item_9(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_10 : Item
+  {
+    public Item_10(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_10_1 : Item_10
+  {
+    public Item_10_1(Parser yyq) : base(yyq) { yytext = " this "; }
+  }
+  /// <exclude/>
+  public class Item_11 : Item
+  {
+    public Item_11(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_12 : Item
+  {
+    public Item_12(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_12_1 : Item_12
+  {
+    public Item_12_1(Parser yyq) : base(yyq)
+    {
+      yytext = " this[" +
+((Stuff)(yyq.StackAt(1).m_value))
+.yytext + "]";
+    }
+  }
+  /// <exclude/>
+  public class Item_13 : Item
+  {
+    public Item_13(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_14 : Item
+  {
+    public Item_14(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_14_1 : Item_14
+  {
+    public Item_14_1(Parser yyq) : base(yyq) { yytext = ":"; }
+  }
+  /// <exclude/>
+  public class Item_15 : Item
+  {
+    public Item_15(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_16 : Item
+  {
+    public Item_16(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_16_1 : Item_16
+  {
+    public Item_16_1(Parser yyq) : base(yyq)
+    {
+      yytext = " new " +
+((Call)(yyq.StackAt(0).m_value))
+.yytext;
+    }
+  }
+  /// <exclude/>
+  public class Item_17 : Item
+  {
+    public Item_17(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_18 : Item
+  {
+    public Item_18(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_18_1 : Item_18
+  {
+    public Item_18_1(Parser yyq) : base(yyq)
+    {
+      yytext = " new " +
+((Name)(yyq.StackAt(0).m_value))
+.yytext;
+    }
+  }
+  /// <exclude/>
+  public class Item_19 : Item
+  {
+    public Item_19(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_20 : Item
+  {
+    public Item_20(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_20_1 : Item_20
+  {
+    public Item_20_1(Parser yyq) : base(yyq)
+    {
+      yytext = "(" +
+((Stuff)(yyq.StackAt(1).m_value))
+.yytext + ")";
+    }
+  }
+  /// <exclude/>
+  public class Item_21 : Item
+  {
+    public Item_21(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_22 : Item
+  {
+    public Item_22(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_22_1 : Item_22
+  {
+    public Item_22_1(Parser yyq) : base(yyq)
+    {
+      yytext = "{" +
+((Stuff)(yyq.StackAt(1).m_value))
+.yytext + "}\n";
+    }
+  }
+  /// <exclude/>
+  public class Item_23 : Item
+  {
+    public Item_23(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_24 : Item
+  {
+    public Item_24(Parser yyq) : base(yyq) { }
+  }
+  /// <exclude/>
+  public class Item_24_1 : Item_24
+  {
+    public Item_24_1(Parser yyq) : base(yyq)
+    {
+      yytext = "[" +
+((Stuff)(yyq.StackAt(1).m_value))
+.yytext + "]";
+    }
+  }
+  /// <exclude/>
+  public class yycs0syntax : YyParser
+  {
+    public override object Action(Parser yyq, SYMBOL yysym, int yyact)
+    {
+      switch (yyact)
+      {
+        case -1: break; //// keep compiler happy
+      }
+      return null;
+    }
     /// <exclude/>
-public class GStuff_5 : GStuff {
-  public GStuff_5(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class GStuff_6 : GStuff {
-  public GStuff_6(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class GStuff_6_1 : GStuff_6 {
-  public GStuff_6_1(Parser yyq):base(yyq){ yytext=
-	((GStuff)(yyq.StackAt(1).m_value))
-	.yytext+
-	((Item)(yyq.StackAt(0).m_value))
-	.yytext; }}
-    /// <exclude/>
-public class Stuff_1 : Stuff {
-  public Stuff_1(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Stuff_2 : Stuff {
-  public Stuff_2(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Stuff_2_1 : Stuff_2 {
-  public Stuff_2_1(Parser yyq):base(yyq){ yytext=""; }}
-  /// <exclude/>
-public class Stuff_3 : Stuff {
-  public Stuff_3(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Stuff_4 : Stuff {
-  public Stuff_4(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Stuff_4_1 : Stuff_4 {
-  public Stuff_4_1(Parser yyq):base(yyq){ yytext=
-	((Stuff)(yyq.StackAt(1).m_value))
-	.yytext+
-	((Item)(yyq.StackAt(0).m_value))
-	.yytext; }}
-    /// <exclude/>
-public class Cons_1 : Cons {
-  public Cons_1(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Cons_2 : Cons {
-  public Cons_2(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Cons_2_1 : Cons_2 {
-  public Cons_2_1(Parser yyq):base(yyq){ 
-			cs0syntax yy = (cs0syntax)yyq;
-			if (
-	((Name)(yyq.StackAt(4).m_value))
-	.yytext.Trim()!=yy.Cls)
-					yytext=
-	((Name)(yyq.StackAt(4).m_value))
-	.yytext+"("+
-	((Stuff)(yyq.StackAt(2).m_value))
-	.yytext+")";
-			else {
-				if (
-	((Stuff)(yyq.StackAt(2).m_value))
-	.yytext.Length==0) {
-					yytext=
-	((Name)(yyq.StackAt(4).m_value))
-	.yytext+"("+yy.Ctx+")"; yy.defconseen=true;
-				} else
-					yytext=
-	((Name)(yyq.StackAt(4).m_value))
-	.yytext+"("+yy.Ctx+","+
-	((Stuff)(yyq.StackAt(2).m_value))
-	.yytext+")"; 
-				if (
-	((BaseCall)(yyq.StackAt(0).m_value))
-	.yytext.Length==0)
-					yytext+=":base("+yy.Par+")";
-				else
-					yytext+=":"+
-	((BaseCall)(yyq.StackAt(0).m_value))
-	.yytext.Substring(0,4)+"("+yy.Par+","+
-	((BaseCall)(yyq.StackAt(0).m_value))
-	.yytext.Substring(4)+")";
-				}
-			}}
-            /// <exclude/>
-public class Call_1 : Call {
-  public Call_1(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Call_2 : Call {
-  public Call_2(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Call_2_1 : Call_2 {
-  public Call_2_1(Parser yyq):base(yyq){ 
-			if (
-	((Name)(yyq.StackAt(3).m_value))
-	.yytext.Trim()!=((cs0syntax)yyq).Cls)
-					yytext=
-	((Name)(yyq.StackAt(3).m_value))
-	.yytext+"("+
-	((Stuff)(yyq.StackAt(1).m_value))
-	.yytext+")";
-			else {
-				if (
-	((Stuff)(yyq.StackAt(1).m_value))
-	.yytext.Length==0)
-					yytext=
-	((Name)(yyq.StackAt(3).m_value))
-	.yytext+"("+((cs0syntax)yyq).Par+")";
-				else
-					yytext=
-	((Name)(yyq.StackAt(3).m_value))
-	.yytext+"("+((cs0syntax)yyq).Par+","+
-	((Stuff)(yyq.StackAt(1).m_value))
-	.yytext+")"; 
-				}
-			}}
-            /// <exclude/>
-public class BaseCall_1 : BaseCall {
-  public BaseCall_1(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class BaseCall_2 : BaseCall {
-  public BaseCall_2(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class BaseCall_2_1 : BaseCall_2 {
-  public BaseCall_2_1(Parser yyq):base(yyq){ yytext=""; }}
-  /// <exclude/>
-public class BaseCall_3 : BaseCall {
-  public BaseCall_3(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class BaseCall_4 : BaseCall {
-  public BaseCall_4(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class BaseCall_4_1 : BaseCall_4 {
-  public BaseCall_4_1(Parser yyq):base(yyq){ yytext="base"+
-	((Stuff)(yyq.StackAt(1).m_value))
-	.yytext; }}
-    /// <exclude/>
-public class BaseCall_5 : BaseCall {
-  public BaseCall_5(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class BaseCall_6 : BaseCall {
-  public BaseCall_6(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class BaseCall_6_1 : BaseCall_6 {
-  public BaseCall_6_1(Parser yyq):base(yyq){ yytext="this"+
-	((Stuff)(yyq.StackAt(1).m_value))
-	.yytext; }}
-    /// <exclude/>
-public class Name_1 : Name {
-  public Name_1(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Name_2 : Name {
-  public Name_2(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Name_2_1 : Name_2 {
-  public Name_2_1(Parser yyq):base(yyq){ yytext=" "+
-	((ID)(yyq.StackAt(0).m_value))
-	.yytext+" "; }}
-    /// <exclude/>
-public class Name_3 : Name {
-  public Name_3(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Name_4 : Name {
-  public Name_4(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Name_4_1 : Name_4 {
-  public Name_4_1(Parser yyq):base(yyq){ yytext=
-	((ID)(yyq.StackAt(3).m_value))
-	.yytext+"["+
-	((Stuff)(yyq.StackAt(1).m_value))
-	.yytext+"]"; }}
-    /// <exclude/>
-public class Item_1 : Item {
-  public Item_1(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_2 : Item {
-  public Item_2(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_2_1 : Item_2 {
-  public Item_2_1(Parser yyq):base(yyq){ yytext=
-	((ANY)(yyq.StackAt(0).m_value))
-	.yytext; }}
-    /// <exclude/>
-public class Item_3 : Item {
-  public Item_3(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_4 : Item {
-  public Item_4(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_4_1 : Item_4 {
-  public Item_4_1(Parser yyq):base(yyq){ yytext=
-	((Name)(yyq.StackAt(0).m_value))
-	.yytext; }}
-    /// <exclude/>
-public class Item_5 : Item {
-  public Item_5(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_6 : Item {
-  public Item_6(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_6_1 : Item_6 {
-  public Item_6_1(Parser yyq):base(yyq){ yytext=";\n"; }}
-  /// <exclude/>
-public class Item_7 : Item {
-  public Item_7(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_8 : Item {
-  public Item_8(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_8_1 : Item_8 {
-  public Item_8_1(Parser yyq):base(yyq){ yytext=" base "; }}
-  /// <exclude/>
-public class Item_9 : Item {
-  public Item_9(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_10 : Item {
-  public Item_10(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_10_1 : Item_10 {
-  public Item_10_1(Parser yyq):base(yyq){ yytext=" this "; }}
-  /// <exclude/>
-public class Item_11 : Item {
-  public Item_11(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_12 : Item {
-  public Item_12(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_12_1 : Item_12 {
-  public Item_12_1(Parser yyq):base(yyq){ yytext=" this["+
-	((Stuff)(yyq.StackAt(1).m_value))
-	.yytext+"]"; }}
-    /// <exclude/>
-public class Item_13 : Item {
-  public Item_13(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_14 : Item {
-  public Item_14(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_14_1 : Item_14 {
-  public Item_14_1(Parser yyq):base(yyq){ yytext=":"; }}
-  /// <exclude/>
-public class Item_15 : Item {
-  public Item_15(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_16 : Item {
-  public Item_16(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_16_1 : Item_16 {
-  public Item_16_1(Parser yyq):base(yyq){ yytext=" new "+
-	((Call)(yyq.StackAt(0).m_value))
-	.yytext; }}
-    /// <exclude/>
-public class Item_17 : Item {
-  public Item_17(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_18 : Item {
-  public Item_18(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_18_1 : Item_18 {
-  public Item_18_1(Parser yyq):base(yyq){ yytext=" new "+
-	((Name)(yyq.StackAt(0).m_value))
-	.yytext; }}
-    /// <exclude/>
-public class Item_19 : Item {
-  public Item_19(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_20 : Item {
-  public Item_20(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_20_1 : Item_20 {
-  public Item_20_1(Parser yyq):base(yyq){ yytext="("+
-	((Stuff)(yyq.StackAt(1).m_value))
-	.yytext+")"; }}
-    /// <exclude/>
-public class Item_21 : Item {
-  public Item_21(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_22 : Item {
-  public Item_22(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_22_1 : Item_22 {
-  public Item_22_1(Parser yyq):base(yyq){ yytext="{"+
-	((Stuff)(yyq.StackAt(1).m_value))
-	.yytext+"}\n"; }}
-    /// <exclude/>
-public class Item_23 : Item {
-  public Item_23(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_24 : Item {
-  public Item_24(Parser yyq):base(yyq){}}
-  /// <exclude/>
-public class Item_24_1 : Item_24 {
-  public Item_24_1(Parser yyq):base(yyq){ yytext="[" + 
-	((Stuff)(yyq.StackAt(1).m_value))
-	.yytext + "]"; }}
-    /// <exclude/>
-public class yycs0syntax : YyParser {
-  public override object Action(Parser yyq,SYMBOL yysym, int yyact) {
-    switch(yyact) {
-	 case -1: break; //// keep compiler happy
-}  return null; }
-/// <exclude/>
-public yycs0syntax ():base() { arr = new int[] { 
+    public yycs0syntax() : base()
+    {
+      arr = new int[] {
 101,4,6,52,0,
 46,0,53,0,102,
 20,103,4,18,67,
@@ -1690,187 +1918,188 @@ public yycs0syntax ():base() { arr = new int[] {
 1,26,1,3,1,
 4,1,3,683,22,
 1,1,2,1,0};
-new Sfactory(this,"Item_20_1",new SCreator(Item_20_1_factory));
-new Sfactory(this,"Item_23",new SCreator(Item_23_factory));
-new Sfactory(this,"Item_6",new SCreator(Item_6_factory));
-new Sfactory(this,"Stuff_4_1",new SCreator(Stuff_4_1_factory));
-new Sfactory(this,"Item_15",new SCreator(Item_15_factory));
-new Sfactory(this,"Item_22_1",new SCreator(Item_22_1_factory));
-new Sfactory(this,"Item_2_1",new SCreator(Item_2_1_factory));
-new Sfactory(this,"Item_11",new SCreator(Item_11_factory));
-new Sfactory(this,"Item_8",new SCreator(Item_8_factory));
-new Sfactory(this,"Name",new SCreator(Name_factory));
-new Sfactory(this,"BaseCall_4",new SCreator(BaseCall_4_factory));
-new Sfactory(this,"Item_14",new SCreator(Item_14_factory));
-new Sfactory(this,"Cons_2",new SCreator(Cons_2_factory));
-new Sfactory(this,"BaseCall_3",new SCreator(BaseCall_3_factory));
-new Sfactory(this,"Item_17",new SCreator(Item_17_factory));
-new Sfactory(this,"Item_10",new SCreator(Item_10_factory));
-new Sfactory(this,"ClassBody_2_1",new SCreator(ClassBody_2_1_factory));
-new Sfactory(this,"Call_2",new SCreator(Call_2_factory));
-new Sfactory(this,"Item_14_1",new SCreator(Item_14_1_factory));
-new Sfactory(this,"Item_1",new SCreator(Item_1_factory));
-new Sfactory(this,"GStuff_6_1",new SCreator(GStuff_6_1_factory));
-new Sfactory(this,"Item_6_1",new SCreator(Item_6_1_factory));
-new Sfactory(this,"Call_2_1",new SCreator(Call_2_1_factory));
-new Sfactory(this,"Item_5",new SCreator(Item_5_factory));
-new Sfactory(this,"Item_4_1",new SCreator(Item_4_1_factory));
-new Sfactory(this,"BaseCall",new SCreator(BaseCall_factory));
-new Sfactory(this,"Item_10_1",new SCreator(Item_10_1_factory));
-new Sfactory(this,"Name_2",new SCreator(Name_2_factory));
-new Sfactory(this,"Call_1",new SCreator(Call_1_factory));
-new Sfactory(this,"ClassBody",new SCreator(ClassBody_factory));
-new Sfactory(this,"error",new SCreator(error_factory));
-new Sfactory(this,"Item_8_1",new SCreator(Item_8_1_factory));
-new Sfactory(this,"BaseCall_6_1",new SCreator(BaseCall_6_1_factory));
-new Sfactory(this,"Item_16_1",new SCreator(Item_16_1_factory));
-new Sfactory(this,"Item_13",new SCreator(Item_13_factory));
-new Sfactory(this,"BaseCall_2",new SCreator(BaseCall_2_factory));
-new Sfactory(this,"Name_2_1",new SCreator(Name_2_1_factory));
-new Sfactory(this,"Cons_2_1",new SCreator(Cons_2_1_factory));
-new Sfactory(this,"Item_7",new SCreator(Item_7_factory));
-new Sfactory(this,"BaseCall_2_1",new SCreator(BaseCall_2_1_factory));
-new Sfactory(this,"GStuff_4",new SCreator(GStuff_4_factory));
-new Sfactory(this,"Item_22",new SCreator(Item_22_factory));
-new Sfactory(this,"Name_3",new SCreator(Name_3_factory));
-new Sfactory(this,"GStuff_3",new SCreator(GStuff_3_factory));
-new Sfactory(this,"Stuff_2_1",new SCreator(Stuff_2_1_factory));
-new Sfactory(this,"ClassBody_1",new SCreator(ClassBody_1_factory));
-new Sfactory(this,"Name_4",new SCreator(Name_4_factory));
-new Sfactory(this,"BaseCall_6",new SCreator(BaseCall_6_factory));
-new Sfactory(this,"Item_24_1",new SCreator(Item_24_1_factory));
-new Sfactory(this,"Item_12_1",new SCreator(Item_12_1_factory));
-new Sfactory(this,"GStuff_1",new SCreator(GStuff_1_factory));
-new Sfactory(this,"Item_4",new SCreator(Item_4_factory));
-new Sfactory(this,"GStuff_2_1",new SCreator(GStuff_2_1_factory));
-new Sfactory(this,"Item_20",new SCreator(Item_20_factory));
-new Sfactory(this,"Stuff_1",new SCreator(Stuff_1_factory));
-new Sfactory(this,"Stuff",new SCreator(Stuff_factory));
-new Sfactory(this,"Item_3",new SCreator(Item_3_factory));
-new Sfactory(this,"Name_4_1",new SCreator(Name_4_1_factory));
-new Sfactory(this,"Item_16",new SCreator(Item_16_factory));
-new Sfactory(this,"Stuff_4",new SCreator(Stuff_4_factory));
-new Sfactory(this,"Cons",new SCreator(Cons_factory));
-new Sfactory(this,"Item_18_1",new SCreator(Item_18_1_factory));
-new Sfactory(this,"GStuff_5",new SCreator(GStuff_5_factory));
-new Sfactory(this,"Item_21",new SCreator(Item_21_factory));
-new Sfactory(this,"Stuff_2",new SCreator(Stuff_2_factory));
-new Sfactory(this,"Item_18",new SCreator(Item_18_factory));
-new Sfactory(this,"GStuff_4_1",new SCreator(GStuff_4_1_factory));
-new Sfactory(this,"BaseCall_1",new SCreator(BaseCall_1_factory));
-new Sfactory(this,"Item_24",new SCreator(Item_24_factory));
-new Sfactory(this,"Item",new SCreator(Item_factory));
-new Sfactory(this,"ClassBody_2",new SCreator(ClassBody_2_factory));
-new Sfactory(this,"GStuff",new SCreator(GStuff_factory));
-new Sfactory(this,"Item_2",new SCreator(Item_2_factory));
-new Sfactory(this,"Item_12",new SCreator(Item_12_factory));
-new Sfactory(this,"Item_9",new SCreator(Item_9_factory));
-new Sfactory(this,"Stuff_3",new SCreator(Stuff_3_factory));
-new Sfactory(this,"Name_1",new SCreator(Name_1_factory));
-new Sfactory(this,"Call",new SCreator(Call_factory));
-new Sfactory(this,"BaseCall_5",new SCreator(BaseCall_5_factory));
-new Sfactory(this,"BaseCall_4_1",new SCreator(BaseCall_4_1_factory));
-new Sfactory(this,"Cons_1",new SCreator(Cons_1_factory));
-new Sfactory(this,"Item_19",new SCreator(Item_19_factory));
-new Sfactory(this,"GStuff_6",new SCreator(GStuff_6_factory));
-new Sfactory(this,"GStuff_2",new SCreator(GStuff_2_factory));
-}
-public static object Item_20_1_factory(Parser yyp) { return new Item_20_1(yyp); }
-public static object Item_23_factory(Parser yyp) { return new Item_23(yyp); }
-public static object Item_6_factory(Parser yyp) { return new Item_6(yyp); }
-public static object Stuff_4_1_factory(Parser yyp) { return new Stuff_4_1(yyp); }
-public static object Item_15_factory(Parser yyp) { return new Item_15(yyp); }
-public static object Item_22_1_factory(Parser yyp) { return new Item_22_1(yyp); }
-public static object Item_2_1_factory(Parser yyp) { return new Item_2_1(yyp); }
-public static object Item_11_factory(Parser yyp) { return new Item_11(yyp); }
-public static object Item_8_factory(Parser yyp) { return new Item_8(yyp); }
-public static object Name_factory(Parser yyp) { return new Name(yyp); }
-public static object BaseCall_4_factory(Parser yyp) { return new BaseCall_4(yyp); }
-public static object Item_14_factory(Parser yyp) { return new Item_14(yyp); }
-public static object Cons_2_factory(Parser yyp) { return new Cons_2(yyp); }
-public static object BaseCall_3_factory(Parser yyp) { return new BaseCall_3(yyp); }
-public static object Item_17_factory(Parser yyp) { return new Item_17(yyp); }
-public static object Item_10_factory(Parser yyp) { return new Item_10(yyp); }
-public static object ClassBody_2_1_factory(Parser yyp) { return new ClassBody_2_1(yyp); }
-public static object Call_2_factory(Parser yyp) { return new Call_2(yyp); }
-public static object Item_14_1_factory(Parser yyp) { return new Item_14_1(yyp); }
-public static object Item_1_factory(Parser yyp) { return new Item_1(yyp); }
-public static object GStuff_6_1_factory(Parser yyp) { return new GStuff_6_1(yyp); }
-public static object Item_6_1_factory(Parser yyp) { return new Item_6_1(yyp); }
-public static object Call_2_1_factory(Parser yyp) { return new Call_2_1(yyp); }
-public static object Item_5_factory(Parser yyp) { return new Item_5(yyp); }
-public static object Item_4_1_factory(Parser yyp) { return new Item_4_1(yyp); }
-public static object BaseCall_factory(Parser yyp) { return new BaseCall(yyp); }
-public static object Item_10_1_factory(Parser yyp) { return new Item_10_1(yyp); }
-public static object Name_2_factory(Parser yyp) { return new Name_2(yyp); }
-public static object Call_1_factory(Parser yyp) { return new Call_1(yyp); }
-public static object ClassBody_factory(Parser yyp) { return new ClassBody(yyp); }
-public static object error_factory(Parser yyp) { return new error(yyp); }
-public static object Item_8_1_factory(Parser yyp) { return new Item_8_1(yyp); }
-public static object BaseCall_6_1_factory(Parser yyp) { return new BaseCall_6_1(yyp); }
-public static object Item_16_1_factory(Parser yyp) { return new Item_16_1(yyp); }
-public static object Item_13_factory(Parser yyp) { return new Item_13(yyp); }
-public static object BaseCall_2_factory(Parser yyp) { return new BaseCall_2(yyp); }
-public static object Name_2_1_factory(Parser yyp) { return new Name_2_1(yyp); }
-public static object Cons_2_1_factory(Parser yyp) { return new Cons_2_1(yyp); }
-public static object Item_7_factory(Parser yyp) { return new Item_7(yyp); }
-public static object BaseCall_2_1_factory(Parser yyp) { return new BaseCall_2_1(yyp); }
-public static object GStuff_4_factory(Parser yyp) { return new GStuff_4(yyp); }
-public static object Item_22_factory(Parser yyp) { return new Item_22(yyp); }
-public static object Name_3_factory(Parser yyp) { return new Name_3(yyp); }
-public static object GStuff_3_factory(Parser yyp) { return new GStuff_3(yyp); }
-public static object Stuff_2_1_factory(Parser yyp) { return new Stuff_2_1(yyp); }
-public static object ClassBody_1_factory(Parser yyp) { return new ClassBody_1(yyp); }
-public static object Name_4_factory(Parser yyp) { return new Name_4(yyp); }
-public static object BaseCall_6_factory(Parser yyp) { return new BaseCall_6(yyp); }
-public static object Item_24_1_factory(Parser yyp) { return new Item_24_1(yyp); }
-public static object Item_12_1_factory(Parser yyp) { return new Item_12_1(yyp); }
-public static object GStuff_1_factory(Parser yyp) { return new GStuff_1(yyp); }
-public static object Item_4_factory(Parser yyp) { return new Item_4(yyp); }
-public static object GStuff_2_1_factory(Parser yyp) { return new GStuff_2_1(yyp); }
-public static object Item_20_factory(Parser yyp) { return new Item_20(yyp); }
-public static object Stuff_1_factory(Parser yyp) { return new Stuff_1(yyp); }
-public static object Stuff_factory(Parser yyp) { return new Stuff(yyp); }
-public static object Item_3_factory(Parser yyp) { return new Item_3(yyp); }
-public static object Name_4_1_factory(Parser yyp) { return new Name_4_1(yyp); }
-public static object Item_16_factory(Parser yyp) { return new Item_16(yyp); }
-public static object Stuff_4_factory(Parser yyp) { return new Stuff_4(yyp); }
-public static object Cons_factory(Parser yyp) { return new Cons(yyp); }
-public static object Item_18_1_factory(Parser yyp) { return new Item_18_1(yyp); }
-public static object GStuff_5_factory(Parser yyp) { return new GStuff_5(yyp); }
-public static object Item_21_factory(Parser yyp) { return new Item_21(yyp); }
-public static object Stuff_2_factory(Parser yyp) { return new Stuff_2(yyp); }
-public static object Item_18_factory(Parser yyp) { return new Item_18(yyp); }
-public static object GStuff_4_1_factory(Parser yyp) { return new GStuff_4_1(yyp); }
-public static object BaseCall_1_factory(Parser yyp) { return new BaseCall_1(yyp); }
-public static object Item_24_factory(Parser yyp) { return new Item_24(yyp); }
-public static object Item_factory(Parser yyp) { return new Item(yyp); }
-public static object ClassBody_2_factory(Parser yyp) { return new ClassBody_2(yyp); }
-public static object GStuff_factory(Parser yyp) { return new GStuff(yyp); }
-public static object Item_2_factory(Parser yyp) { return new Item_2(yyp); }
-public static object Item_12_factory(Parser yyp) { return new Item_12(yyp); }
-public static object Item_9_factory(Parser yyp) { return new Item_9(yyp); }
-public static object Stuff_3_factory(Parser yyp) { return new Stuff_3(yyp); }
-public static object Name_1_factory(Parser yyp) { return new Name_1(yyp); }
-public static object Call_factory(Parser yyp) { return new Call(yyp); }
-public static object BaseCall_5_factory(Parser yyp) { return new BaseCall_5(yyp); }
-public static object BaseCall_4_1_factory(Parser yyp) { return new BaseCall_4_1(yyp); }
-public static object Cons_1_factory(Parser yyp) { return new Cons_1(yyp); }
-public static object Item_19_factory(Parser yyp) { return new Item_19(yyp); }
-public static object GStuff_6_factory(Parser yyp) { return new GStuff_6(yyp); }
-public static object GStuff_2_factory(Parser yyp) { return new GStuff_2(yyp); }
-}
-/// <exclude/>
-public class cs0syntax : Parser {
-public cs0syntax ():base(new yycs0syntax (),new cs0tokens()) {}
-public cs0syntax (YyParser syms):base(syms,new cs0tokens()) {}
-public cs0syntax (YyParser syms,ErrorHandler erh):base(syms,new cs0tokens(erh)) {}
+      new Sfactory(this, "Item_20_1", new SCreator(Item_20_1_factory));
+      new Sfactory(this, "Item_23", new SCreator(Item_23_factory));
+      new Sfactory(this, "Item_6", new SCreator(Item_6_factory));
+      new Sfactory(this, "Stuff_4_1", new SCreator(Stuff_4_1_factory));
+      new Sfactory(this, "Item_15", new SCreator(Item_15_factory));
+      new Sfactory(this, "Item_22_1", new SCreator(Item_22_1_factory));
+      new Sfactory(this, "Item_2_1", new SCreator(Item_2_1_factory));
+      new Sfactory(this, "Item_11", new SCreator(Item_11_factory));
+      new Sfactory(this, "Item_8", new SCreator(Item_8_factory));
+      new Sfactory(this, "Name", new SCreator(Name_factory));
+      new Sfactory(this, "BaseCall_4", new SCreator(BaseCall_4_factory));
+      new Sfactory(this, "Item_14", new SCreator(Item_14_factory));
+      new Sfactory(this, "Cons_2", new SCreator(Cons_2_factory));
+      new Sfactory(this, "BaseCall_3", new SCreator(BaseCall_3_factory));
+      new Sfactory(this, "Item_17", new SCreator(Item_17_factory));
+      new Sfactory(this, "Item_10", new SCreator(Item_10_factory));
+      new Sfactory(this, "ClassBody_2_1", new SCreator(ClassBody_2_1_factory));
+      new Sfactory(this, "Call_2", new SCreator(Call_2_factory));
+      new Sfactory(this, "Item_14_1", new SCreator(Item_14_1_factory));
+      new Sfactory(this, "Item_1", new SCreator(Item_1_factory));
+      new Sfactory(this, "GStuff_6_1", new SCreator(GStuff_6_1_factory));
+      new Sfactory(this, "Item_6_1", new SCreator(Item_6_1_factory));
+      new Sfactory(this, "Call_2_1", new SCreator(Call_2_1_factory));
+      new Sfactory(this, "Item_5", new SCreator(Item_5_factory));
+      new Sfactory(this, "Item_4_1", new SCreator(Item_4_1_factory));
+      new Sfactory(this, "BaseCall", new SCreator(BaseCall_factory));
+      new Sfactory(this, "Item_10_1", new SCreator(Item_10_1_factory));
+      new Sfactory(this, "Name_2", new SCreator(Name_2_factory));
+      new Sfactory(this, "Call_1", new SCreator(Call_1_factory));
+      new Sfactory(this, "ClassBody", new SCreator(ClassBody_factory));
+      new Sfactory(this, "error", new SCreator(error_factory));
+      new Sfactory(this, "Item_8_1", new SCreator(Item_8_1_factory));
+      new Sfactory(this, "BaseCall_6_1", new SCreator(BaseCall_6_1_factory));
+      new Sfactory(this, "Item_16_1", new SCreator(Item_16_1_factory));
+      new Sfactory(this, "Item_13", new SCreator(Item_13_factory));
+      new Sfactory(this, "BaseCall_2", new SCreator(BaseCall_2_factory));
+      new Sfactory(this, "Name_2_1", new SCreator(Name_2_1_factory));
+      new Sfactory(this, "Cons_2_1", new SCreator(Cons_2_1_factory));
+      new Sfactory(this, "Item_7", new SCreator(Item_7_factory));
+      new Sfactory(this, "BaseCall_2_1", new SCreator(BaseCall_2_1_factory));
+      new Sfactory(this, "GStuff_4", new SCreator(GStuff_4_factory));
+      new Sfactory(this, "Item_22", new SCreator(Item_22_factory));
+      new Sfactory(this, "Name_3", new SCreator(Name_3_factory));
+      new Sfactory(this, "GStuff_3", new SCreator(GStuff_3_factory));
+      new Sfactory(this, "Stuff_2_1", new SCreator(Stuff_2_1_factory));
+      new Sfactory(this, "ClassBody_1", new SCreator(ClassBody_1_factory));
+      new Sfactory(this, "Name_4", new SCreator(Name_4_factory));
+      new Sfactory(this, "BaseCall_6", new SCreator(BaseCall_6_factory));
+      new Sfactory(this, "Item_24_1", new SCreator(Item_24_1_factory));
+      new Sfactory(this, "Item_12_1", new SCreator(Item_12_1_factory));
+      new Sfactory(this, "GStuff_1", new SCreator(GStuff_1_factory));
+      new Sfactory(this, "Item_4", new SCreator(Item_4_factory));
+      new Sfactory(this, "GStuff_2_1", new SCreator(GStuff_2_1_factory));
+      new Sfactory(this, "Item_20", new SCreator(Item_20_factory));
+      new Sfactory(this, "Stuff_1", new SCreator(Stuff_1_factory));
+      new Sfactory(this, "Stuff", new SCreator(Stuff_factory));
+      new Sfactory(this, "Item_3", new SCreator(Item_3_factory));
+      new Sfactory(this, "Name_4_1", new SCreator(Name_4_1_factory));
+      new Sfactory(this, "Item_16", new SCreator(Item_16_factory));
+      new Sfactory(this, "Stuff_4", new SCreator(Stuff_4_factory));
+      new Sfactory(this, "Cons", new SCreator(Cons_factory));
+      new Sfactory(this, "Item_18_1", new SCreator(Item_18_1_factory));
+      new Sfactory(this, "GStuff_5", new SCreator(GStuff_5_factory));
+      new Sfactory(this, "Item_21", new SCreator(Item_21_factory));
+      new Sfactory(this, "Stuff_2", new SCreator(Stuff_2_factory));
+      new Sfactory(this, "Item_18", new SCreator(Item_18_factory));
+      new Sfactory(this, "GStuff_4_1", new SCreator(GStuff_4_1_factory));
+      new Sfactory(this, "BaseCall_1", new SCreator(BaseCall_1_factory));
+      new Sfactory(this, "Item_24", new SCreator(Item_24_factory));
+      new Sfactory(this, "Item", new SCreator(Item_factory));
+      new Sfactory(this, "ClassBody_2", new SCreator(ClassBody_2_factory));
+      new Sfactory(this, "GStuff", new SCreator(GStuff_factory));
+      new Sfactory(this, "Item_2", new SCreator(Item_2_factory));
+      new Sfactory(this, "Item_12", new SCreator(Item_12_factory));
+      new Sfactory(this, "Item_9", new SCreator(Item_9_factory));
+      new Sfactory(this, "Stuff_3", new SCreator(Stuff_3_factory));
+      new Sfactory(this, "Name_1", new SCreator(Name_1_factory));
+      new Sfactory(this, "Call", new SCreator(Call_factory));
+      new Sfactory(this, "BaseCall_5", new SCreator(BaseCall_5_factory));
+      new Sfactory(this, "BaseCall_4_1", new SCreator(BaseCall_4_1_factory));
+      new Sfactory(this, "Cons_1", new SCreator(Cons_1_factory));
+      new Sfactory(this, "Item_19", new SCreator(Item_19_factory));
+      new Sfactory(this, "GStuff_6", new SCreator(GStuff_6_factory));
+      new Sfactory(this, "GStuff_2", new SCreator(GStuff_2_factory));
+    }
+    public static object Item_20_1_factory(Parser yyp) { return new Item_20_1(yyp); }
+    public static object Item_23_factory(Parser yyp) { return new Item_23(yyp); }
+    public static object Item_6_factory(Parser yyp) { return new Item_6(yyp); }
+    public static object Stuff_4_1_factory(Parser yyp) { return new Stuff_4_1(yyp); }
+    public static object Item_15_factory(Parser yyp) { return new Item_15(yyp); }
+    public static object Item_22_1_factory(Parser yyp) { return new Item_22_1(yyp); }
+    public static object Item_2_1_factory(Parser yyp) { return new Item_2_1(yyp); }
+    public static object Item_11_factory(Parser yyp) { return new Item_11(yyp); }
+    public static object Item_8_factory(Parser yyp) { return new Item_8(yyp); }
+    public static object Name_factory(Parser yyp) { return new Name(yyp); }
+    public static object BaseCall_4_factory(Parser yyp) { return new BaseCall_4(yyp); }
+    public static object Item_14_factory(Parser yyp) { return new Item_14(yyp); }
+    public static object Cons_2_factory(Parser yyp) { return new Cons_2(yyp); }
+    public static object BaseCall_3_factory(Parser yyp) { return new BaseCall_3(yyp); }
+    public static object Item_17_factory(Parser yyp) { return new Item_17(yyp); }
+    public static object Item_10_factory(Parser yyp) { return new Item_10(yyp); }
+    public static object ClassBody_2_1_factory(Parser yyp) { return new ClassBody_2_1(yyp); }
+    public static object Call_2_factory(Parser yyp) { return new Call_2(yyp); }
+    public static object Item_14_1_factory(Parser yyp) { return new Item_14_1(yyp); }
+    public static object Item_1_factory(Parser yyp) { return new Item_1(yyp); }
+    public static object GStuff_6_1_factory(Parser yyp) { return new GStuff_6_1(yyp); }
+    public static object Item_6_1_factory(Parser yyp) { return new Item_6_1(yyp); }
+    public static object Call_2_1_factory(Parser yyp) { return new Call_2_1(yyp); }
+    public static object Item_5_factory(Parser yyp) { return new Item_5(yyp); }
+    public static object Item_4_1_factory(Parser yyp) { return new Item_4_1(yyp); }
+    public static object BaseCall_factory(Parser yyp) { return new BaseCall(yyp); }
+    public static object Item_10_1_factory(Parser yyp) { return new Item_10_1(yyp); }
+    public static object Name_2_factory(Parser yyp) { return new Name_2(yyp); }
+    public static object Call_1_factory(Parser yyp) { return new Call_1(yyp); }
+    public static object ClassBody_factory(Parser yyp) { return new ClassBody(yyp); }
+    public static object error_factory(Parser yyp) { return new error(yyp); }
+    public static object Item_8_1_factory(Parser yyp) { return new Item_8_1(yyp); }
+    public static object BaseCall_6_1_factory(Parser yyp) { return new BaseCall_6_1(yyp); }
+    public static object Item_16_1_factory(Parser yyp) { return new Item_16_1(yyp); }
+    public static object Item_13_factory(Parser yyp) { return new Item_13(yyp); }
+    public static object BaseCall_2_factory(Parser yyp) { return new BaseCall_2(yyp); }
+    public static object Name_2_1_factory(Parser yyp) { return new Name_2_1(yyp); }
+    public static object Cons_2_1_factory(Parser yyp) { return new Cons_2_1(yyp); }
+    public static object Item_7_factory(Parser yyp) { return new Item_7(yyp); }
+    public static object BaseCall_2_1_factory(Parser yyp) { return new BaseCall_2_1(yyp); }
+    public static object GStuff_4_factory(Parser yyp) { return new GStuff_4(yyp); }
+    public static object Item_22_factory(Parser yyp) { return new Item_22(yyp); }
+    public static object Name_3_factory(Parser yyp) { return new Name_3(yyp); }
+    public static object GStuff_3_factory(Parser yyp) { return new GStuff_3(yyp); }
+    public static object Stuff_2_1_factory(Parser yyp) { return new Stuff_2_1(yyp); }
+    public static object ClassBody_1_factory(Parser yyp) { return new ClassBody_1(yyp); }
+    public static object Name_4_factory(Parser yyp) { return new Name_4(yyp); }
+    public static object BaseCall_6_factory(Parser yyp) { return new BaseCall_6(yyp); }
+    public static object Item_24_1_factory(Parser yyp) { return new Item_24_1(yyp); }
+    public static object Item_12_1_factory(Parser yyp) { return new Item_12_1(yyp); }
+    public static object GStuff_1_factory(Parser yyp) { return new GStuff_1(yyp); }
+    public static object Item_4_factory(Parser yyp) { return new Item_4(yyp); }
+    public static object GStuff_2_1_factory(Parser yyp) { return new GStuff_2_1(yyp); }
+    public static object Item_20_factory(Parser yyp) { return new Item_20(yyp); }
+    public static object Stuff_1_factory(Parser yyp) { return new Stuff_1(yyp); }
+    public static object Stuff_factory(Parser yyp) { return new Stuff(yyp); }
+    public static object Item_3_factory(Parser yyp) { return new Item_3(yyp); }
+    public static object Name_4_1_factory(Parser yyp) { return new Name_4_1(yyp); }
+    public static object Item_16_factory(Parser yyp) { return new Item_16(yyp); }
+    public static object Stuff_4_factory(Parser yyp) { return new Stuff_4(yyp); }
+    public static object Cons_factory(Parser yyp) { return new Cons(yyp); }
+    public static object Item_18_1_factory(Parser yyp) { return new Item_18_1(yyp); }
+    public static object GStuff_5_factory(Parser yyp) { return new GStuff_5(yyp); }
+    public static object Item_21_factory(Parser yyp) { return new Item_21(yyp); }
+    public static object Stuff_2_factory(Parser yyp) { return new Stuff_2(yyp); }
+    public static object Item_18_factory(Parser yyp) { return new Item_18(yyp); }
+    public static object GStuff_4_1_factory(Parser yyp) { return new GStuff_4_1(yyp); }
+    public static object BaseCall_1_factory(Parser yyp) { return new BaseCall_1(yyp); }
+    public static object Item_24_factory(Parser yyp) { return new Item_24(yyp); }
+    public static object Item_factory(Parser yyp) { return new Item(yyp); }
+    public static object ClassBody_2_factory(Parser yyp) { return new ClassBody_2(yyp); }
+    public static object GStuff_factory(Parser yyp) { return new GStuff(yyp); }
+    public static object Item_2_factory(Parser yyp) { return new Item_2(yyp); }
+    public static object Item_12_factory(Parser yyp) { return new Item_12(yyp); }
+    public static object Item_9_factory(Parser yyp) { return new Item_9(yyp); }
+    public static object Stuff_3_factory(Parser yyp) { return new Stuff_3(yyp); }
+    public static object Name_1_factory(Parser yyp) { return new Name_1(yyp); }
+    public static object Call_factory(Parser yyp) { return new Call(yyp); }
+    public static object BaseCall_5_factory(Parser yyp) { return new BaseCall_5(yyp); }
+    public static object BaseCall_4_1_factory(Parser yyp) { return new BaseCall_4_1(yyp); }
+    public static object Cons_1_factory(Parser yyp) { return new Cons_1(yyp); }
+    public static object Item_19_factory(Parser yyp) { return new Item_19(yyp); }
+    public static object GStuff_6_factory(Parser yyp) { return new GStuff_6(yyp); }
+    public static object GStuff_2_factory(Parser yyp) { return new GStuff_2(yyp); }
+  }
+  /// <exclude/>
+  public class cs0syntax : Parser
+  {
+    public cs0syntax() : base(new yycs0syntax(), new cs0tokens()) { }
+    public cs0syntax(YyParser syms) : base(syms, new cs0tokens()) { }
+    public cs0syntax(YyParser syms, ErrorHandler erh) : base(syms, new cs0tokens(erh)) { }
 
-	public string Out;
-	public string Cls;
-	public string Par;
-	public string Ctx;
-	public bool defconseen = false;
+    public string Out;
+    public string Cls;
+    public string Par;
+    public string Ctx;
+    public bool defconseen = false;
 
- }
+  }
 }

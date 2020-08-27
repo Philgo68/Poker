@@ -1,12 +1,7 @@
-﻿using Poker.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Poker.Models
 {
-  [Serializable]
   public class StandardDeck : BaseDeck
   {
     public override string Name => "Standard Deck";

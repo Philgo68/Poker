@@ -1,11 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Poker.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Xml.Schema;
 
 namespace Poker.Helpers
 {

@@ -1,11 +1,7 @@
-﻿using Poker.Interfaces;
-using Poker.Models;
+﻿using Poker.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Poker.Helpers
 {
@@ -42,10 +38,10 @@ namespace Poker.Helpers
       }
 
       // deal out all combinations
-     if (duration == 0 && (iterations == 0 || (iterations * Convert.ToUInt16(threadCnt)) > totalIterations))
+      if (duration == 0 && (iterations == 0 || (iterations * Convert.ToUInt16(threadCnt)) > totalIterations))
       {
         var start = 0x1UL << (deck.CardCount - 1);
-        var levelZeroStart = start >> (threadNum - 1); 
+        var levelZeroStart = start >> (threadNum - 1);
 
         var returnCards = new ulong[newHand.Count];
 

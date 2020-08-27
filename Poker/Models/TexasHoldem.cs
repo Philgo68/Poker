@@ -1,28 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Poker.Helpers;
-using Poker.Interfaces;
-using System;
-using System.Collections.Generic;
-
-namespace Poker.Models
+﻿namespace Poker.Models
 {
-	public class TexasHoldem : PokerGame
-	{
-		public TexasHoldem()
-		{
-		}
+  public class TexasHoldem : PokerGame
+  {
+    public TexasHoldem()
+    {
+    }
 
-		public override string Name { get { return "Texas Hold'em"; } }
+    public override string Name { get { return "Texas Hold'em"; } }
 
-		public override BaseDeck GetDeck(ulong dealtCards = 0)
-		{
-			return new StandardDeck(dealtCards);
-		}
+    public override BaseDeck GetDeck(ulong dealtCards = 0)
+    {
+      return new StandardDeck(dealtCards);
+    }
 
-		public override BaseHand GetHand()
-		{
-			return new BaseHand(2);
-		}
+    public override BaseHand GetHand()
+    {
+      return new BaseHand(2);
+    }
 
-	}
+  }
 }

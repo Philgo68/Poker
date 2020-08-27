@@ -1,24 +1,18 @@
-﻿using System;
+﻿using Poker.Helpers;
+using Poker.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography.Xml;
-using System.Threading;
 using System.Threading.Tasks;
-using Poker.CFHandEvaluator;
-using Poker.Helpers;
-using Poker.Interfaces;
 
 namespace Poker.Models
 {
- [Serializable]
   public class BaseHand : IHandHolder, IComparable
   {
     private readonly int cardCount;
     private int cardsNeeded;
     private ulong cardsMask;
+    protected bool revealed;
 
     public BaseHand(int _cardCount = 5)
     {
@@ -29,6 +23,7 @@ namespace Poker.Models
       Ties = 0;
       Changed = false;
       CommunityCards = false;
+      Revealed = false;
     }
 
     public BaseHand(ulong _cardsMask, int _cardCount = 5) : this(_cardCount)
@@ -42,7 +37,8 @@ namespace Poker.Models
     }
 
     public virtual int CardsNeeded => cardsNeeded;
-    public ulong CardsMask { 
+    public ulong CardsMask
+    {
       get => cardsMask;
       set
       {
@@ -63,12 +59,12 @@ namespace Poker.Models
       return -Percent.CompareTo(((BaseHand)obj).Percent);
     }
     public bool CommunityCards { get; set; }
+    public virtual bool Revealed { get => revealed || CommunityCards; set => revealed = value; }
     public virtual string Name => "BaseHand";
     public virtual int CardCount => cardCount;
     public virtual string CardDescriptions => Deck.CardDescriptions(CardsMask);
     public virtual IEnumerable<int> CardNumbers => Deck.CardNumbers(CardsMask);
 
-    [field: NonSerialized]
     public event Action StateHasChangedDelegate;
 
     protected void StateHasChanged()

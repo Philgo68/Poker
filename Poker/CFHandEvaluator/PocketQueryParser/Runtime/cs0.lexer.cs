@@ -1,103 +1,146 @@
-using System;using Tools;
+using Tools;
 #pragma warning disable 0162
 #pragma warning disable 1591
-namespace YYClass {
-//%BASE+3
-/// <exclude/>
-public class BASE : TOKEN{ public override string yyname { get { return "BASE";}}
-/// <exclude/>
-public override int yynum { get { return 3; }}
-/// <exclude/>
- public BASE(Lexer yyl):base(yyl) {}}
-//%THIS+4
-/// <exclude/>
-public class THIS : TOKEN{ public override string yyname { get { return "THIS";}}
-/// <exclude/>
-public override int yynum { get { return 4; }}
-/// <exclude/>
- public THIS(Lexer yyl):base(yyl) {}}
-//%NEW+5
-/// <exclude/>
-public class NEW : TOKEN{ public override string yyname { get { return "NEW";}}
-/// <exclude/>
-public override int yynum { get { return 5; }}
-/// <exclude/>
- public NEW(Lexer yyl):base(yyl) {}}
-//%ID+6
-/// <exclude/>
-public class ID : TOKEN{ public override string yyname { get { return "ID";}}
-/// <exclude/>
-public override int yynum { get { return 6; }}
-/// <exclude/>
- public ID(Lexer yyl):base(yyl) {}}
-//%ANY+7
-/// <exclude/>
-public class ANY : TOKEN{ public override string yyname { get { return "ANY";}}
-/// <exclude/>
-public override int yynum { get { return 7; }}
-/// <exclude/>
- public ANY(Lexer yyl):base(yyl) {}}
-//%COLON+8
-/// <exclude/>
-public class COLON : TOKEN{ public override string yyname { get { return "COLON";}}
-/// <exclude/>
-public override int yynum { get { return 8; }}
-/// <exclude/>
- public COLON(Lexer yyl):base(yyl) {}}
-//%SEMICOLON+9
-/// <exclude/>
-public class SEMICOLON : TOKEN{ public override string yyname { get { return "SEMICOLON";}}
-/// <exclude/>
-public override int yynum { get { return 9; }}
-/// <exclude/>
- public SEMICOLON(Lexer yyl):base(yyl) {}}
-//%LBRACE+10
-/// <exclude/>
-public class LBRACE : TOKEN{ public override string yyname { get { return "LBRACE";}}
-/// <exclude/>
-public override int yynum { get { return 10; }}
-/// <exclude/>
- public LBRACE(Lexer yyl):base(yyl) {}}
-//%RBRACE+11
-/// <exclude/>
-public class RBRACE : TOKEN{ public override string yyname { get { return "RBRACE";}}
-/// <exclude/>
-public override int yynum { get { return 11; }}
-/// <exclude/>
- public RBRACE(Lexer yyl):base(yyl) {}}
-//%LPAREN+12
-/// <exclude/>
-public class LPAREN : TOKEN{ public override string yyname { get { return "LPAREN";}}
-/// <exclude/>
-public override int yynum { get { return 12; }}
-/// <exclude/>
- public LPAREN(Lexer yyl):base(yyl) {}}
-//%RPAREN+13
-/// <exclude/>
-public class RPAREN : TOKEN{ public override string yyname { get { return "RPAREN";}}
-/// <exclude/>
-public override int yynum { get { return 13; }}
-/// <exclude/>
- public RPAREN(Lexer yyl):base(yyl) {}}
-//%LBRACK+14
-/// <exclude/>
-public class LBRACK : TOKEN{ public override string yyname { get { return "LBRACK";}}
-/// <exclude/>
-public override int yynum { get { return 14; }}
-/// <exclude/>
- public LBRACK(Lexer yyl):base(yyl) {}}
-//%RBRACK+15
-/// <exclude/>
-public class RBRACK : TOKEN{ public override string yyname { get { return "RBRACK";}}
-/// <exclude/>
-public override int yynum { get { return 15; }}
-/// <exclude/>
- public RBRACK(Lexer yyl):base(yyl) {}}
-//%|cs0tokens
-/// <exclude/>
-public class yycs0tokens : YyLexer {
-/// <exclude/>
- public yycs0tokens(ErrorHandler eh):base(eh) { arr = new int[] { 
+namespace YYClass
+{
+  //%BASE+3
+  /// <exclude/>
+  public class BASE : TOKEN
+  {
+    public override string yyname { get { return "BASE"; } }
+    /// <exclude/>
+    public override int yynum { get { return 3; } }
+    /// <exclude/>
+    public BASE(Lexer yyl) : base(yyl) { }
+  }
+  //%THIS+4
+  /// <exclude/>
+  public class THIS : TOKEN
+  {
+    public override string yyname { get { return "THIS"; } }
+    /// <exclude/>
+    public override int yynum { get { return 4; } }
+    /// <exclude/>
+    public THIS(Lexer yyl) : base(yyl) { }
+  }
+  //%NEW+5
+  /// <exclude/>
+  public class NEW : TOKEN
+  {
+    public override string yyname { get { return "NEW"; } }
+    /// <exclude/>
+    public override int yynum { get { return 5; } }
+    /// <exclude/>
+    public NEW(Lexer yyl) : base(yyl) { }
+  }
+  //%ID+6
+  /// <exclude/>
+  public class ID : TOKEN
+  {
+    public override string yyname { get { return "ID"; } }
+    /// <exclude/>
+    public override int yynum { get { return 6; } }
+    /// <exclude/>
+    public ID(Lexer yyl) : base(yyl) { }
+  }
+  //%ANY+7
+  /// <exclude/>
+  public class ANY : TOKEN
+  {
+    public override string yyname { get { return "ANY"; } }
+    /// <exclude/>
+    public override int yynum { get { return 7; } }
+    /// <exclude/>
+    public ANY(Lexer yyl) : base(yyl) { }
+  }
+  //%COLON+8
+  /// <exclude/>
+  public class COLON : TOKEN
+  {
+    public override string yyname { get { return "COLON"; } }
+    /// <exclude/>
+    public override int yynum { get { return 8; } }
+    /// <exclude/>
+    public COLON(Lexer yyl) : base(yyl) { }
+  }
+  //%SEMICOLON+9
+  /// <exclude/>
+  public class SEMICOLON : TOKEN
+  {
+    public override string yyname { get { return "SEMICOLON"; } }
+    /// <exclude/>
+    public override int yynum { get { return 9; } }
+    /// <exclude/>
+    public SEMICOLON(Lexer yyl) : base(yyl) { }
+  }
+  //%LBRACE+10
+  /// <exclude/>
+  public class LBRACE : TOKEN
+  {
+    public override string yyname { get { return "LBRACE"; } }
+    /// <exclude/>
+    public override int yynum { get { return 10; } }
+    /// <exclude/>
+    public LBRACE(Lexer yyl) : base(yyl) { }
+  }
+  //%RBRACE+11
+  /// <exclude/>
+  public class RBRACE : TOKEN
+  {
+    public override string yyname { get { return "RBRACE"; } }
+    /// <exclude/>
+    public override int yynum { get { return 11; } }
+    /// <exclude/>
+    public RBRACE(Lexer yyl) : base(yyl) { }
+  }
+  //%LPAREN+12
+  /// <exclude/>
+  public class LPAREN : TOKEN
+  {
+    public override string yyname { get { return "LPAREN"; } }
+    /// <exclude/>
+    public override int yynum { get { return 12; } }
+    /// <exclude/>
+    public LPAREN(Lexer yyl) : base(yyl) { }
+  }
+  //%RPAREN+13
+  /// <exclude/>
+  public class RPAREN : TOKEN
+  {
+    public override string yyname { get { return "RPAREN"; } }
+    /// <exclude/>
+    public override int yynum { get { return 13; } }
+    /// <exclude/>
+    public RPAREN(Lexer yyl) : base(yyl) { }
+  }
+  //%LBRACK+14
+  /// <exclude/>
+  public class LBRACK : TOKEN
+  {
+    public override string yyname { get { return "LBRACK"; } }
+    /// <exclude/>
+    public override int yynum { get { return 14; } }
+    /// <exclude/>
+    public LBRACK(Lexer yyl) : base(yyl) { }
+  }
+  //%RBRACK+15
+  /// <exclude/>
+  public class RBRACK : TOKEN
+  {
+    public override string yyname { get { return "RBRACK"; } }
+    /// <exclude/>
+    public override int yynum { get { return 15; } }
+    /// <exclude/>
+    public RBRACK(Lexer yyl) : base(yyl) { }
+  }
+  //%|cs0tokens
+  /// <exclude/>
+  public class yycs0tokens : YyLexer
+  {
+    /// <exclude/>
+    public yycs0tokens(ErrorHandler eh) : base(eh)
+    {
+      arr = new int[] {
 101,4,6,52,0,
 46,0,53,0,6,
 102,4,16,117,0,
@@ -1967,71 +2010,79 @@ public class yycs0tokens : YyLexer {
 307,10,244,1,11,
 186,308,10,186,1,
 3,309,5,0,0};
- new Tfactory(this,"THIS",new TCreator(THIS_factory));
- new Tfactory(this,"LBRACK",new TCreator(LBRACK_factory));
- new Tfactory(this,"ID",new TCreator(ID_factory));
- new Tfactory(this,"LPAREN",new TCreator(LPAREN_factory));
- new Tfactory(this,"RPAREN",new TCreator(RPAREN_factory));
- new Tfactory(this,"COLON",new TCreator(COLON_factory));
- new Tfactory(this,"NEW",new TCreator(NEW_factory));
- new Tfactory(this,"SEMICOLON",new TCreator(SEMICOLON_factory));
- new Tfactory(this,"LBRACE",new TCreator(LBRACE_factory));
- new Tfactory(this,"ANY",new TCreator(ANY_factory));
- new Tfactory(this,"RBRACK",new TCreator(RBRACK_factory));
- new Tfactory(this,"RBRACE",new TCreator(RBRACE_factory));
- new Tfactory(this,"BASE",new TCreator(BASE_factory));
-}
-/// <exclude/>
-public static object THIS_factory(Lexer yyl) { return new THIS(yyl);}
-/// <exclude/>
-public static object LBRACK_factory(Lexer yyl) { return new LBRACK(yyl);}
-/// <exclude/>
-public static object ID_factory(Lexer yyl) { return new ID(yyl);}
-/// <exclude/>
-public static object LPAREN_factory(Lexer yyl) { return new LPAREN(yyl);}
-/// <exclude/>
-public static object RPAREN_factory(Lexer yyl) { return new RPAREN(yyl);}
-/// <exclude/>
-public static object COLON_factory(Lexer yyl) { return new COLON(yyl);}
-/// <exclude/>
-public static object NEW_factory(Lexer yyl) { return new NEW(yyl);}
-/// <exclude/>
-public static object SEMICOLON_factory(Lexer yyl) { return new SEMICOLON(yyl);}
-/// <exclude/>
-public static object LBRACE_factory(Lexer yyl) { return new LBRACE(yyl);}
-/// <exclude/>
-public static object ANY_factory(Lexer yyl) { return new ANY(yyl);}
-/// <exclude/>
-public static object RBRACK_factory(Lexer yyl) { return new RBRACK(yyl);}
-/// <exclude/>
-public static object RBRACE_factory(Lexer yyl) { return new RBRACE(yyl);}
-/// <exclude/>
-public static object BASE_factory(Lexer yyl) { return new BASE(yyl);}
-/// <exclude/>
-public override TOKEN OldAction(Lexer yym,ref string yytext,int action, ref bool reject) {
-  switch(action) {
-  case -1: break;
-   case 74: { yytext="(("+((cs0tokens)yym).Out+")yyq)"; return new ANY(yym); }
-      break;
-   case 55: { yytext="(("+((cs0tokens)yym).Out+")yym)"; return new ANY(yym); }
-      break;
-   case 8: { yytext ="yym.yy_begin"; return new ANY(yym); }
-      break;
-   case 2: ;
-      break;
+      new Tfactory(this, "THIS", new TCreator(THIS_factory));
+      new Tfactory(this, "LBRACK", new TCreator(LBRACK_factory));
+      new Tfactory(this, "ID", new TCreator(ID_factory));
+      new Tfactory(this, "LPAREN", new TCreator(LPAREN_factory));
+      new Tfactory(this, "RPAREN", new TCreator(RPAREN_factory));
+      new Tfactory(this, "COLON", new TCreator(COLON_factory));
+      new Tfactory(this, "NEW", new TCreator(NEW_factory));
+      new Tfactory(this, "SEMICOLON", new TCreator(SEMICOLON_factory));
+      new Tfactory(this, "LBRACE", new TCreator(LBRACE_factory));
+      new Tfactory(this, "ANY", new TCreator(ANY_factory));
+      new Tfactory(this, "RBRACK", new TCreator(RBRACK_factory));
+      new Tfactory(this, "RBRACE", new TCreator(RBRACE_factory));
+      new Tfactory(this, "BASE", new TCreator(BASE_factory));
+    }
+    /// <exclude/>
+    public static object THIS_factory(Lexer yyl) { return new THIS(yyl); }
+    /// <exclude/>
+    public static object LBRACK_factory(Lexer yyl) { return new LBRACK(yyl); }
+    /// <exclude/>
+    public static object ID_factory(Lexer yyl) { return new ID(yyl); }
+    /// <exclude/>
+    public static object LPAREN_factory(Lexer yyl) { return new LPAREN(yyl); }
+    /// <exclude/>
+    public static object RPAREN_factory(Lexer yyl) { return new RPAREN(yyl); }
+    /// <exclude/>
+    public static object COLON_factory(Lexer yyl) { return new COLON(yyl); }
+    /// <exclude/>
+    public static object NEW_factory(Lexer yyl) { return new NEW(yyl); }
+    /// <exclude/>
+    public static object SEMICOLON_factory(Lexer yyl) { return new SEMICOLON(yyl); }
+    /// <exclude/>
+    public static object LBRACE_factory(Lexer yyl) { return new LBRACE(yyl); }
+    /// <exclude/>
+    public static object ANY_factory(Lexer yyl) { return new ANY(yyl); }
+    /// <exclude/>
+    public static object RBRACK_factory(Lexer yyl) { return new RBRACK(yyl); }
+    /// <exclude/>
+    public static object RBRACE_factory(Lexer yyl) { return new RBRACE(yyl); }
+    /// <exclude/>
+    public static object BASE_factory(Lexer yyl) { return new BASE(yyl); }
+    /// <exclude/>
+    public override TOKEN OldAction(Lexer yym, ref string yytext, int action, ref bool reject)
+    {
+      switch (action)
+      {
+        case -1: break;
+        case 74:
+          { yytext = "((" + ((cs0tokens)yym).Out + ")yyq)"; return new ANY(yym); }
+          break;
+        case 55:
+          { yytext = "((" + ((cs0tokens)yym).Out + ")yym)"; return new ANY(yym); }
+          break;
+        case 8:
+          { yytext = "yym.yy_begin"; return new ANY(yym); }
+          break;
+        case 2:
+          ;
+          break;
+      }
+      return null;
+    }
   }
-  return null;
-}}
-/// <exclude/>
-public class cs0tokens:Lexer {
-/// <exclude/>
-public cs0tokens():base(new yycs0tokens(new ErrorHandler(false))) {}
-/// <exclude/>
-public cs0tokens(ErrorHandler eh):base(new yycs0tokens(eh)) {}
-/// <exclude/>
-public cs0tokens(YyLexer tks):base(tks){}
+  /// <exclude/>
+  public class cs0tokens : Lexer
+  {
+    /// <exclude/>
+    public cs0tokens() : base(new yycs0tokens(new ErrorHandler(false))) { }
+    /// <exclude/>
+    public cs0tokens(ErrorHandler eh) : base(new yycs0tokens(eh)) { }
+    /// <exclude/>
+    public cs0tokens(YyLexer tks) : base(tks) { }
 
-	public string Out;
+    public string Out;
 
- }
+  }
 }

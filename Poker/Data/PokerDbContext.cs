@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Poker.Models;
 
@@ -25,6 +22,8 @@ namespace Poker.Data
       modelBuilder.Entity<Player>()
         .HasIndex(player => player.ScreenName)
         .IsUnique();
+
+      //modelBuilder.UsePropertyAccessMode(PropertyAccessMode.PreferProperty);
     }
   }
 }

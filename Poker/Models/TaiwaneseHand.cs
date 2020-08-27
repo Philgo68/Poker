@@ -1,19 +1,13 @@
-﻿using Microsoft.AspNetCore.Connections;
-using Microsoft.AspNetCore.SignalR.Protocol;
-using Poker.Helpers;
-using Poker.Interfaces;
+﻿using Poker.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using YYClass;
 
 namespace Poker.Models
 {
-  [Serializable]
   public class TaiwaneseHand : BaseHand
   {
     private BaseHand topHand;
@@ -32,6 +26,14 @@ namespace Poker.Models
     public BaseHand TopHand { get => manualLayoutInProgress ? null : topHand; set { topHand = value; CardsMask = (topHand?.CardsMask ?? 0) | (middleHand?.CardsMask ?? 0) | (bottomHand?.CardsMask ?? 0); } }
     public BaseHand MiddleHand { get => manualLayoutInProgress ? null : middleHand; set { middleHand = value; CardsMask = (topHand?.CardsMask ?? 0) | (middleHand?.CardsMask ?? 0) | (bottomHand?.CardsMask ?? 0); } }
     public BaseHand BottomHand { get => manualLayoutInProgress ? null : bottomHand; set { bottomHand = value; CardsMask = (topHand?.CardsMask ?? 0) | (middleHand?.CardsMask ?? 0) | (bottomHand?.CardsMask ?? 0); } }
+
+    public override bool Revealed { get => revealed; set {
+        revealed = value;
+        if (TopHand != null) TopHand.Revealed = value;
+        if (MiddleHand != null) MiddleHand.Revealed = value;
+        if (BottomHand != null) BottomHand.Revealed = value;
+      } 
+    }
 
     public override int CompareTo(object obj)
     {
@@ -109,10 +111,10 @@ namespace Poker.Models
       StateHasChanged();
     }
 
-    public override long LayoutHand(double duration = 0.1)
+    public override long LayoutHand(double duration = 0.2)
     {
       long cnt = 0;
-      if (true || !HandsLaidOut)
+      if (!HandsLaidOut)
       {
         var rand = new Random();
         long end = Convert.ToInt64(Stopwatch.GetTimestamp() + (duration * Stopwatch.Frequency));
@@ -265,7 +267,7 @@ namespace Poker.Models
 
       //TODO switch to Omaha evaluation
       // Bottom hands
-      (heroType, hero) = PokerGame.EvaluateHand(BottomHand.CardsMask | heroFiller| boardMask);
+      (heroType, hero) = PokerGame.EvaluateHand(BottomHand.CardsMask | heroFiller | boardMask);
 
       // Must check them all to get the best opponent hand
       rankTies = 0;
@@ -303,9 +305,9 @@ namespace Poker.Models
           break;
       }
 
-      if (winCnt == 3) 
+      if (winCnt == 3)
         wins += 3 * opponents.Length;  // 3 from all the beaten players
-      
+
       // return net gain
       return wins - loses;
     }

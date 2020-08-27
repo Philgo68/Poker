@@ -1,28 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Poker.Helpers;
-using Poker.Interfaces;
+﻿using Poker.Helpers;
 using System;
-using System.Collections.Generic;
 
 namespace Poker.Models
 {
-	public class Omaha : PokerGame
-	{
-		public Omaha()
-		{
-		}
+  public class Omaha : PokerGame
+  {
+    public Omaha()
+    {
+    }
 
-		public override string Name { get { return "Omaha"; } }
-    
+    public override string Name { get { return "Omaha"; } }
+
     public override BaseDeck GetDeck(ulong dealtCards = 0)
-		{
-			return new StandardDeck(dealtCards);
-		}
+    {
+      return new StandardDeck(dealtCards);
+    }
 
-		public override BaseHand GetHand()
-		{
-			return new BaseHand(4);
-		}
+    public override BaseHand GetHand()
+    {
+      return new BaseHand(4);
+    }
 
     public override (int, uint) Evaluate(ulong cards)
     {
@@ -34,9 +31,9 @@ namespace Poker.Models
     }
 
     public override (int, uint) Evaluate(ulong hand, ulong board)
-		{
-			return EvaluateHand(hand, board);
-		}
+    {
+      return EvaluateHand(hand, board);
+    }
 
     public static (int, uint) EvaluateHand(ulong hand, ulong board)
     {
@@ -101,7 +98,7 @@ namespace Poker.Models
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
-      
+
       selectedBoardCards = boardcards[0] | boardcards[2] | boardcards[4];
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
@@ -128,8 +125,8 @@ namespace Poker.Models
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank); 
-      
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
       selectedBoardCards = boardcards[1] | boardcards[2] | boardcards[3];
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
@@ -142,8 +139,8 @@ namespace Poker.Models
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank); 
-      
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
       selectedBoardCards = boardcards[1] | boardcards[2] | boardcards[4];
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
@@ -156,8 +153,8 @@ namespace Poker.Models
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank); 
-      
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
       selectedBoardCards = boardcards[1] | boardcards[3] | boardcards[4];
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
@@ -170,8 +167,8 @@ namespace Poker.Models
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[1] | handcards[3]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[2] | handcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank); 
-      
+      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+
       selectedBoardCards = boardcards[2] | boardcards[3] | boardcards[4];
       (nextType, nextRank) = EvaluateHand(selectedBoardCards | handcards[0] | handcards[1]);
       if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);

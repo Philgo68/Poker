@@ -1,905 +1,1312 @@
-using System;using Tools;
+using System;
+using Tools;
 #pragma warning disable 1591
 
 
 #line 1 "exam.parser"
-using  System.Collections.Generic;
+using System.Collections.Generic;
 
 #line 1 "exam.parser"
 using Poker.CFHandEvaluator;
 
 #line 1 "exam.parser"
 /// <exclude/>
-public class SpecDoc : SYMBOL {
-   /// <exclude/>
-	public SpecDoc(Parser yyq):base(yyq) { }
+public class SpecDoc : SYMBOL
+{
   /// <exclude/>
-  public override string yyname { get { return "SpecDoc"; }}
+  public SpecDoc(Parser yyq) : base(yyq) { }
   /// <exclude/>
-  public override int yynum { get { return 80; }}}
+  public override string yyname { get { return "SpecDoc"; } }
+  /// <exclude/>
+  public override int yynum { get { return 80; } }
+}
 
 /// <exclude/>
-public class SpecDoc_1 : SpecDoc {
+public class SpecDoc_1 : SpecDoc
+{
   /// <exclude/>
-  public SpecDoc_1(Parser yyq):base(yyq){}}
+  public SpecDoc_1(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class SpecDoc_2 : SpecDoc {
+public class SpecDoc_2 : SpecDoc
+{
   /// <exclude/>
-  public SpecDoc_2(Parser yyq):base(yyq){}}
+  public SpecDoc_2(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class SpecDoc_2_1 : SpecDoc_2 {
+public class SpecDoc_2_1 : SpecDoc_2
+{
   /// <exclude/>
-  public SpecDoc_2_1(Parser yyq):base(yyq){yylval = new PocketHands();}}
+  public SpecDoc_2_1(Parser yyq) : base(yyq) { yylval = new PocketHands(); }
+}
 
 /// <exclude/>
-public class SpecDoc_3 : SpecDoc {
+public class SpecDoc_3 : SpecDoc
+{
   /// <exclude/>
-  public SpecDoc_3(Parser yyq):base(yyq){}}
+  public SpecDoc_3(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class SpecDoc_4 : SpecDoc {
+public class SpecDoc_4 : SpecDoc
+{
   /// <exclude/>
-  public SpecDoc_4(Parser yyq):base(yyq){}}
+  public SpecDoc_4(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class SpecDoc_4_1 : SpecDoc_4 {
+public class SpecDoc_4_1 : SpecDoc_4
+{
   /// <exclude/>
-  public SpecDoc_4_1(Parser yyq):base(yyq){yylval = 
-	((Expr)(yyq.StackAt(0).m_value))
-	;}}
+  public SpecDoc_4_1(Parser yyq) : base(yyq)
+  {
+    yylval =
+((Expr)(yyq.StackAt(0).m_value))
+;
+  }
+}
 /// <exclude/>
-public class Expr : SYMBOL {
-   /// <exclude/>
-	public Expr(Parser yyq):base(yyq) { }
+public class Expr : SYMBOL
+{
+  /// <exclude/>
+  public Expr(Parser yyq) : base(yyq) { }
   /// <exclude/>
-  public override string yyname { get { return "Expr"; }}
+  public override string yyname { get { return "Expr"; } }
   /// <exclude/>
-  public override int yynum { get { return 84; }}}
+  public override int yynum { get { return 84; } }
+}
 
 /// <exclude/>
-public class Expr_1 : Expr {
+public class Expr_1 : Expr
+{
   /// <exclude/>
-  public Expr_1(Parser yyq):base(yyq){}}
+  public Expr_1(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_2 : Expr {
+public class Expr_2 : Expr
+{
   /// <exclude/>
-  public Expr_2(Parser yyq):base(yyq){}}
+  public Expr_2(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_2_1 : Expr_2 {
+public class Expr_2_1 : Expr_2
+{
   /// <exclude/>
-  public Expr_2_1(Parser yyq):base(yyq){yylval = (PocketHands) 
-	((Expr)(yyq.StackAt(1).m_value))
-	.yylval;}}
+  public Expr_2_1(Parser yyq) : base(yyq)
+  {
+    yylval = (PocketHands)
+((Expr)(yyq.StackAt(1).m_value))
+.yylval;
+  }
+}
 
 /// <exclude/>
-public class Expr_3 : Expr {
+public class Expr_3 : Expr
+{
   /// <exclude/>
-  public Expr_3(Parser yyq):base(yyq){}}
+  public Expr_3(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_4 : Expr {
+public class Expr_4 : Expr
+{
   /// <exclude/>
-  public Expr_4(Parser yyq):base(yyq){}}
+  public Expr_4(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_4_1 : Expr_4 {
+public class Expr_4_1 : Expr_4
+{
   /// <exclude/>
-  public Expr_4_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(1).m_value))
-	.yylval) & PocketHands.Suited;}}
+  public Expr_4_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(1).m_value))
+.yylval) & PocketHands.Suited;
+  }
+}
 
 /// <exclude/>
-public class Expr_5 : Expr {
+public class Expr_5 : Expr
+{
   /// <exclude/>
-  public Expr_5(Parser yyq):base(yyq){}}
+  public Expr_5(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_6 : Expr {
+public class Expr_6 : Expr
+{
   /// <exclude/>
-  public Expr_6(Parser yyq):base(yyq){}}
+  public Expr_6(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_6_1 : Expr_6 {
+public class Expr_6_1 : Expr_6
+{
   /// <exclude/>
-  public Expr_6_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(1).m_value))
-	.yylval) & PocketHands.Offsuit;}}
+  public Expr_6_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(1).m_value))
+.yylval) & PocketHands.Offsuit;
+  }
+}
 
 /// <exclude/>
-public class Expr_7 : Expr {
+public class Expr_7 : Expr
+{
   /// <exclude/>
-  public Expr_7(Parser yyq):base(yyq){}}
+  public Expr_7(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_8 : Expr {
+public class Expr_8 : Expr
+{
   /// <exclude/>
-  public Expr_8(Parser yyq):base(yyq){}}
+  public Expr_8(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_8_1 : Expr_8 {
+public class Expr_8_1 : Expr_8
+{
   /// <exclude/>
-  public Expr_8_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) | ((PocketHands) 
-	((Expr)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_8_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) | ((PocketHands)
+((Expr)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_9 : Expr {
+public class Expr_9 : Expr
+{
   /// <exclude/>
-  public Expr_9(Parser yyq):base(yyq){}}
+  public Expr_9(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_10 : Expr {
+public class Expr_10 : Expr
+{
   /// <exclude/>
-  public Expr_10(Parser yyq):base(yyq){}}
+  public Expr_10(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_10_1 : Expr_10 {
+public class Expr_10_1 : Expr_10
+{
   /// <exclude/>
-  public Expr_10_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) & ((PocketHands) 
-	((Expr)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_10_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) & ((PocketHands)
+((Expr)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_11 : Expr {
+public class Expr_11 : Expr
+{
   /// <exclude/>
-  public Expr_11(Parser yyq):base(yyq){}}
+  public Expr_11(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_12 : Expr {
+public class Expr_12 : Expr
+{
   /// <exclude/>
-  public Expr_12(Parser yyq):base(yyq){}}
+  public Expr_12(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_12_1 : Expr_12 {
+public class Expr_12_1 : Expr_12
+{
   /// <exclude/>
-  public Expr_12_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) & ((PocketHands) 
-	((Expr)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_12_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) & ((PocketHands)
+((Expr)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_13 : Expr {
+public class Expr_13 : Expr
+{
   /// <exclude/>
-  public Expr_13(Parser yyq):base(yyq){}}
+  public Expr_13(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_14 : Expr {
+public class Expr_14 : Expr
+{
   /// <exclude/>
-  public Expr_14(Parser yyq):base(yyq){}}
+  public Expr_14(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_14_1 : Expr_14 {
+public class Expr_14_1 : Expr_14
+{
   /// <exclude/>
-  public Expr_14_1(Parser yyq):base(yyq){yylval = !((PocketHands) 
-	((Expr)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_14_1(Parser yyq) : base(yyq)
+  {
+    yylval = !((PocketHands)
+((Expr)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_15 : Expr {
+public class Expr_15 : Expr
+{
   /// <exclude/>
-  public Expr_15(Parser yyq):base(yyq){}}
+  public Expr_15(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_16 : Expr {
+public class Expr_16 : Expr
+{
   /// <exclude/>
-  public Expr_16(Parser yyq):base(yyq){}}
+  public Expr_16(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_16_1 : Expr_16 {
+public class Expr_16_1 : Expr_16
+{
   /// <exclude/>
-  public Expr_16_1(Parser yyq):base(yyq){yylval = PocketHands.GroupRange((PocketHands.GroupTypeEnum) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval, (PocketHands.GroupTypeEnum) 
-	((Expr)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_16_1(Parser yyq) : base(yyq)
+  {
+    yylval = PocketHands.GroupRange((PocketHands.GroupTypeEnum)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval, (PocketHands.GroupTypeEnum)
+((Expr)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_17 : Expr {
+public class Expr_17 : Expr
+{
   /// <exclude/>
-  public Expr_17(Parser yyq):base(yyq){}}
+  public Expr_17(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_18 : Expr {
+public class Expr_18 : Expr
+{
   /// <exclude/>
-  public Expr_18(Parser yyq):base(yyq){}}
+  public Expr_18(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_18_1 : Expr_18 {
+public class Expr_18_1 : Expr_18
+{
   /// <exclude/>
-  public Expr_18_1(Parser yyq):base(yyq){yylval = PocketHands.LT(((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval), (string)
-	((Card169)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_18_1(Parser yyq) : base(yyq)
+  {
+    yylval = PocketHands.LT(((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval), (string)
+((Card169)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_19 : Expr {
+public class Expr_19 : Expr
+{
   /// <exclude/>
-  public Expr_19(Parser yyq):base(yyq){}}
+  public Expr_19(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_20 : Expr {
+public class Expr_20 : Expr
+{
   /// <exclude/>
-  public Expr_20(Parser yyq):base(yyq){}}
+  public Expr_20(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_20_1 : Expr_20 {
+public class Expr_20_1 : Expr_20
+{
   /// <exclude/>
-  public Expr_20_1(Parser yyq):base(yyq){yylval = PocketHands.LE(((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval), (string)
-	((Card169)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_20_1(Parser yyq) : base(yyq)
+  {
+    yylval = PocketHands.LE(((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval), (string)
+((Card169)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_21 : Expr {
+public class Expr_21 : Expr
+{
   /// <exclude/>
-  public Expr_21(Parser yyq):base(yyq){}}
+  public Expr_21(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_22 : Expr {
+public class Expr_22 : Expr
+{
   /// <exclude/>
-  public Expr_22(Parser yyq):base(yyq){}}
+  public Expr_22(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_22_1 : Expr_22 {
+public class Expr_22_1 : Expr_22
+{
   /// <exclude/>
-  public Expr_22_1(Parser yyq):base(yyq){yylval = PocketHands.GT(((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval), (string)
-	((Card169)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_22_1(Parser yyq) : base(yyq)
+  {
+    yylval = PocketHands.GT(((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval), (string)
+((Card169)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_23 : Expr {
+public class Expr_23 : Expr
+{
   /// <exclude/>
-  public Expr_23(Parser yyq):base(yyq){}}
+  public Expr_23(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_24 : Expr {
+public class Expr_24 : Expr
+{
   /// <exclude/>
-  public Expr_24(Parser yyq):base(yyq){}}
+  public Expr_24(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_24_1 : Expr_24 {
+public class Expr_24_1 : Expr_24
+{
   /// <exclude/>
-  public Expr_24_1(Parser yyq):base(yyq){yylval = PocketHands.GE(((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval), (string)
-	((Card169)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_24_1(Parser yyq) : base(yyq)
+  {
+    yylval = PocketHands.GE(((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval), (string)
+((Card169)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_25 : Expr {
+public class Expr_25 : Expr
+{
   /// <exclude/>
-  public Expr_25(Parser yyq):base(yyq){}}
+  public Expr_25(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_26 : Expr {
+public class Expr_26 : Expr
+{
   /// <exclude/>
-  public Expr_26(Parser yyq):base(yyq){}}
+  public Expr_26(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_26_1 : Expr_26 {
+public class Expr_26_1 : Expr_26
+{
   /// <exclude/>
-  public Expr_26_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) < (PocketHands.GroupTypeEnum) 
-	((Group)(yyq.StackAt(0).m_value))
-	.yylval;}}
+  public Expr_26_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) < (PocketHands.GroupTypeEnum)
+((Group)(yyq.StackAt(0).m_value))
+.yylval;
+  }
+}
 
 /// <exclude/>
-public class Expr_27 : Expr {
+public class Expr_27 : Expr
+{
   /// <exclude/>
-  public Expr_27(Parser yyq):base(yyq){}}
+  public Expr_27(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_28 : Expr {
+public class Expr_28 : Expr
+{
   /// <exclude/>
-  public Expr_28(Parser yyq):base(yyq){}}
+  public Expr_28(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_28_1 : Expr_28 {
+public class Expr_28_1 : Expr_28
+{
   /// <exclude/>
-  public Expr_28_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) <= (PocketHands.GroupTypeEnum) 
-	((Group)(yyq.StackAt(0).m_value))
-	.yylval;}}
+  public Expr_28_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) <= (PocketHands.GroupTypeEnum)
+((Group)(yyq.StackAt(0).m_value))
+.yylval;
+  }
+}
 
 /// <exclude/>
-public class Expr_29 : Expr {
+public class Expr_29 : Expr
+{
   /// <exclude/>
-  public Expr_29(Parser yyq):base(yyq){}}
+  public Expr_29(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_30 : Expr {
+public class Expr_30 : Expr
+{
   /// <exclude/>
-  public Expr_30(Parser yyq):base(yyq){}}
+  public Expr_30(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_30_1 : Expr_30 {
+public class Expr_30_1 : Expr_30
+{
   /// <exclude/>
-  public Expr_30_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) > (PocketHands.GroupTypeEnum) 
-	((Group)(yyq.StackAt(0).m_value))
-	.yylval;}}
+  public Expr_30_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) > (PocketHands.GroupTypeEnum)
+((Group)(yyq.StackAt(0).m_value))
+.yylval;
+  }
+}
 
 /// <exclude/>
-public class Expr_31 : Expr {
+public class Expr_31 : Expr
+{
   /// <exclude/>
-  public Expr_31(Parser yyq):base(yyq){}}
+  public Expr_31(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_32 : Expr {
+public class Expr_32 : Expr
+{
   /// <exclude/>
-  public Expr_32(Parser yyq):base(yyq){}}
+  public Expr_32(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_32_1 : Expr_32 {
+public class Expr_32_1 : Expr_32
+{
   /// <exclude/>
-  public Expr_32_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) >= (PocketHands.GroupTypeEnum) 
-	((Group)(yyq.StackAt(0).m_value))
-	.yylval;}}
+  public Expr_32_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) >= (PocketHands.GroupTypeEnum)
+((Group)(yyq.StackAt(0).m_value))
+.yylval;
+  }
+}
 
 /// <exclude/>
-public class Expr_33 : Expr {
+public class Expr_33 : Expr
+{
   /// <exclude/>
-  public Expr_33(Parser yyq):base(yyq){}}
+  public Expr_33(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_34 : Expr {
+public class Expr_34 : Expr
+{
   /// <exclude/>
-  public Expr_34(Parser yyq):base(yyq){}}
+  public Expr_34(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_34_1 : Expr_34 {
+public class Expr_34_1 : Expr_34
+{
   /// <exclude/>
-  public Expr_34_1(Parser yyq):base(yyq){yylval = PocketHands.AllHands;}}
+  public Expr_34_1(Parser yyq) : base(yyq) { yylval = PocketHands.AllHands; }
+}
 
 /// <exclude/>
-public class Expr_35 : Expr {
+public class Expr_35 : Expr
+{
   /// <exclude/>
-  public Expr_35(Parser yyq):base(yyq){}}
+  public Expr_35(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_36 : Expr {
+public class Expr_36 : Expr
+{
   /// <exclude/>
-  public Expr_36(Parser yyq):base(yyq){}}
+  public Expr_36(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_36_1 : Expr_36 {
+public class Expr_36_1 : Expr_36
+{
   /// <exclude/>
-  public Expr_36_1(Parser yyq):base(yyq){yylval = PocketHands.PocketCards(((string) 
-	((Card)(yyq.StackAt(1).m_value))
-	.yylval) + " " + ((string) 
-	((Card)(yyq.StackAt(0).m_value))
-	.yylval));}}
+  public Expr_36_1(Parser yyq) : base(yyq)
+  {
+    yylval = PocketHands.PocketCards(((string)
+((Card)(yyq.StackAt(1).m_value))
+.yylval) + " " + ((string)
+((Card)(yyq.StackAt(0).m_value))
+.yylval));
+  }
+}
 
 /// <exclude/>
-public class Expr_37 : Expr {
+public class Expr_37 : Expr
+{
   /// <exclude/>
-  public Expr_37(Parser yyq):base(yyq){}}
+  public Expr_37(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_38 : Expr {
+public class Expr_38 : Expr
+{
   /// <exclude/>
-  public Expr_38(Parser yyq):base(yyq){}}
+  public Expr_38(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_38_1 : Expr_38 {
+public class Expr_38_1 : Expr_38
+{
   /// <exclude/>
-  public Expr_38_1(Parser yyq):base(yyq){yylval = PocketHands.PocketCards169(((string) 
-	((Card169)(yyq.StackAt(0).m_value))
-	.yylval));}}
+  public Expr_38_1(Parser yyq) : base(yyq)
+  {
+    yylval = PocketHands.PocketCards169(((string)
+((Card169)(yyq.StackAt(0).m_value))
+.yylval));
+  }
+}
 
 /// <exclude/>
-public class Expr_39 : Expr {
+public class Expr_39 : Expr
+{
   /// <exclude/>
-  public Expr_39(Parser yyq):base(yyq){}}
+  public Expr_39(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_40 : Expr {
+public class Expr_40 : Expr
+{
   /// <exclude/>
-  public Expr_40(Parser yyq):base(yyq){}}
+  public Expr_40(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_40_1 : Expr_40 {
+public class Expr_40_1 : Expr_40
+{
   /// <exclude/>
-  public Expr_40_1(Parser yyq):base(yyq){yylval = PocketHands.Connected;}}
+  public Expr_40_1(Parser yyq) : base(yyq) { yylval = PocketHands.Connected; }
+}
 
 /// <exclude/>
-public class Expr_41 : Expr {
+public class Expr_41 : Expr
+{
   /// <exclude/>
-  public Expr_41(Parser yyq):base(yyq){}}
+  public Expr_41(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_42 : Expr {
+public class Expr_42 : Expr
+{
   /// <exclude/>
-  public Expr_42(Parser yyq):base(yyq){}}
+  public Expr_42(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_42_1 : Expr_42 {
+public class Expr_42_1 : Expr_42
+{
   /// <exclude/>
-  public Expr_42_1(Parser yyq):base(yyq){yylval = PocketHands.Gap;}}
+  public Expr_42_1(Parser yyq) : base(yyq) { yylval = PocketHands.Gap; }
+}
 
 /// <exclude/>
-public class Expr_43 : Expr {
+public class Expr_43 : Expr
+{
   /// <exclude/>
-  public Expr_43(Parser yyq):base(yyq){}}
+  public Expr_43(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_44 : Expr {
+public class Expr_44 : Expr
+{
   /// <exclude/>
-  public Expr_44(Parser yyq):base(yyq){}}
+  public Expr_44(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_44_1 : Expr_44 {
+public class Expr_44_1 : Expr_44
+{
   /// <exclude/>
-  public Expr_44_1(Parser yyq):base(yyq){yylval = PocketHands.Gap1;}}
+  public Expr_44_1(Parser yyq) : base(yyq) { yylval = PocketHands.Gap1; }
+}
 
 /// <exclude/>
-public class Expr_45 : Expr {
+public class Expr_45 : Expr
+{
   /// <exclude/>
-  public Expr_45(Parser yyq):base(yyq){}}
+  public Expr_45(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_46 : Expr {
+public class Expr_46 : Expr
+{
   /// <exclude/>
-  public Expr_46(Parser yyq):base(yyq){}}
+  public Expr_46(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_46_1 : Expr_46 {
+public class Expr_46_1 : Expr_46
+{
   /// <exclude/>
-  public Expr_46_1(Parser yyq):base(yyq){yylval = PocketHands.Gap2;}}
+  public Expr_46_1(Parser yyq) : base(yyq) { yylval = PocketHands.Gap2; }
+}
 
 /// <exclude/>
-public class Expr_47 : Expr {
+public class Expr_47 : Expr
+{
   /// <exclude/>
-  public Expr_47(Parser yyq):base(yyq){}}
+  public Expr_47(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_48 : Expr {
+public class Expr_48 : Expr
+{
   /// <exclude/>
-  public Expr_48(Parser yyq):base(yyq){}}
+  public Expr_48(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_48_1 : Expr_48 {
+public class Expr_48_1 : Expr_48
+{
   /// <exclude/>
-  public Expr_48_1(Parser yyq):base(yyq){yylval = PocketHands.Gap3;}}
+  public Expr_48_1(Parser yyq) : base(yyq) { yylval = PocketHands.Gap3; }
+}
 
 /// <exclude/>
-public class Expr_49 : Expr {
+public class Expr_49 : Expr
+{
   /// <exclude/>
-  public Expr_49(Parser yyq):base(yyq){}}
+  public Expr_49(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_50 : Expr {
+public class Expr_50 : Expr
+{
   /// <exclude/>
-  public Expr_50(Parser yyq):base(yyq){}}
+  public Expr_50(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_50_1 : Expr_50 {
+public class Expr_50_1 : Expr_50
+{
   /// <exclude/>
-  public Expr_50_1(Parser yyq):base(yyq){yylval = PocketHands.Suited;}}
+  public Expr_50_1(Parser yyq) : base(yyq) { yylval = PocketHands.Suited; }
+}
 
 /// <exclude/>
-public class Expr_51 : Expr {
+public class Expr_51 : Expr
+{
   /// <exclude/>
-  public Expr_51(Parser yyq):base(yyq){}}
+  public Expr_51(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_52 : Expr {
+public class Expr_52 : Expr
+{
   /// <exclude/>
-  public Expr_52(Parser yyq):base(yyq){}}
+  public Expr_52(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_52_1 : Expr_52 {
+public class Expr_52_1 : Expr_52
+{
   /// <exclude/>
-  public Expr_52_1(Parser yyq):base(yyq){yylval = PocketHands.Offsuit;}}
+  public Expr_52_1(Parser yyq) : base(yyq) { yylval = PocketHands.Offsuit; }
+}
 
 /// <exclude/>
-public class Expr_53 : Expr {
+public class Expr_53 : Expr
+{
   /// <exclude/>
-  public Expr_53(Parser yyq):base(yyq){}}
+  public Expr_53(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_54 : Expr {
+public class Expr_54 : Expr
+{
   /// <exclude/>
-  public Expr_54(Parser yyq):base(yyq){}}
+  public Expr_54(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_54_1 : Expr_54 {
+public class Expr_54_1 : Expr_54
+{
   /// <exclude/>
-  public Expr_54_1(Parser yyq):base(yyq){yylval = PocketHands.Pair;}}
+  public Expr_54_1(Parser yyq) : base(yyq) { yylval = PocketHands.Pair; }
+}
 
 /// <exclude/>
-public class Expr_55 : Expr {
+public class Expr_55 : Expr
+{
   /// <exclude/>
-  public Expr_55(Parser yyq):base(yyq){}}
+  public Expr_55(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_56 : Expr {
+public class Expr_56 : Expr
+{
   /// <exclude/>
-  public Expr_56(Parser yyq):base(yyq){}}
+  public Expr_56(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_56_1 : Expr_56 {
+public class Expr_56_1 : Expr_56
+{
   /// <exclude/>
-  public Expr_56_1(Parser yyq):base(yyq){yylval = PocketHands.Group((PocketHands.GroupTypeEnum) 
-	((Group)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_56_1(Parser yyq) : base(yyq)
+  {
+    yylval = PocketHands.Group((PocketHands.GroupTypeEnum)
+((Group)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_57 : Expr {
+public class Expr_57 : Expr
+{
   /// <exclude/>
-  public Expr_57(Parser yyq):base(yyq){}}
+  public Expr_57(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_58 : Expr {
+public class Expr_58 : Expr
+{
   /// <exclude/>
-  public Expr_58(Parser yyq):base(yyq){}}
+  public Expr_58(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_58_1 : Expr_58 {
+public class Expr_58_1 : Expr_58
+{
   /// <exclude/>
-  public Expr_58_1(Parser yyq):base(yyq){yylval = PocketHands.PocketCards169Wild((string)
-	((Card169Wild)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_58_1(Parser yyq) : base(yyq)
+  {
+    yylval = PocketHands.PocketCards169Wild((string)
+((Card169Wild)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_59 : Expr {
+public class Expr_59 : Expr
+{
   /// <exclude/>
-  public Expr_59(Parser yyq):base(yyq){}}
+  public Expr_59(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_60 : Expr {
+public class Expr_60 : Expr
+{
   /// <exclude/>
-  public Expr_60(Parser yyq):base(yyq){}}
+  public Expr_60(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_60_1 : Expr_60 {
+public class Expr_60_1 : Expr_60
+{
   /// <exclude/>
-  public Expr_60_1(Parser yyq):base(yyq){yylval = PocketHands.GroupRange((PocketHands.GroupTypeEnum) 
-	((Group)(yyq.StackAt(2).m_value))
-	.yylval,(PocketHands.GroupTypeEnum) 
-	((Group)(yyq.StackAt(0).m_value))
-	.yylval); }}
+  public Expr_60_1(Parser yyq) : base(yyq)
+  {
+    yylval = PocketHands.GroupRange((PocketHands.GroupTypeEnum)
+((Group)(yyq.StackAt(2).m_value))
+.yylval, (PocketHands.GroupTypeEnum)
+((Group)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_61 : Expr {
+public class Expr_61 : Expr
+{
   /// <exclude/>
-  public Expr_61(Parser yyq):base(yyq){}}
+  public Expr_61(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_62 : Expr {
+public class Expr_62 : Expr
+{
   /// <exclude/>
-  public Expr_62(Parser yyq):base(yyq){}}
+  public Expr_62(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_62_1 : Expr_62 {
+public class Expr_62_1 : Expr_62
+{
   /// <exclude/>
-  public Expr_62_1(Parser yyq):base(yyq){yylval = PocketHands.PocketCards169Range((string) 
-	((Card169)(yyq.StackAt(2).m_value))
-	.yylval, (string) 
-	((Card169)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_62_1(Parser yyq) : base(yyq)
+  {
+    yylval = PocketHands.PocketCards169Range((string)
+((Card169)(yyq.StackAt(2).m_value))
+.yylval, (string)
+((Card169)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_63 : Expr {
+public class Expr_63 : Expr
+{
   /// <exclude/>
-  public Expr_63(Parser yyq):base(yyq){}}
+  public Expr_63(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_64 : Expr {
+public class Expr_64 : Expr
+{
   /// <exclude/>
-  public Expr_64(Parser yyq):base(yyq){}}
+  public Expr_64(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_64_1 : Expr_64 {
+public class Expr_64_1 : Expr_64
+{
   /// <exclude/>
-  public Expr_64_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) < double.Parse((string) 
-	((Number)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_64_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) < double.Parse((string)
+((Number)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_65 : Expr {
+public class Expr_65 : Expr
+{
   /// <exclude/>
-  public Expr_65(Parser yyq):base(yyq){}}
+  public Expr_65(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_66 : Expr {
+public class Expr_66 : Expr
+{
   /// <exclude/>
-  public Expr_66(Parser yyq):base(yyq){}}
+  public Expr_66(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_66_1 : Expr_66 {
+public class Expr_66_1 : Expr_66
+{
   /// <exclude/>
-  public Expr_66_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) <= double.Parse((string) 
-	((Number)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_66_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) <= double.Parse((string)
+((Number)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_67 : Expr {
+public class Expr_67 : Expr
+{
   /// <exclude/>
-  public Expr_67(Parser yyq):base(yyq){}}
+  public Expr_67(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_68 : Expr {
+public class Expr_68 : Expr
+{
   /// <exclude/>
-  public Expr_68(Parser yyq):base(yyq){}}
+  public Expr_68(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_68_1 : Expr_68 {
+public class Expr_68_1 : Expr_68
+{
   /// <exclude/>
-  public Expr_68_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) > double.Parse((string) 
-	((Number)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_68_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) > double.Parse((string)
+((Number)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_69 : Expr {
+public class Expr_69 : Expr
+{
   /// <exclude/>
-  public Expr_69(Parser yyq):base(yyq){}}
+  public Expr_69(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_70 : Expr {
+public class Expr_70 : Expr
+{
   /// <exclude/>
-  public Expr_70(Parser yyq):base(yyq){}}
+  public Expr_70(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_70_1 : Expr_70 {
+public class Expr_70_1 : Expr_70
+{
   /// <exclude/>
-  public Expr_70_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) >= double.Parse((string) 
-	((Number)(yyq.StackAt(0).m_value))
-	.yylval);}}
+  public Expr_70_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) >= double.Parse((string)
+((Number)(yyq.StackAt(0).m_value))
+.yylval);
+  }
+}
 
 /// <exclude/>
-public class Expr_71 : Expr {
+public class Expr_71 : Expr
+{
   /// <exclude/>
-  public Expr_71(Parser yyq):base(yyq){}}
+  public Expr_71(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_72 : Expr {
+public class Expr_72 : Expr
+{
   /// <exclude/>
-  public Expr_72(Parser yyq):base(yyq){}}
+  public Expr_72(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_72_1 : Expr_72 {
+public class Expr_72_1 : Expr_72
+{
   /// <exclude/>
-  public Expr_72_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) < (double.Parse((string) 
-	((Percent)(yyq.StackAt(0).m_value))
-	.yylval)/100.0);}}
+  public Expr_72_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) < (double.Parse((string)
+((Percent)(yyq.StackAt(0).m_value))
+.yylval) / 100.0);
+  }
+}
 
 /// <exclude/>
-public class Expr_73 : Expr {
+public class Expr_73 : Expr
+{
   /// <exclude/>
-  public Expr_73(Parser yyq):base(yyq){}}
+  public Expr_73(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_74 : Expr {
+public class Expr_74 : Expr
+{
   /// <exclude/>
-  public Expr_74(Parser yyq):base(yyq){}}
+  public Expr_74(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_74_1 : Expr_74 {
+public class Expr_74_1 : Expr_74
+{
   /// <exclude/>
-  public Expr_74_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) <= (double.Parse((string) 
-	((Percent)(yyq.StackAt(0).m_value))
-	.yylval)/100.0);}}
+  public Expr_74_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) <= (double.Parse((string)
+((Percent)(yyq.StackAt(0).m_value))
+.yylval) / 100.0);
+  }
+}
 
 /// <exclude/>
-public class Expr_75 : Expr {
+public class Expr_75 : Expr
+{
   /// <exclude/>
-  public Expr_75(Parser yyq):base(yyq){}}
+  public Expr_75(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_76 : Expr {
+public class Expr_76 : Expr
+{
   /// <exclude/>
-  public Expr_76(Parser yyq):base(yyq){}}
+  public Expr_76(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_76_1 : Expr_76 {
+public class Expr_76_1 : Expr_76
+{
   /// <exclude/>
-  public Expr_76_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) > (double.Parse((string) 
-	((Percent)(yyq.StackAt(0).m_value))
-	.yylval)/100.0);}}
+  public Expr_76_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) > (double.Parse((string)
+((Percent)(yyq.StackAt(0).m_value))
+.yylval) / 100.0);
+  }
+}
 
 /// <exclude/>
-public class Expr_77 : Expr {
+public class Expr_77 : Expr
+{
   /// <exclude/>
-  public Expr_77(Parser yyq):base(yyq){}}
+  public Expr_77(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_78 : Expr {
+public class Expr_78 : Expr
+{
   /// <exclude/>
-  public Expr_78(Parser yyq):base(yyq){}}
+  public Expr_78(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Expr_78_1 : Expr_78 {
+public class Expr_78_1 : Expr_78
+{
   /// <exclude/>
-  public Expr_78_1(Parser yyq):base(yyq){yylval = ((PocketHands) 
-	((Expr)(yyq.StackAt(2).m_value))
-	.yylval) >= (double.Parse((string) 
-	((Percent)(yyq.StackAt(0).m_value))
-	.yylval)/100.0);}}
+  public Expr_78_1(Parser yyq) : base(yyq)
+  {
+    yylval = ((PocketHands)
+((Expr)(yyq.StackAt(2).m_value))
+.yylval) >= (double.Parse((string)
+((Percent)(yyq.StackAt(0).m_value))
+.yylval) / 100.0);
+  }
+}
 /// <exclude/>
-public class Group : SYMBOL {
-   /// <exclude/>
-	public Group(Parser yyq):base(yyq) { }
+public class Group : SYMBOL
+{
   /// <exclude/>
-  public override string yyname { get { return "Group"; }}
+  public Group(Parser yyq) : base(yyq) { }
   /// <exclude/>
-  public override int yynum { get { return 124; }}}
+  public override string yyname { get { return "Group"; } }
+  /// <exclude/>
+  public override int yynum { get { return 124; } }
+}
 
 /// <exclude/>
-public class Group_1 : Group {
+public class Group_1 : Group
+{
   /// <exclude/>
-  public Group_1(Parser yyq):base(yyq){}}
+  public Group_1(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_2 : Group {
+public class Group_2 : Group
+{
   /// <exclude/>
-  public Group_2(Parser yyq):base(yyq){}}
+  public Group_2(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_2_1 : Group_2 {
+public class Group_2_1 : Group_2
+{
   /// <exclude/>
-  public Group_2_1(Parser yyq):base(yyq){yylval = 7;}}
+  public Group_2_1(Parser yyq) : base(yyq) { yylval = 7; }
+}
 
 /// <exclude/>
-public class Group_3 : Group {
+public class Group_3 : Group
+{
   /// <exclude/>
-  public Group_3(Parser yyq):base(yyq){}}
+  public Group_3(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_4 : Group {
+public class Group_4 : Group
+{
   /// <exclude/>
-  public Group_4(Parser yyq):base(yyq){}}
+  public Group_4(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_4_1 : Group_4 {
+public class Group_4_1 : Group_4
+{
   /// <exclude/>
-  public Group_4_1(Parser yyq):base(yyq){yylval = 6;}}
+  public Group_4_1(Parser yyq) : base(yyq) { yylval = 6; }
+}
 
 /// <exclude/>
-public class Group_5 : Group {
+public class Group_5 : Group
+{
   /// <exclude/>
-  public Group_5(Parser yyq):base(yyq){}}
+  public Group_5(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_6 : Group {
+public class Group_6 : Group
+{
   /// <exclude/>
-  public Group_6(Parser yyq):base(yyq){}}
+  public Group_6(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_6_1 : Group_6 {
+public class Group_6_1 : Group_6
+{
   /// <exclude/>
-  public Group_6_1(Parser yyq):base(yyq){yylval = 5;}}
+  public Group_6_1(Parser yyq) : base(yyq) { yylval = 5; }
+}
 
 /// <exclude/>
-public class Group_7 : Group {
+public class Group_7 : Group
+{
   /// <exclude/>
-  public Group_7(Parser yyq):base(yyq){}}
+  public Group_7(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_8 : Group {
+public class Group_8 : Group
+{
   /// <exclude/>
-  public Group_8(Parser yyq):base(yyq){}}
+  public Group_8(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_8_1 : Group_8 {
+public class Group_8_1 : Group_8
+{
   /// <exclude/>
-  public Group_8_1(Parser yyq):base(yyq){yylval = 4;}}
+  public Group_8_1(Parser yyq) : base(yyq) { yylval = 4; }
+}
 
 /// <exclude/>
-public class Group_9 : Group {
+public class Group_9 : Group
+{
   /// <exclude/>
-  public Group_9(Parser yyq):base(yyq){}}
+  public Group_9(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_10 : Group {
+public class Group_10 : Group
+{
   /// <exclude/>
-  public Group_10(Parser yyq):base(yyq){}}
+  public Group_10(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_10_1 : Group_10 {
+public class Group_10_1 : Group_10
+{
   /// <exclude/>
-  public Group_10_1(Parser yyq):base(yyq){yylval = 3;}}
+  public Group_10_1(Parser yyq) : base(yyq) { yylval = 3; }
+}
 
 /// <exclude/>
-public class Group_11 : Group {
+public class Group_11 : Group
+{
   /// <exclude/>
-  public Group_11(Parser yyq):base(yyq){}}
+  public Group_11(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_12 : Group {
+public class Group_12 : Group
+{
   /// <exclude/>
-  public Group_12(Parser yyq):base(yyq){}}
+  public Group_12(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_12_1 : Group_12 {
+public class Group_12_1 : Group_12
+{
   /// <exclude/>
-  public Group_12_1(Parser yyq):base(yyq){yylval = 2;}}
+  public Group_12_1(Parser yyq) : base(yyq) { yylval = 2; }
+}
 
 /// <exclude/>
-public class Group_13 : Group {
+public class Group_13 : Group
+{
   /// <exclude/>
-  public Group_13(Parser yyq):base(yyq){}}
+  public Group_13(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_14 : Group {
+public class Group_14 : Group
+{
   /// <exclude/>
-  public Group_14(Parser yyq):base(yyq){}}
+  public Group_14(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_14_1 : Group_14 {
+public class Group_14_1 : Group_14
+{
   /// <exclude/>
-  public Group_14_1(Parser yyq):base(yyq){yylval = 1;}}
+  public Group_14_1(Parser yyq) : base(yyq) { yylval = 1; }
+}
 
 /// <exclude/>
-public class Group_15 : Group {
+public class Group_15 : Group
+{
   /// <exclude/>
-  public Group_15(Parser yyq):base(yyq){}}
+  public Group_15(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_16 : Group {
+public class Group_16 : Group
+{
   /// <exclude/>
-  public Group_16(Parser yyq):base(yyq){}}
+  public Group_16(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_16_1 : Group_16 {
+public class Group_16_1 : Group_16
+{
   /// <exclude/>
-  public Group_16_1(Parser yyq):base(yyq){yylval = 0;}}
+  public Group_16_1(Parser yyq) : base(yyq) { yylval = 0; }
+}
 
 /// <exclude/>
-public class Group_17 : Group {
+public class Group_17 : Group
+{
   /// <exclude/>
-  public Group_17(Parser yyq):base(yyq){}}
+  public Group_17(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_18 : Group {
+public class Group_18 : Group
+{
   /// <exclude/>
-  public Group_18(Parser yyq):base(yyq){}}
+  public Group_18(Parser yyq) : base(yyq) { }
+}
 
 /// <exclude/>
-public class Group_18_1 : Group_18 {
+public class Group_18_1 : Group_18
+{
   /// <exclude/>
-  public Group_18_1(Parser yyq):base(yyq){yylval = 8;}}
+  public Group_18_1(Parser yyq) : base(yyq) { yylval = 8; }
+}
 /// <exclude/>
-public class yysyntax: YyParser {
+public class yysyntax : YyParser
+{
   /// <exclude/>
-  public override object Action(Parser yyq,SYMBOL yysym, int yyact) {
-    switch(yyact) {
-	 case -1: break; //// keep compiler happy
-}  return null; }
-/// <exclude/>
-public yysyntax():base() { arr = new int[] { 
+  public override object Action(Parser yyq, SYMBOL yysym, int yyact)
+  {
+    switch (yyact)
+    {
+      case -1: break; //// keep compiler happy
+    }
+    return null;
+  }
+  /// <exclude/>
+  public yysyntax() : base()
+  {
+    arr = new int[] {
 101,4,6,52,0,
 46,0,53,0,102,
 20,103,4,14,83,
@@ -3130,477 +3537,478 @@ public yysyntax():base() { arr = new int[] {
 1,3,1,1,1,
 0,1156,22,1,1,
 2,1,0};
-new Sfactory(this,"Expr_46_1",new SCreator(Expr_46_1_factory));
-new Sfactory(this,"Expr_20_1",new SCreator(Expr_20_1_factory));
-new Sfactory(this,"error",new SCreator(error_factory));
-new Sfactory(this,"Expr_18_1",new SCreator(Expr_18_1_factory));
-new Sfactory(this,"Expr_38_1",new SCreator(Expr_38_1_factory));
-new Sfactory(this,"Expr_33",new SCreator(Expr_33_factory));
-new Sfactory(this,"Expr_76_1",new SCreator(Expr_76_1_factory));
-new Sfactory(this,"Expr_50_1",new SCreator(Expr_50_1_factory));
-new Sfactory(this,"Expr_16",new SCreator(Expr_16_factory));
-new Sfactory(this,"Expr_59",new SCreator(Expr_59_factory));
-new Sfactory(this,"Expr_40",new SCreator(Expr_40_factory));
-new Sfactory(this,"Expr_66_1",new SCreator(Expr_66_1_factory));
-new Sfactory(this,"Expr_40_1",new SCreator(Expr_40_1_factory));
-new Sfactory(this,"Expr_27",new SCreator(Expr_27_factory));
-new Sfactory(this,"Group_6_1",new SCreator(Group_6_1_factory));
-new Sfactory(this,"Group_10_1",new SCreator(Group_10_1_factory));
-new Sfactory(this,"Expr_74",new SCreator(Expr_74_factory));
-new Sfactory(this,"Expr_70_1",new SCreator(Expr_70_1_factory));
-new Sfactory(this,"Expr_52_1",new SCreator(Expr_52_1_factory));
-new Sfactory(this,"Expr_10",new SCreator(Expr_10_factory));
-new Sfactory(this,"Expr_2_1",new SCreator(Expr_2_1_factory));
-new Sfactory(this,"Expr_5",new SCreator(Expr_5_factory));
-new Sfactory(this,"Expr_60_1",new SCreator(Expr_60_1_factory));
-new Sfactory(this,"Expr_42_1",new SCreator(Expr_42_1_factory));
-new Sfactory(this,"Expr_21",new SCreator(Expr_21_factory));
-new Sfactory(this,"Expr_68",new SCreator(Expr_68_factory));
-new Sfactory(this,"Group_4_1",new SCreator(Group_4_1_factory));
-new Sfactory(this,"Expr_22",new SCreator(Expr_22_factory));
-new Sfactory(this,"Expr_65",new SCreator(Expr_65_factory));
-new Sfactory(this,"Expr_72_1",new SCreator(Expr_72_1_factory));
-new Sfactory(this,"SpecDoc",new SCreator(SpecDoc_factory));
-new Sfactory(this,"Expr_73",new SCreator(Expr_73_factory));
-new Sfactory(this,"SpecDoc_4_1",new SCreator(SpecDoc_4_1_factory));
-new Sfactory(this,"Group_8",new SCreator(Group_8_factory));
-new Sfactory(this,"Expr_38",new SCreator(Expr_38_factory));
-new Sfactory(this,"Expr_56",new SCreator(Expr_56_factory));
-new Sfactory(this,"Expr_62_1",new SCreator(Expr_62_1_factory));
-new Sfactory(this,"Group_5",new SCreator(Group_5_factory));
-new Sfactory(this,"Expr",new SCreator(Expr_factory));
-new Sfactory(this,"Expr_35",new SCreator(Expr_35_factory));
-new Sfactory(this,"Expr_34_1",new SCreator(Expr_34_1_factory));
-new Sfactory(this,"Expr_67",new SCreator(Expr_67_factory));
-new Sfactory(this,"Expr_8_1",new SCreator(Expr_8_1_factory));
-new Sfactory(this,"Expr_26_1",new SCreator(Expr_26_1_factory));
-new Sfactory(this,"Expr_24_1",new SCreator(Expr_24_1_factory));
-new Sfactory(this,"Expr_50",new SCreator(Expr_50_factory));
-new Sfactory(this,"Expr_6_1",new SCreator(Expr_6_1_factory));
-new Sfactory(this,"Expr_54_1",new SCreator(Expr_54_1_factory));
-new Sfactory(this,"Expr_61",new SCreator(Expr_61_factory));
-new Sfactory(this,"Expr_44",new SCreator(Expr_44_factory));
-new Sfactory(this,"Expr_62",new SCreator(Expr_62_factory));
-new Sfactory(this,"Expr_44_1",new SCreator(Expr_44_1_factory));
-new Sfactory(this,"Expr_37",new SCreator(Expr_37_factory));
-new Sfactory(this,"Group_16_1",new SCreator(Group_16_1_factory));
-new Sfactory(this,"Expr_2",new SCreator(Expr_2_factory));
-new Sfactory(this,"SpecDoc_3",new SCreator(SpecDoc_3_factory));
-new Sfactory(this,"Expr_31",new SCreator(Expr_31_factory));
-new Sfactory(this,"Expr_78",new SCreator(Expr_78_factory));
-new Sfactory(this,"Expr_74_1",new SCreator(Expr_74_1_factory));
-new Sfactory(this,"Group_3",new SCreator(Group_3_factory));
-new Sfactory(this,"SpecDoc_4",new SCreator(SpecDoc_4_factory));
-new Sfactory(this,"Expr_14",new SCreator(Expr_14_factory));
-new Sfactory(this,"Expr_32",new SCreator(Expr_32_factory));
-new Sfactory(this,"Expr_75",new SCreator(Expr_75_factory));
-new Sfactory(this,"Expr_64_1",new SCreator(Expr_64_1_factory));
-new Sfactory(this,"Group_17",new SCreator(Group_17_factory));
-new Sfactory(this,"Expr_43",new SCreator(Expr_43_factory));
-new Sfactory(this,"Group_8_1",new SCreator(Group_8_1_factory));
-new Sfactory(this,"Expr_26",new SCreator(Expr_26_factory));
-new Sfactory(this,"Expr_69",new SCreator(Expr_69_factory));
-new Sfactory(this,"Group_9",new SCreator(Group_9_factory));
-new Sfactory(this,"Expr_32_1",new SCreator(Expr_32_1_factory));
-new Sfactory(this,"Expr_77",new SCreator(Expr_77_factory));
-new Sfactory(this,"Expr_13",new SCreator(Expr_13_factory));
-new Sfactory(this,"Expr_76",new SCreator(Expr_76_factory));
-new Sfactory(this,"Expr_39",new SCreator(Expr_39_factory));
-new Sfactory(this,"Expr_20",new SCreator(Expr_20_factory));
-new Sfactory(this,"Group_18_1",new SCreator(Group_18_1_factory));
-new Sfactory(this,"Expr_6",new SCreator(Expr_6_factory));
-new Sfactory(this,"Expr_71",new SCreator(Expr_71_factory));
-new Sfactory(this,"Expr_28_1",new SCreator(Expr_28_1_factory));
-new Sfactory(this,"Expr_72",new SCreator(Expr_72_factory));
-new Sfactory(this,"Group_12",new SCreator(Group_12_factory));
-new Sfactory(this,"SpecDoc_2_1",new SCreator(SpecDoc_2_1_factory));
-new Sfactory(this,"Expr_58_1",new SCreator(Expr_58_1_factory));
-new Sfactory(this,"Expr_3",new SCreator(Expr_3_factory));
-new Sfactory(this,"Expr_54",new SCreator(Expr_54_factory));
-new Sfactory(this,"Expr_48",new SCreator(Expr_48_factory));
-new Sfactory(this,"Expr_66",new SCreator(Expr_66_factory));
-new Sfactory(this,"Expr_48_1",new SCreator(Expr_48_1_factory));
-new Sfactory(this,"Expr_45",new SCreator(Expr_45_factory));
-new Sfactory(this,"Group_14_1",new SCreator(Group_14_1_factory));
-new Sfactory(this,"Expr_53",new SCreator(Expr_53_factory));
-new Sfactory(this,"Expr_78_1",new SCreator(Expr_78_1_factory));
-new Sfactory(this,"Expr_18",new SCreator(Expr_18_factory));
-new Sfactory(this,"Expr_36",new SCreator(Expr_36_factory));
-new Sfactory(this,"Group_2",new SCreator(Group_2_factory));
-new Sfactory(this,"Expr_60",new SCreator(Expr_60_factory));
-new Sfactory(this,"Expr_15",new SCreator(Expr_15_factory));
-new Sfactory(this,"Expr_68_1",new SCreator(Expr_68_1_factory));
-new Sfactory(this,"Expr_47",new SCreator(Expr_47_factory));
-new Sfactory(this,"Group_10",new SCreator(Group_10_factory));
-new Sfactory(this,"Expr_9",new SCreator(Expr_9_factory));
-new Sfactory(this,"Expr_30",new SCreator(Expr_30_factory));
-new Sfactory(this,"Group_16",new SCreator(Group_16_factory));
-new Sfactory(this,"SpecDoc_2",new SCreator(SpecDoc_2_factory));
-new Sfactory(this,"SpecDoc_1",new SCreator(SpecDoc_1_factory));
-new Sfactory(this,"Expr_7",new SCreator(Expr_7_factory));
-new Sfactory(this,"Group_13",new SCreator(Group_13_factory));
-new Sfactory(this,"Expr_41",new SCreator(Expr_41_factory));
-new Sfactory(this,"Expr_25",new SCreator(Expr_25_factory));
-new Sfactory(this,"Expr_24",new SCreator(Expr_24_factory));
-new Sfactory(this,"Expr_42",new SCreator(Expr_42_factory));
-new Sfactory(this,"Expr_63",new SCreator(Expr_63_factory));
-new Sfactory(this,"Group",new SCreator(Group_factory));
-new Sfactory(this,"Group_15",new SCreator(Group_15_factory));
-new Sfactory(this,"Expr_11",new SCreator(Expr_11_factory));
-new Sfactory(this,"Expr_58",new SCreator(Expr_58_factory));
-new Sfactory(this,"Expr_4_1",new SCreator(Expr_4_1_factory));
-new Sfactory(this,"Expr_8",new SCreator(Expr_8_factory));
-new Sfactory(this,"Expr_12",new SCreator(Expr_12_factory));
-new Sfactory(this,"Expr_55",new SCreator(Expr_55_factory));
-new Sfactory(this,"Expr_14_1",new SCreator(Expr_14_1_factory));
-new Sfactory(this,"Expr_23",new SCreator(Expr_23_factory));
-new Sfactory(this,"Group_2_1",new SCreator(Group_2_1_factory));
-new Sfactory(this,"Expr_49",new SCreator(Expr_49_factory));
-new Sfactory(this,"Group_12_1",new SCreator(Group_12_1_factory));
-new Sfactory(this,"Expr_16_1",new SCreator(Expr_16_1_factory));
-new Sfactory(this,"Expr_70",new SCreator(Expr_70_factory));
-new Sfactory(this,"Group_18",new SCreator(Group_18_factory));
-new Sfactory(this,"Expr_57",new SCreator(Expr_57_factory));
-new Sfactory(this,"Expr_17",new SCreator(Expr_17_factory));
-new Sfactory(this,"Group_6",new SCreator(Group_6_factory));
-new Sfactory(this,"Expr_64",new SCreator(Expr_64_factory));
-new Sfactory(this,"Expr_19",new SCreator(Expr_19_factory));
-new Sfactory(this,"Group_7",new SCreator(Group_7_factory));
-new Sfactory(this,"Expr_36_1",new SCreator(Expr_36_1_factory));
-new Sfactory(this,"Expr_10_1",new SCreator(Expr_10_1_factory));
-new Sfactory(this,"Expr_12_1",new SCreator(Expr_12_1_factory));
-new Sfactory(this,"Expr_4",new SCreator(Expr_4_factory));
-new Sfactory(this,"Expr_22_1",new SCreator(Expr_22_1_factory));
-new Sfactory(this,"Expr_51",new SCreator(Expr_51_factory));
-new Sfactory(this,"Expr_29",new SCreator(Expr_29_factory));
-new Sfactory(this,"Expr_34",new SCreator(Expr_34_factory));
-new Sfactory(this,"Group_14",new SCreator(Group_14_factory));
-new Sfactory(this,"Expr_52",new SCreator(Expr_52_factory));
-new Sfactory(this,"Group_11",new SCreator(Group_11_factory));
-new Sfactory(this,"Expr_56_1",new SCreator(Expr_56_1_factory));
-new Sfactory(this,"Expr_30_1",new SCreator(Expr_30_1_factory));
-new Sfactory(this,"Expr_1",new SCreator(Expr_1_factory));
-new Sfactory(this,"Group_4",new SCreator(Group_4_factory));
-new Sfactory(this,"Expr_28",new SCreator(Expr_28_factory));
-new Sfactory(this,"Group_1",new SCreator(Group_1_factory));
-new Sfactory(this,"Expr_46",new SCreator(Expr_46_factory));
+    new Sfactory(this, "Expr_46_1", new SCreator(Expr_46_1_factory));
+    new Sfactory(this, "Expr_20_1", new SCreator(Expr_20_1_factory));
+    new Sfactory(this, "error", new SCreator(error_factory));
+    new Sfactory(this, "Expr_18_1", new SCreator(Expr_18_1_factory));
+    new Sfactory(this, "Expr_38_1", new SCreator(Expr_38_1_factory));
+    new Sfactory(this, "Expr_33", new SCreator(Expr_33_factory));
+    new Sfactory(this, "Expr_76_1", new SCreator(Expr_76_1_factory));
+    new Sfactory(this, "Expr_50_1", new SCreator(Expr_50_1_factory));
+    new Sfactory(this, "Expr_16", new SCreator(Expr_16_factory));
+    new Sfactory(this, "Expr_59", new SCreator(Expr_59_factory));
+    new Sfactory(this, "Expr_40", new SCreator(Expr_40_factory));
+    new Sfactory(this, "Expr_66_1", new SCreator(Expr_66_1_factory));
+    new Sfactory(this, "Expr_40_1", new SCreator(Expr_40_1_factory));
+    new Sfactory(this, "Expr_27", new SCreator(Expr_27_factory));
+    new Sfactory(this, "Group_6_1", new SCreator(Group_6_1_factory));
+    new Sfactory(this, "Group_10_1", new SCreator(Group_10_1_factory));
+    new Sfactory(this, "Expr_74", new SCreator(Expr_74_factory));
+    new Sfactory(this, "Expr_70_1", new SCreator(Expr_70_1_factory));
+    new Sfactory(this, "Expr_52_1", new SCreator(Expr_52_1_factory));
+    new Sfactory(this, "Expr_10", new SCreator(Expr_10_factory));
+    new Sfactory(this, "Expr_2_1", new SCreator(Expr_2_1_factory));
+    new Sfactory(this, "Expr_5", new SCreator(Expr_5_factory));
+    new Sfactory(this, "Expr_60_1", new SCreator(Expr_60_1_factory));
+    new Sfactory(this, "Expr_42_1", new SCreator(Expr_42_1_factory));
+    new Sfactory(this, "Expr_21", new SCreator(Expr_21_factory));
+    new Sfactory(this, "Expr_68", new SCreator(Expr_68_factory));
+    new Sfactory(this, "Group_4_1", new SCreator(Group_4_1_factory));
+    new Sfactory(this, "Expr_22", new SCreator(Expr_22_factory));
+    new Sfactory(this, "Expr_65", new SCreator(Expr_65_factory));
+    new Sfactory(this, "Expr_72_1", new SCreator(Expr_72_1_factory));
+    new Sfactory(this, "SpecDoc", new SCreator(SpecDoc_factory));
+    new Sfactory(this, "Expr_73", new SCreator(Expr_73_factory));
+    new Sfactory(this, "SpecDoc_4_1", new SCreator(SpecDoc_4_1_factory));
+    new Sfactory(this, "Group_8", new SCreator(Group_8_factory));
+    new Sfactory(this, "Expr_38", new SCreator(Expr_38_factory));
+    new Sfactory(this, "Expr_56", new SCreator(Expr_56_factory));
+    new Sfactory(this, "Expr_62_1", new SCreator(Expr_62_1_factory));
+    new Sfactory(this, "Group_5", new SCreator(Group_5_factory));
+    new Sfactory(this, "Expr", new SCreator(Expr_factory));
+    new Sfactory(this, "Expr_35", new SCreator(Expr_35_factory));
+    new Sfactory(this, "Expr_34_1", new SCreator(Expr_34_1_factory));
+    new Sfactory(this, "Expr_67", new SCreator(Expr_67_factory));
+    new Sfactory(this, "Expr_8_1", new SCreator(Expr_8_1_factory));
+    new Sfactory(this, "Expr_26_1", new SCreator(Expr_26_1_factory));
+    new Sfactory(this, "Expr_24_1", new SCreator(Expr_24_1_factory));
+    new Sfactory(this, "Expr_50", new SCreator(Expr_50_factory));
+    new Sfactory(this, "Expr_6_1", new SCreator(Expr_6_1_factory));
+    new Sfactory(this, "Expr_54_1", new SCreator(Expr_54_1_factory));
+    new Sfactory(this, "Expr_61", new SCreator(Expr_61_factory));
+    new Sfactory(this, "Expr_44", new SCreator(Expr_44_factory));
+    new Sfactory(this, "Expr_62", new SCreator(Expr_62_factory));
+    new Sfactory(this, "Expr_44_1", new SCreator(Expr_44_1_factory));
+    new Sfactory(this, "Expr_37", new SCreator(Expr_37_factory));
+    new Sfactory(this, "Group_16_1", new SCreator(Group_16_1_factory));
+    new Sfactory(this, "Expr_2", new SCreator(Expr_2_factory));
+    new Sfactory(this, "SpecDoc_3", new SCreator(SpecDoc_3_factory));
+    new Sfactory(this, "Expr_31", new SCreator(Expr_31_factory));
+    new Sfactory(this, "Expr_78", new SCreator(Expr_78_factory));
+    new Sfactory(this, "Expr_74_1", new SCreator(Expr_74_1_factory));
+    new Sfactory(this, "Group_3", new SCreator(Group_3_factory));
+    new Sfactory(this, "SpecDoc_4", new SCreator(SpecDoc_4_factory));
+    new Sfactory(this, "Expr_14", new SCreator(Expr_14_factory));
+    new Sfactory(this, "Expr_32", new SCreator(Expr_32_factory));
+    new Sfactory(this, "Expr_75", new SCreator(Expr_75_factory));
+    new Sfactory(this, "Expr_64_1", new SCreator(Expr_64_1_factory));
+    new Sfactory(this, "Group_17", new SCreator(Group_17_factory));
+    new Sfactory(this, "Expr_43", new SCreator(Expr_43_factory));
+    new Sfactory(this, "Group_8_1", new SCreator(Group_8_1_factory));
+    new Sfactory(this, "Expr_26", new SCreator(Expr_26_factory));
+    new Sfactory(this, "Expr_69", new SCreator(Expr_69_factory));
+    new Sfactory(this, "Group_9", new SCreator(Group_9_factory));
+    new Sfactory(this, "Expr_32_1", new SCreator(Expr_32_1_factory));
+    new Sfactory(this, "Expr_77", new SCreator(Expr_77_factory));
+    new Sfactory(this, "Expr_13", new SCreator(Expr_13_factory));
+    new Sfactory(this, "Expr_76", new SCreator(Expr_76_factory));
+    new Sfactory(this, "Expr_39", new SCreator(Expr_39_factory));
+    new Sfactory(this, "Expr_20", new SCreator(Expr_20_factory));
+    new Sfactory(this, "Group_18_1", new SCreator(Group_18_1_factory));
+    new Sfactory(this, "Expr_6", new SCreator(Expr_6_factory));
+    new Sfactory(this, "Expr_71", new SCreator(Expr_71_factory));
+    new Sfactory(this, "Expr_28_1", new SCreator(Expr_28_1_factory));
+    new Sfactory(this, "Expr_72", new SCreator(Expr_72_factory));
+    new Sfactory(this, "Group_12", new SCreator(Group_12_factory));
+    new Sfactory(this, "SpecDoc_2_1", new SCreator(SpecDoc_2_1_factory));
+    new Sfactory(this, "Expr_58_1", new SCreator(Expr_58_1_factory));
+    new Sfactory(this, "Expr_3", new SCreator(Expr_3_factory));
+    new Sfactory(this, "Expr_54", new SCreator(Expr_54_factory));
+    new Sfactory(this, "Expr_48", new SCreator(Expr_48_factory));
+    new Sfactory(this, "Expr_66", new SCreator(Expr_66_factory));
+    new Sfactory(this, "Expr_48_1", new SCreator(Expr_48_1_factory));
+    new Sfactory(this, "Expr_45", new SCreator(Expr_45_factory));
+    new Sfactory(this, "Group_14_1", new SCreator(Group_14_1_factory));
+    new Sfactory(this, "Expr_53", new SCreator(Expr_53_factory));
+    new Sfactory(this, "Expr_78_1", new SCreator(Expr_78_1_factory));
+    new Sfactory(this, "Expr_18", new SCreator(Expr_18_factory));
+    new Sfactory(this, "Expr_36", new SCreator(Expr_36_factory));
+    new Sfactory(this, "Group_2", new SCreator(Group_2_factory));
+    new Sfactory(this, "Expr_60", new SCreator(Expr_60_factory));
+    new Sfactory(this, "Expr_15", new SCreator(Expr_15_factory));
+    new Sfactory(this, "Expr_68_1", new SCreator(Expr_68_1_factory));
+    new Sfactory(this, "Expr_47", new SCreator(Expr_47_factory));
+    new Sfactory(this, "Group_10", new SCreator(Group_10_factory));
+    new Sfactory(this, "Expr_9", new SCreator(Expr_9_factory));
+    new Sfactory(this, "Expr_30", new SCreator(Expr_30_factory));
+    new Sfactory(this, "Group_16", new SCreator(Group_16_factory));
+    new Sfactory(this, "SpecDoc_2", new SCreator(SpecDoc_2_factory));
+    new Sfactory(this, "SpecDoc_1", new SCreator(SpecDoc_1_factory));
+    new Sfactory(this, "Expr_7", new SCreator(Expr_7_factory));
+    new Sfactory(this, "Group_13", new SCreator(Group_13_factory));
+    new Sfactory(this, "Expr_41", new SCreator(Expr_41_factory));
+    new Sfactory(this, "Expr_25", new SCreator(Expr_25_factory));
+    new Sfactory(this, "Expr_24", new SCreator(Expr_24_factory));
+    new Sfactory(this, "Expr_42", new SCreator(Expr_42_factory));
+    new Sfactory(this, "Expr_63", new SCreator(Expr_63_factory));
+    new Sfactory(this, "Group", new SCreator(Group_factory));
+    new Sfactory(this, "Group_15", new SCreator(Group_15_factory));
+    new Sfactory(this, "Expr_11", new SCreator(Expr_11_factory));
+    new Sfactory(this, "Expr_58", new SCreator(Expr_58_factory));
+    new Sfactory(this, "Expr_4_1", new SCreator(Expr_4_1_factory));
+    new Sfactory(this, "Expr_8", new SCreator(Expr_8_factory));
+    new Sfactory(this, "Expr_12", new SCreator(Expr_12_factory));
+    new Sfactory(this, "Expr_55", new SCreator(Expr_55_factory));
+    new Sfactory(this, "Expr_14_1", new SCreator(Expr_14_1_factory));
+    new Sfactory(this, "Expr_23", new SCreator(Expr_23_factory));
+    new Sfactory(this, "Group_2_1", new SCreator(Group_2_1_factory));
+    new Sfactory(this, "Expr_49", new SCreator(Expr_49_factory));
+    new Sfactory(this, "Group_12_1", new SCreator(Group_12_1_factory));
+    new Sfactory(this, "Expr_16_1", new SCreator(Expr_16_1_factory));
+    new Sfactory(this, "Expr_70", new SCreator(Expr_70_factory));
+    new Sfactory(this, "Group_18", new SCreator(Group_18_factory));
+    new Sfactory(this, "Expr_57", new SCreator(Expr_57_factory));
+    new Sfactory(this, "Expr_17", new SCreator(Expr_17_factory));
+    new Sfactory(this, "Group_6", new SCreator(Group_6_factory));
+    new Sfactory(this, "Expr_64", new SCreator(Expr_64_factory));
+    new Sfactory(this, "Expr_19", new SCreator(Expr_19_factory));
+    new Sfactory(this, "Group_7", new SCreator(Group_7_factory));
+    new Sfactory(this, "Expr_36_1", new SCreator(Expr_36_1_factory));
+    new Sfactory(this, "Expr_10_1", new SCreator(Expr_10_1_factory));
+    new Sfactory(this, "Expr_12_1", new SCreator(Expr_12_1_factory));
+    new Sfactory(this, "Expr_4", new SCreator(Expr_4_factory));
+    new Sfactory(this, "Expr_22_1", new SCreator(Expr_22_1_factory));
+    new Sfactory(this, "Expr_51", new SCreator(Expr_51_factory));
+    new Sfactory(this, "Expr_29", new SCreator(Expr_29_factory));
+    new Sfactory(this, "Expr_34", new SCreator(Expr_34_factory));
+    new Sfactory(this, "Group_14", new SCreator(Group_14_factory));
+    new Sfactory(this, "Expr_52", new SCreator(Expr_52_factory));
+    new Sfactory(this, "Group_11", new SCreator(Group_11_factory));
+    new Sfactory(this, "Expr_56_1", new SCreator(Expr_56_1_factory));
+    new Sfactory(this, "Expr_30_1", new SCreator(Expr_30_1_factory));
+    new Sfactory(this, "Expr_1", new SCreator(Expr_1_factory));
+    new Sfactory(this, "Group_4", new SCreator(Group_4_factory));
+    new Sfactory(this, "Expr_28", new SCreator(Expr_28_factory));
+    new Sfactory(this, "Group_1", new SCreator(Group_1_factory));
+    new Sfactory(this, "Expr_46", new SCreator(Expr_46_factory));
+  }
+  /// <exclude/>
+  public static object Expr_46_1_factory(Parser yyp) { return new Expr_46_1(yyp); }
+  /// <exclude/>
+  public static object Expr_20_1_factory(Parser yyp) { return new Expr_20_1(yyp); }
+  /// <exclude/>
+  public static object error_factory(Parser yyp) { return new error(yyp); }
+  /// <exclude/>
+  public static object Expr_18_1_factory(Parser yyp) { return new Expr_18_1(yyp); }
+  /// <exclude/>
+  public static object Expr_38_1_factory(Parser yyp) { return new Expr_38_1(yyp); }
+  /// <exclude/>
+  public static object Expr_33_factory(Parser yyp) { return new Expr_33(yyp); }
+  /// <exclude/>
+  public static object Expr_76_1_factory(Parser yyp) { return new Expr_76_1(yyp); }
+  /// <exclude/>
+  public static object Expr_50_1_factory(Parser yyp) { return new Expr_50_1(yyp); }
+  /// <exclude/>
+  public static object Expr_16_factory(Parser yyp) { return new Expr_16(yyp); }
+  /// <exclude/>
+  public static object Expr_59_factory(Parser yyp) { return new Expr_59(yyp); }
+  /// <exclude/>
+  public static object Expr_40_factory(Parser yyp) { return new Expr_40(yyp); }
+  /// <exclude/>
+  public static object Expr_66_1_factory(Parser yyp) { return new Expr_66_1(yyp); }
+  /// <exclude/>
+  public static object Expr_40_1_factory(Parser yyp) { return new Expr_40_1(yyp); }
+  /// <exclude/>
+  public static object Expr_27_factory(Parser yyp) { return new Expr_27(yyp); }
+  /// <exclude/>
+  public static object Group_6_1_factory(Parser yyp) { return new Group_6_1(yyp); }
+  /// <exclude/>
+  public static object Group_10_1_factory(Parser yyp) { return new Group_10_1(yyp); }
+  /// <exclude/>
+  public static object Expr_74_factory(Parser yyp) { return new Expr_74(yyp); }
+  /// <exclude/>
+  public static object Expr_70_1_factory(Parser yyp) { return new Expr_70_1(yyp); }
+  /// <exclude/>
+  public static object Expr_52_1_factory(Parser yyp) { return new Expr_52_1(yyp); }
+  /// <exclude/>
+  public static object Expr_10_factory(Parser yyp) { return new Expr_10(yyp); }
+  /// <exclude/>
+  public static object Expr_2_1_factory(Parser yyp) { return new Expr_2_1(yyp); }
+  /// <exclude/>
+  public static object Expr_5_factory(Parser yyp) { return new Expr_5(yyp); }
+  /// <exclude/>
+  public static object Expr_60_1_factory(Parser yyp) { return new Expr_60_1(yyp); }
+  /// <exclude/>
+  public static object Expr_42_1_factory(Parser yyp) { return new Expr_42_1(yyp); }
+  /// <exclude/>
+  public static object Expr_21_factory(Parser yyp) { return new Expr_21(yyp); }
+  /// <exclude/>
+  public static object Expr_68_factory(Parser yyp) { return new Expr_68(yyp); }
+  /// <exclude/>
+  public static object Group_4_1_factory(Parser yyp) { return new Group_4_1(yyp); }
+  /// <exclude/>
+  public static object Expr_22_factory(Parser yyp) { return new Expr_22(yyp); }
+  /// <exclude/>
+  public static object Expr_65_factory(Parser yyp) { return new Expr_65(yyp); }
+  /// <exclude/>
+  public static object Expr_72_1_factory(Parser yyp) { return new Expr_72_1(yyp); }
+  /// <exclude/>
+  public static object SpecDoc_factory(Parser yyp) { return new SpecDoc(yyp); }
+  /// <exclude/>
+  public static object Expr_73_factory(Parser yyp) { return new Expr_73(yyp); }
+  /// <exclude/>
+  public static object SpecDoc_4_1_factory(Parser yyp) { return new SpecDoc_4_1(yyp); }
+  /// <exclude/>
+  public static object Group_8_factory(Parser yyp) { return new Group_8(yyp); }
+  /// <exclude/>
+  public static object Expr_38_factory(Parser yyp) { return new Expr_38(yyp); }
+  /// <exclude/>
+  public static object Expr_56_factory(Parser yyp) { return new Expr_56(yyp); }
+  /// <exclude/>
+  public static object Expr_62_1_factory(Parser yyp) { return new Expr_62_1(yyp); }
+  /// <exclude/>
+  public static object Group_5_factory(Parser yyp) { return new Group_5(yyp); }
+  /// <exclude/>
+  public static object Expr_factory(Parser yyp) { return new Expr(yyp); }
+  /// <exclude/>
+  public static object Expr_35_factory(Parser yyp) { return new Expr_35(yyp); }
+  /// <exclude/>
+  public static object Expr_34_1_factory(Parser yyp) { return new Expr_34_1(yyp); }
+  /// <exclude/>
+  public static object Expr_67_factory(Parser yyp) { return new Expr_67(yyp); }
+  /// <exclude/>
+  public static object Expr_8_1_factory(Parser yyp) { return new Expr_8_1(yyp); }
+  /// <exclude/>
+  public static object Expr_26_1_factory(Parser yyp) { return new Expr_26_1(yyp); }
+  /// <exclude/>
+  public static object Expr_24_1_factory(Parser yyp) { return new Expr_24_1(yyp); }
+  /// <exclude/>
+  public static object Expr_50_factory(Parser yyp) { return new Expr_50(yyp); }
+  /// <exclude/>
+  public static object Expr_6_1_factory(Parser yyp) { return new Expr_6_1(yyp); }
+  /// <exclude/>
+  public static object Expr_54_1_factory(Parser yyp) { return new Expr_54_1(yyp); }
+  /// <exclude/>
+  public static object Expr_61_factory(Parser yyp) { return new Expr_61(yyp); }
+  /// <exclude/>
+  public static object Expr_44_factory(Parser yyp) { return new Expr_44(yyp); }
+  /// <exclude/>
+  public static object Expr_62_factory(Parser yyp) { return new Expr_62(yyp); }
+  /// <exclude/>
+  public static object Expr_44_1_factory(Parser yyp) { return new Expr_44_1(yyp); }
+  /// <exclude/>
+  public static object Expr_37_factory(Parser yyp) { return new Expr_37(yyp); }
+  /// <exclude/>
+  public static object Group_16_1_factory(Parser yyp) { return new Group_16_1(yyp); }
+  /// <exclude/>
+  public static object Expr_2_factory(Parser yyp) { return new Expr_2(yyp); }
+  /// <exclude/>
+  public static object SpecDoc_3_factory(Parser yyp) { return new SpecDoc_3(yyp); }
+  /// <exclude/>
+  public static object Expr_31_factory(Parser yyp) { return new Expr_31(yyp); }
+  /// <exclude/>
+  public static object Expr_78_factory(Parser yyp) { return new Expr_78(yyp); }
+  /// <exclude/>
+  public static object Expr_74_1_factory(Parser yyp) { return new Expr_74_1(yyp); }
+  /// <exclude/>
+  public static object Group_3_factory(Parser yyp) { return new Group_3(yyp); }
+  /// <exclude/>
+  public static object SpecDoc_4_factory(Parser yyp) { return new SpecDoc_4(yyp); }
+  /// <exclude/>
+  public static object Expr_14_factory(Parser yyp) { return new Expr_14(yyp); }
+  /// <exclude/>
+  public static object Expr_32_factory(Parser yyp) { return new Expr_32(yyp); }
+  /// <exclude/>
+  public static object Expr_75_factory(Parser yyp) { return new Expr_75(yyp); }
+  /// <exclude/>
+  public static object Expr_64_1_factory(Parser yyp) { return new Expr_64_1(yyp); }
+  /// <exclude/>
+  public static object Group_17_factory(Parser yyp) { return new Group_17(yyp); }
+  /// <exclude/>
+  public static object Expr_43_factory(Parser yyp) { return new Expr_43(yyp); }
+  /// <exclude/>
+  public static object Group_8_1_factory(Parser yyp) { return new Group_8_1(yyp); }
+  /// <exclude/>
+  public static object Expr_26_factory(Parser yyp) { return new Expr_26(yyp); }
+  /// <exclude/>
+  public static object Expr_69_factory(Parser yyp) { return new Expr_69(yyp); }
+  /// <exclude/>
+  public static object Group_9_factory(Parser yyp) { return new Group_9(yyp); }
+  /// <exclude/>
+  public static object Expr_32_1_factory(Parser yyp) { return new Expr_32_1(yyp); }
+  /// <exclude/>
+  public static object Expr_77_factory(Parser yyp) { return new Expr_77(yyp); }
+  /// <exclude/>
+  public static object Expr_13_factory(Parser yyp) { return new Expr_13(yyp); }
+  /// <exclude/>
+  public static object Expr_76_factory(Parser yyp) { return new Expr_76(yyp); }
+  /// <exclude/>
+  public static object Expr_39_factory(Parser yyp) { return new Expr_39(yyp); }
+  /// <exclude/>
+  public static object Expr_20_factory(Parser yyp) { return new Expr_20(yyp); }
+  /// <exclude/>
+  public static object Group_18_1_factory(Parser yyp) { return new Group_18_1(yyp); }
+  /// <exclude/>
+  public static object Expr_6_factory(Parser yyp) { return new Expr_6(yyp); }
+  /// <exclude/>
+  public static object Expr_71_factory(Parser yyp) { return new Expr_71(yyp); }
+  /// <exclude/>
+  public static object Expr_28_1_factory(Parser yyp) { return new Expr_28_1(yyp); }
+  /// <exclude/>
+  public static object Expr_72_factory(Parser yyp) { return new Expr_72(yyp); }
+  /// <exclude/>
+  public static object Group_12_factory(Parser yyp) { return new Group_12(yyp); }
+  /// <exclude/>
+  public static object SpecDoc_2_1_factory(Parser yyp) { return new SpecDoc_2_1(yyp); }
+  /// <exclude/>
+  public static object Expr_58_1_factory(Parser yyp) { return new Expr_58_1(yyp); }
+  /// <exclude/>
+  public static object Expr_3_factory(Parser yyp) { return new Expr_3(yyp); }
+  /// <exclude/>
+  public static object Expr_54_factory(Parser yyp) { return new Expr_54(yyp); }
+  /// <exclude/>
+  public static object Expr_48_factory(Parser yyp) { return new Expr_48(yyp); }
+  /// <exclude/>
+  public static object Expr_66_factory(Parser yyp) { return new Expr_66(yyp); }
+  /// <exclude/>
+  public static object Expr_48_1_factory(Parser yyp) { return new Expr_48_1(yyp); }
+  /// <exclude/>
+  public static object Expr_45_factory(Parser yyp) { return new Expr_45(yyp); }
+  /// <exclude/>
+  public static object Group_14_1_factory(Parser yyp) { return new Group_14_1(yyp); }
+  /// <exclude/>
+  public static object Expr_53_factory(Parser yyp) { return new Expr_53(yyp); }
+  /// <exclude/>
+  public static object Expr_78_1_factory(Parser yyp) { return new Expr_78_1(yyp); }
+  /// <exclude/>
+  public static object Expr_18_factory(Parser yyp) { return new Expr_18(yyp); }
+  /// <exclude/>
+  public static object Expr_36_factory(Parser yyp) { return new Expr_36(yyp); }
+  /// <exclude/>
+  public static object Group_2_factory(Parser yyp) { return new Group_2(yyp); }
+  /// <exclude/>
+  public static object Expr_60_factory(Parser yyp) { return new Expr_60(yyp); }
+  /// <exclude/>
+  public static object Expr_15_factory(Parser yyp) { return new Expr_15(yyp); }
+  /// <exclude/>
+  public static object Expr_68_1_factory(Parser yyp) { return new Expr_68_1(yyp); }
+  /// <exclude/>
+  public static object Expr_47_factory(Parser yyp) { return new Expr_47(yyp); }
+  /// <exclude/>
+  public static object Group_10_factory(Parser yyp) { return new Group_10(yyp); }
+  /// <exclude/>
+  public static object Expr_9_factory(Parser yyp) { return new Expr_9(yyp); }
+  /// <exclude/>
+  public static object Expr_30_factory(Parser yyp) { return new Expr_30(yyp); }
+  /// <exclude/>
+  public static object Group_16_factory(Parser yyp) { return new Group_16(yyp); }
+  /// <exclude/>
+  public static object SpecDoc_2_factory(Parser yyp) { return new SpecDoc_2(yyp); }
+  /// <exclude/>
+  public static object SpecDoc_1_factory(Parser yyp) { return new SpecDoc_1(yyp); }
+  /// <exclude/>
+  public static object Expr_7_factory(Parser yyp) { return new Expr_7(yyp); }
+  /// <exclude/>
+  public static object Group_13_factory(Parser yyp) { return new Group_13(yyp); }
+  /// <exclude/>
+  public static object Expr_41_factory(Parser yyp) { return new Expr_41(yyp); }
+  /// <exclude/>
+  public static object Expr_25_factory(Parser yyp) { return new Expr_25(yyp); }
+  /// <exclude/>
+  public static object Expr_24_factory(Parser yyp) { return new Expr_24(yyp); }
+  /// <exclude/>
+  public static object Expr_42_factory(Parser yyp) { return new Expr_42(yyp); }
+  /// <exclude/>
+  public static object Expr_63_factory(Parser yyp) { return new Expr_63(yyp); }
+  /// <exclude/>
+  public static object Group_factory(Parser yyp) { return new Group(yyp); }
+  /// <exclude/>
+  public static object Group_15_factory(Parser yyp) { return new Group_15(yyp); }
+  /// <exclude/>
+  public static object Expr_11_factory(Parser yyp) { return new Expr_11(yyp); }
+  /// <exclude/>
+  public static object Expr_58_factory(Parser yyp) { return new Expr_58(yyp); }
+  /// <exclude/>
+  public static object Expr_4_1_factory(Parser yyp) { return new Expr_4_1(yyp); }
+  /// <exclude/>
+  public static object Expr_8_factory(Parser yyp) { return new Expr_8(yyp); }
+  /// <exclude/>
+  public static object Expr_12_factory(Parser yyp) { return new Expr_12(yyp); }
+  /// <exclude/>
+  public static object Expr_55_factory(Parser yyp) { return new Expr_55(yyp); }
+  /// <exclude/>
+  public static object Expr_14_1_factory(Parser yyp) { return new Expr_14_1(yyp); }
+  /// <exclude/>
+  public static object Expr_23_factory(Parser yyp) { return new Expr_23(yyp); }
+  /// <exclude/>
+  public static object Group_2_1_factory(Parser yyp) { return new Group_2_1(yyp); }
+  /// <exclude/>
+  public static object Expr_49_factory(Parser yyp) { return new Expr_49(yyp); }
+  /// <exclude/>
+  public static object Group_12_1_factory(Parser yyp) { return new Group_12_1(yyp); }
+  /// <exclude/>
+  public static object Expr_16_1_factory(Parser yyp) { return new Expr_16_1(yyp); }
+  /// <exclude/>
+  public static object Expr_70_factory(Parser yyp) { return new Expr_70(yyp); }
+  /// <exclude/>
+  public static object Group_18_factory(Parser yyp) { return new Group_18(yyp); }
+  /// <exclude/>
+  public static object Expr_57_factory(Parser yyp) { return new Expr_57(yyp); }
+  /// <exclude/>
+  public static object Expr_17_factory(Parser yyp) { return new Expr_17(yyp); }
+  /// <exclude/>
+  public static object Group_6_factory(Parser yyp) { return new Group_6(yyp); }
+  /// <exclude/>
+  public static object Expr_64_factory(Parser yyp) { return new Expr_64(yyp); }
+  /// <exclude/>
+  public static object Expr_19_factory(Parser yyp) { return new Expr_19(yyp); }
+  /// <exclude/>
+  public static object Group_7_factory(Parser yyp) { return new Group_7(yyp); }
+  /// <exclude/>
+  public static object Expr_36_1_factory(Parser yyp) { return new Expr_36_1(yyp); }
+  /// <exclude/>
+  public static object Expr_10_1_factory(Parser yyp) { return new Expr_10_1(yyp); }
+  /// <exclude/>
+  public static object Expr_12_1_factory(Parser yyp) { return new Expr_12_1(yyp); }
+  /// <exclude/>
+  public static object Expr_4_factory(Parser yyp) { return new Expr_4(yyp); }
+  /// <exclude/>
+  public static object Expr_22_1_factory(Parser yyp) { return new Expr_22_1(yyp); }
+  /// <exclude/>
+  public static object Expr_51_factory(Parser yyp) { return new Expr_51(yyp); }
+  /// <exclude/>
+  public static object Expr_29_factory(Parser yyp) { return new Expr_29(yyp); }
+  /// <exclude/>
+  public static object Expr_34_factory(Parser yyp) { return new Expr_34(yyp); }
+  /// <exclude/>
+  public static object Group_14_factory(Parser yyp) { return new Group_14(yyp); }
+  /// <exclude/>
+  public static object Expr_52_factory(Parser yyp) { return new Expr_52(yyp); }
+  /// <exclude/>
+  public static object Group_11_factory(Parser yyp) { return new Group_11(yyp); }
+  /// <exclude/>
+  public static object Expr_56_1_factory(Parser yyp) { return new Expr_56_1(yyp); }
+  /// <exclude/>
+  public static object Expr_30_1_factory(Parser yyp) { return new Expr_30_1(yyp); }
+  /// <exclude/>
+  public static object Expr_1_factory(Parser yyp) { return new Expr_1(yyp); }
+  /// <exclude/>
+  public static object Group_4_factory(Parser yyp) { return new Group_4(yyp); }
+  /// <exclude/>
+  public static object Expr_28_factory(Parser yyp) { return new Expr_28(yyp); }
+  /// <exclude/>
+  public static object Group_1_factory(Parser yyp) { return new Group_1(yyp); }
+  /// <exclude/>
+  public static object Expr_46_factory(Parser yyp) { return new Expr_46(yyp); }
 }
 /// <exclude/>
-public static object Expr_46_1_factory(Parser yyp) { return new Expr_46_1(yyp); }
-/// <exclude/>
-public static object Expr_20_1_factory(Parser yyp) { return new Expr_20_1(yyp); }
-/// <exclude/>
-public static object error_factory(Parser yyp) { return new error(yyp); }
-/// <exclude/>
-public static object Expr_18_1_factory(Parser yyp) { return new Expr_18_1(yyp); }
-/// <exclude/>
-public static object Expr_38_1_factory(Parser yyp) { return new Expr_38_1(yyp); }
-/// <exclude/>
-public static object Expr_33_factory(Parser yyp) { return new Expr_33(yyp); }
-/// <exclude/>
-public static object Expr_76_1_factory(Parser yyp) { return new Expr_76_1(yyp); }
-/// <exclude/>
-public static object Expr_50_1_factory(Parser yyp) { return new Expr_50_1(yyp); }
-/// <exclude/>
-public static object Expr_16_factory(Parser yyp) { return new Expr_16(yyp); }
-/// <exclude/>
-public static object Expr_59_factory(Parser yyp) { return new Expr_59(yyp); }
-/// <exclude/>
-public static object Expr_40_factory(Parser yyp) { return new Expr_40(yyp); }
-/// <exclude/>
-public static object Expr_66_1_factory(Parser yyp) { return new Expr_66_1(yyp); }
-/// <exclude/>
-public static object Expr_40_1_factory(Parser yyp) { return new Expr_40_1(yyp); }
-/// <exclude/>
-public static object Expr_27_factory(Parser yyp) { return new Expr_27(yyp); }
-/// <exclude/>
-public static object Group_6_1_factory(Parser yyp) { return new Group_6_1(yyp); }
-/// <exclude/>
-public static object Group_10_1_factory(Parser yyp) { return new Group_10_1(yyp); }
-/// <exclude/>
-public static object Expr_74_factory(Parser yyp) { return new Expr_74(yyp); }
-/// <exclude/>
-public static object Expr_70_1_factory(Parser yyp) { return new Expr_70_1(yyp); }
-/// <exclude/>
-public static object Expr_52_1_factory(Parser yyp) { return new Expr_52_1(yyp); }
-/// <exclude/>
-public static object Expr_10_factory(Parser yyp) { return new Expr_10(yyp); }
-/// <exclude/>
-public static object Expr_2_1_factory(Parser yyp) { return new Expr_2_1(yyp); }
-/// <exclude/>
-public static object Expr_5_factory(Parser yyp) { return new Expr_5(yyp); }
-/// <exclude/>
-public static object Expr_60_1_factory(Parser yyp) { return new Expr_60_1(yyp); }
-/// <exclude/>
-public static object Expr_42_1_factory(Parser yyp) { return new Expr_42_1(yyp); }
-/// <exclude/>
-public static object Expr_21_factory(Parser yyp) { return new Expr_21(yyp); }
-/// <exclude/>
-public static object Expr_68_factory(Parser yyp) { return new Expr_68(yyp); }
-/// <exclude/>
-public static object Group_4_1_factory(Parser yyp) { return new Group_4_1(yyp); }
-/// <exclude/>
-public static object Expr_22_factory(Parser yyp) { return new Expr_22(yyp); }
-/// <exclude/>
-public static object Expr_65_factory(Parser yyp) { return new Expr_65(yyp); }
-/// <exclude/>
-public static object Expr_72_1_factory(Parser yyp) { return new Expr_72_1(yyp); }
-/// <exclude/>
-public static object SpecDoc_factory(Parser yyp) { return new SpecDoc(yyp); }
-/// <exclude/>
-public static object Expr_73_factory(Parser yyp) { return new Expr_73(yyp); }
-/// <exclude/>
-public static object SpecDoc_4_1_factory(Parser yyp) { return new SpecDoc_4_1(yyp); }
-/// <exclude/>
-public static object Group_8_factory(Parser yyp) { return new Group_8(yyp); }
-/// <exclude/>
-public static object Expr_38_factory(Parser yyp) { return new Expr_38(yyp); }
-/// <exclude/>
-public static object Expr_56_factory(Parser yyp) { return new Expr_56(yyp); }
-/// <exclude/>
-public static object Expr_62_1_factory(Parser yyp) { return new Expr_62_1(yyp); }
-/// <exclude/>
-public static object Group_5_factory(Parser yyp) { return new Group_5(yyp); }
-/// <exclude/>
-public static object Expr_factory(Parser yyp) { return new Expr(yyp); }
-/// <exclude/>
-public static object Expr_35_factory(Parser yyp) { return new Expr_35(yyp); }
-/// <exclude/>
-public static object Expr_34_1_factory(Parser yyp) { return new Expr_34_1(yyp); }
-/// <exclude/>
-public static object Expr_67_factory(Parser yyp) { return new Expr_67(yyp); }
-/// <exclude/>
-public static object Expr_8_1_factory(Parser yyp) { return new Expr_8_1(yyp); }
-/// <exclude/>
-public static object Expr_26_1_factory(Parser yyp) { return new Expr_26_1(yyp); }
-/// <exclude/>
-public static object Expr_24_1_factory(Parser yyp) { return new Expr_24_1(yyp); }
-/// <exclude/>
-public static object Expr_50_factory(Parser yyp) { return new Expr_50(yyp); }
-/// <exclude/>
-public static object Expr_6_1_factory(Parser yyp) { return new Expr_6_1(yyp); }
-/// <exclude/>
-public static object Expr_54_1_factory(Parser yyp) { return new Expr_54_1(yyp); }
-/// <exclude/>
-public static object Expr_61_factory(Parser yyp) { return new Expr_61(yyp); }
-/// <exclude/>
-public static object Expr_44_factory(Parser yyp) { return new Expr_44(yyp); }
-/// <exclude/>
-public static object Expr_62_factory(Parser yyp) { return new Expr_62(yyp); }
-/// <exclude/>
-public static object Expr_44_1_factory(Parser yyp) { return new Expr_44_1(yyp); }
-/// <exclude/>
-public static object Expr_37_factory(Parser yyp) { return new Expr_37(yyp); }
-/// <exclude/>
-public static object Group_16_1_factory(Parser yyp) { return new Group_16_1(yyp); }
-/// <exclude/>
-public static object Expr_2_factory(Parser yyp) { return new Expr_2(yyp); }
-/// <exclude/>
-public static object SpecDoc_3_factory(Parser yyp) { return new SpecDoc_3(yyp); }
-/// <exclude/>
-public static object Expr_31_factory(Parser yyp) { return new Expr_31(yyp); }
-/// <exclude/>
-public static object Expr_78_factory(Parser yyp) { return new Expr_78(yyp); }
-/// <exclude/>
-public static object Expr_74_1_factory(Parser yyp) { return new Expr_74_1(yyp); }
-/// <exclude/>
-public static object Group_3_factory(Parser yyp) { return new Group_3(yyp); }
-/// <exclude/>
-public static object SpecDoc_4_factory(Parser yyp) { return new SpecDoc_4(yyp); }
-/// <exclude/>
-public static object Expr_14_factory(Parser yyp) { return new Expr_14(yyp); }
-/// <exclude/>
-public static object Expr_32_factory(Parser yyp) { return new Expr_32(yyp); }
-/// <exclude/>
-public static object Expr_75_factory(Parser yyp) { return new Expr_75(yyp); }
-/// <exclude/>
-public static object Expr_64_1_factory(Parser yyp) { return new Expr_64_1(yyp); }
-/// <exclude/>
-public static object Group_17_factory(Parser yyp) { return new Group_17(yyp); }
-/// <exclude/>
-public static object Expr_43_factory(Parser yyp) { return new Expr_43(yyp); }
-/// <exclude/>
-public static object Group_8_1_factory(Parser yyp) { return new Group_8_1(yyp); }
-/// <exclude/>
-public static object Expr_26_factory(Parser yyp) { return new Expr_26(yyp); }
-/// <exclude/>
-public static object Expr_69_factory(Parser yyp) { return new Expr_69(yyp); }
-/// <exclude/>
-public static object Group_9_factory(Parser yyp) { return new Group_9(yyp); }
-/// <exclude/>
-public static object Expr_32_1_factory(Parser yyp) { return new Expr_32_1(yyp); }
-/// <exclude/>
-public static object Expr_77_factory(Parser yyp) { return new Expr_77(yyp); }
-/// <exclude/>
-public static object Expr_13_factory(Parser yyp) { return new Expr_13(yyp); }
-/// <exclude/>
-public static object Expr_76_factory(Parser yyp) { return new Expr_76(yyp); }
-/// <exclude/>
-public static object Expr_39_factory(Parser yyp) { return new Expr_39(yyp); }
-/// <exclude/>
-public static object Expr_20_factory(Parser yyp) { return new Expr_20(yyp); }
-/// <exclude/>
-public static object Group_18_1_factory(Parser yyp) { return new Group_18_1(yyp); }
-/// <exclude/>
-public static object Expr_6_factory(Parser yyp) { return new Expr_6(yyp); }
-/// <exclude/>
-public static object Expr_71_factory(Parser yyp) { return new Expr_71(yyp); }
-/// <exclude/>
-public static object Expr_28_1_factory(Parser yyp) { return new Expr_28_1(yyp); }
-/// <exclude/>
-public static object Expr_72_factory(Parser yyp) { return new Expr_72(yyp); }
-/// <exclude/>
-public static object Group_12_factory(Parser yyp) { return new Group_12(yyp); }
-/// <exclude/>
-public static object SpecDoc_2_1_factory(Parser yyp) { return new SpecDoc_2_1(yyp); }
-/// <exclude/>
-public static object Expr_58_1_factory(Parser yyp) { return new Expr_58_1(yyp); }
-/// <exclude/>
-public static object Expr_3_factory(Parser yyp) { return new Expr_3(yyp); }
-/// <exclude/>
-public static object Expr_54_factory(Parser yyp) { return new Expr_54(yyp); }
-/// <exclude/>
-public static object Expr_48_factory(Parser yyp) { return new Expr_48(yyp); }
-/// <exclude/>
-public static object Expr_66_factory(Parser yyp) { return new Expr_66(yyp); }
-/// <exclude/>
-public static object Expr_48_1_factory(Parser yyp) { return new Expr_48_1(yyp); }
-/// <exclude/>
-public static object Expr_45_factory(Parser yyp) { return new Expr_45(yyp); }
-/// <exclude/>
-public static object Group_14_1_factory(Parser yyp) { return new Group_14_1(yyp); }
-/// <exclude/>
-public static object Expr_53_factory(Parser yyp) { return new Expr_53(yyp); }
-/// <exclude/>
-public static object Expr_78_1_factory(Parser yyp) { return new Expr_78_1(yyp); }
-/// <exclude/>
-public static object Expr_18_factory(Parser yyp) { return new Expr_18(yyp); }
-/// <exclude/>
-public static object Expr_36_factory(Parser yyp) { return new Expr_36(yyp); }
-/// <exclude/>
-public static object Group_2_factory(Parser yyp) { return new Group_2(yyp); }
-/// <exclude/>
-public static object Expr_60_factory(Parser yyp) { return new Expr_60(yyp); }
-/// <exclude/>
-public static object Expr_15_factory(Parser yyp) { return new Expr_15(yyp); }
-/// <exclude/>
-public static object Expr_68_1_factory(Parser yyp) { return new Expr_68_1(yyp); }
-/// <exclude/>
-public static object Expr_47_factory(Parser yyp) { return new Expr_47(yyp); }
-/// <exclude/>
-public static object Group_10_factory(Parser yyp) { return new Group_10(yyp); }
-/// <exclude/>
-public static object Expr_9_factory(Parser yyp) { return new Expr_9(yyp); }
-/// <exclude/>
-public static object Expr_30_factory(Parser yyp) { return new Expr_30(yyp); }
-/// <exclude/>
-public static object Group_16_factory(Parser yyp) { return new Group_16(yyp); }
-/// <exclude/>
-public static object SpecDoc_2_factory(Parser yyp) { return new SpecDoc_2(yyp); }
-/// <exclude/>
-public static object SpecDoc_1_factory(Parser yyp) { return new SpecDoc_1(yyp); }
-/// <exclude/>
-public static object Expr_7_factory(Parser yyp) { return new Expr_7(yyp); }
-/// <exclude/>
-public static object Group_13_factory(Parser yyp) { return new Group_13(yyp); }
-/// <exclude/>
-public static object Expr_41_factory(Parser yyp) { return new Expr_41(yyp); }
-/// <exclude/>
-public static object Expr_25_factory(Parser yyp) { return new Expr_25(yyp); }
-/// <exclude/>
-public static object Expr_24_factory(Parser yyp) { return new Expr_24(yyp); }
-/// <exclude/>
-public static object Expr_42_factory(Parser yyp) { return new Expr_42(yyp); }
-/// <exclude/>
-public static object Expr_63_factory(Parser yyp) { return new Expr_63(yyp); }
-/// <exclude/>
-public static object Group_factory(Parser yyp) { return new Group(yyp); }
-/// <exclude/>
-public static object Group_15_factory(Parser yyp) { return new Group_15(yyp); }
-/// <exclude/>
-public static object Expr_11_factory(Parser yyp) { return new Expr_11(yyp); }
-/// <exclude/>
-public static object Expr_58_factory(Parser yyp) { return new Expr_58(yyp); }
-/// <exclude/>
-public static object Expr_4_1_factory(Parser yyp) { return new Expr_4_1(yyp); }
-/// <exclude/>
-public static object Expr_8_factory(Parser yyp) { return new Expr_8(yyp); }
-/// <exclude/>
-public static object Expr_12_factory(Parser yyp) { return new Expr_12(yyp); }
-/// <exclude/>
-public static object Expr_55_factory(Parser yyp) { return new Expr_55(yyp); }
-/// <exclude/>
-public static object Expr_14_1_factory(Parser yyp) { return new Expr_14_1(yyp); }
-/// <exclude/>
-public static object Expr_23_factory(Parser yyp) { return new Expr_23(yyp); }
-/// <exclude/>
-public static object Group_2_1_factory(Parser yyp) { return new Group_2_1(yyp); }
-/// <exclude/>
-public static object Expr_49_factory(Parser yyp) { return new Expr_49(yyp); }
-/// <exclude/>
-public static object Group_12_1_factory(Parser yyp) { return new Group_12_1(yyp); }
-/// <exclude/>
-public static object Expr_16_1_factory(Parser yyp) { return new Expr_16_1(yyp); }
-/// <exclude/>
-public static object Expr_70_factory(Parser yyp) { return new Expr_70(yyp); }
-/// <exclude/>
-public static object Group_18_factory(Parser yyp) { return new Group_18(yyp); }
-/// <exclude/>
-public static object Expr_57_factory(Parser yyp) { return new Expr_57(yyp); }
-/// <exclude/>
-public static object Expr_17_factory(Parser yyp) { return new Expr_17(yyp); }
-/// <exclude/>
-public static object Group_6_factory(Parser yyp) { return new Group_6(yyp); }
-/// <exclude/>
-public static object Expr_64_factory(Parser yyp) { return new Expr_64(yyp); }
-/// <exclude/>
-public static object Expr_19_factory(Parser yyp) { return new Expr_19(yyp); }
-/// <exclude/>
-public static object Group_7_factory(Parser yyp) { return new Group_7(yyp); }
-/// <exclude/>
-public static object Expr_36_1_factory(Parser yyp) { return new Expr_36_1(yyp); }
-/// <exclude/>
-public static object Expr_10_1_factory(Parser yyp) { return new Expr_10_1(yyp); }
-/// <exclude/>
-public static object Expr_12_1_factory(Parser yyp) { return new Expr_12_1(yyp); }
-/// <exclude/>
-public static object Expr_4_factory(Parser yyp) { return new Expr_4(yyp); }
-/// <exclude/>
-public static object Expr_22_1_factory(Parser yyp) { return new Expr_22_1(yyp); }
-/// <exclude/>
-public static object Expr_51_factory(Parser yyp) { return new Expr_51(yyp); }
-/// <exclude/>
-public static object Expr_29_factory(Parser yyp) { return new Expr_29(yyp); }
-/// <exclude/>
-public static object Expr_34_factory(Parser yyp) { return new Expr_34(yyp); }
-/// <exclude/>
-public static object Group_14_factory(Parser yyp) { return new Group_14(yyp); }
-/// <exclude/>
-public static object Expr_52_factory(Parser yyp) { return new Expr_52(yyp); }
-/// <exclude/>
-public static object Group_11_factory(Parser yyp) { return new Group_11(yyp); }
-/// <exclude/>
-public static object Expr_56_1_factory(Parser yyp) { return new Expr_56_1(yyp); }
-/// <exclude/>
-public static object Expr_30_1_factory(Parser yyp) { return new Expr_30_1(yyp); }
-/// <exclude/>
-public static object Expr_1_factory(Parser yyp) { return new Expr_1(yyp); }
-/// <exclude/>
-public static object Group_4_factory(Parser yyp) { return new Group_4(yyp); }
-/// <exclude/>
-public static object Expr_28_factory(Parser yyp) { return new Expr_28(yyp); }
-/// <exclude/>
-public static object Group_1_factory(Parser yyp) { return new Group_1(yyp); }
-/// <exclude/>
-public static object Expr_46_factory(Parser yyp) { return new Expr_46(yyp); }
-}
-/// <exclude/>
-public class syntax: Parser {
-/// <exclude/>
-public syntax():base(new yysyntax(),new Exam()) {}
-/// <exclude/>
-public syntax(YyParser syms):base(syms,new Exam()) {}
-/// <exclude/>
-public syntax(YyParser syms,ErrorHandler erh):base(syms,new Exam(erh)) {}
+public class syntax : Parser
+{
+  /// <exclude/>
+  public syntax() : base(new yysyntax(), new Exam()) { }
+  /// <exclude/>
+  public syntax(YyParser syms) : base(syms, new Exam()) { }
+  /// <exclude/>
+  public syntax(YyParser syms, ErrorHandler erh) : base(syms, new Exam(erh)) { }
 
- }
+}

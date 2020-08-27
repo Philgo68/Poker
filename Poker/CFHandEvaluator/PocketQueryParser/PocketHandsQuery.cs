@@ -19,83 +19,79 @@
 // Written (ported) by Keith Rule - Sept 2005, updated May 2006
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using Tools;
 
 namespace Poker.CFHandEvaluator
 {
+  /// <summary>
+  /// Represents a set of pocket hands and operations that
+  /// can be applied to them.
+  /// </summary>
+  public partial class PocketHands
+  {
     /// <summary>
-    /// Represents a set of pocket hands and operations that
-    /// can be applied to them.
+    /// This function allows a text description (or query) of set 
+    /// of pocket hands to be specified such that all of the hands that match
+    /// this query (minus the hands containing any of the cards in the 
+    /// dead mask) will be returned.
     /// </summary>
-    public partial class PocketHands 
+    /// <param name="dead">card mask for dead cards</param>
+    /// <param name="s">string defining PocketHands query</param>
+    /// <returns></returns>
+    static public PocketHands Query(string s, ulong dead)
     {
-        /// <summary>
-        /// This function allows a text description (or query) of set 
-        /// of pocket hands to be specified such that all of the hands that match
-        /// this query (minus the hands containing any of the cards in the 
-        /// dead mask) will be returned.
-        /// </summary>
-        /// <param name="dead">card mask for dead cards</param>
-        /// <param name="s">string defining PocketHands query</param>
-        /// <returns></returns>
-        static public PocketHands Query(string s, ulong dead)
-        {
-            return Query(s) - dead;
-        }
-
-        
-       /// <summary>
-       /// 
-       /// </summary>
-       /// <param name="s"></param>
-       /// <param name="dead"></param>
-       /// <returns></returns>
-        static public bool ValidateQuery(string s, ulong dead)
-        {
-            try
-            {
-                return Query(s, dead).Count > 0;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        static public bool ValidateQuery(string s)
-        {
-            return ValidateQuery(s, 0UL);
-        }
-
-        /// <summary>
-        /// This function allows a text description (or query) of set 
-        /// of pocket hands to be specified such that all of the hands that match
-        /// this query will be returned.
-        /// </summary>
-        /// <param name="s">Query String</param>
-        /// <returns></returns>
-        static public PocketHands Query(string s)
-        {
-            try
-            {
-                syntax p = new syntax();
-                // For debugging the parser
-                //p.m_debug = true;
-                object obj = p.Parse(s);
-                return (PocketHands)((Expr)((SpecDoc)obj).yylval).yylval;
-            }
-            catch
-            {
-                throw new ArgumentException("Syntax Error");
-            }
-        }
+      return Query(s) - dead;
     }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="dead"></param>
+    /// <returns></returns>
+    static public bool ValidateQuery(string s, ulong dead)
+    {
+      try
+      {
+        return Query(s, dead).Count > 0;
+      }
+      catch
+      {
+        return false;
+      }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    static public bool ValidateQuery(string s)
+    {
+      return ValidateQuery(s, 0UL);
+    }
+
+    /// <summary>
+    /// This function allows a text description (or query) of set 
+    /// of pocket hands to be specified such that all of the hands that match
+    /// this query will be returned.
+    /// </summary>
+    /// <param name="s">Query String</param>
+    /// <returns></returns>
+    static public PocketHands Query(string s)
+    {
+      try
+      {
+        syntax p = new syntax();
+        // For debugging the parser
+        //p.m_debug = true;
+        object obj = p.Parse(s);
+        return (PocketHands)((Expr)((SpecDoc)obj).yylval).yylval;
+      }
+      catch
+      {
+        throw new ArgumentException("Syntax Error");
+      }
+    }
+  }
 }

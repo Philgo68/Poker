@@ -1,18 +1,14 @@
-using System;
 using System.Collections;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
 //using System.Runtime.Serialization.Formatters.Binary;
 
 
 namespace Tools
 {
+  /// <exclude/>
+  public abstract class LNode
+  {
     /// <exclude/>
-	public abstract class LNode
-	{
-        /// <exclude/>
-		public int m_state;
+    public int m_state;
 #if (GENTIME)
         /// <exclude/>
 		public TokensGen m_tks;
@@ -23,62 +19,62 @@ namespace Tools
 			m_state = tks.NewState(); 
 		}
 #endif
-        /// <exclude/>
-		protected LNode() {}
-	}
-
     /// <exclude/>
-	public class TokClassDef
-	{
-//#if (GENTIME)
-        /// <exclude/>
-		public string m_refToken = "";
-        /// <exclude/>
-		public string m_initialisation = "";
-        /// <exclude/>
-		public string m_implement = "";
-        /// <exclude/>
-		public TokClassDef(GenBase gbs,string name,string bas) 
-		{ 
-			if (gbs is TokensGen) 
-			{
-				TokensGen tks = (TokensGen) gbs;
-				m_name = name; 
-				tks.m_tokens.tokens[name] = this; 
-				m_refToken = bas; 
-			}
-			m_yynum = ++gbs.LastSymbol;
-		}
-//#endif
-        /// <exclude/>
-        TokClassDef() {}
-        /// <exclude/>
-		public string m_name = "";
-        /// <exclude/>
-		public int m_yynum = 0;
-        /// <exclude/>
-		public static object Serialise(object o,Serialiser s)
-		{
-			if (s==null)
-				return new TokClassDef();
-			TokClassDef t = (TokClassDef)o;
-			if (s.Encode) 
-			{
-				s.Serialise(t.m_name);
-				s.Serialise(t.m_yynum);
-				return null;
-			}
-			t.m_name = (string)s.Deserialise();
-			t.m_yynum = (int)s.Deserialise();
-			return t;
-		}
-	}
+    protected LNode() { }
+  }
 
+  /// <exclude/>
+  public class TokClassDef
+  {
+    //#if (GENTIME)
     /// <exclude/>
-	public class Dfa : LNode
-	{
-        /// <exclude/>
-		Dfa() {}
+    public string m_refToken = "";
+    /// <exclude/>
+    public string m_initialisation = "";
+    /// <exclude/>
+    public string m_implement = "";
+    /// <exclude/>
+    public TokClassDef(GenBase gbs, string name, string bas)
+    {
+      if (gbs is TokensGen)
+      {
+        TokensGen tks = (TokensGen)gbs;
+        m_name = name;
+        tks.m_tokens.tokens[name] = this;
+        m_refToken = bas;
+      }
+      m_yynum = ++gbs.LastSymbol;
+    }
+    //#endif
+    /// <exclude/>
+    TokClassDef() { }
+    /// <exclude/>
+    public string m_name = "";
+    /// <exclude/>
+    public int m_yynum = 0;
+    /// <exclude/>
+    public static object Serialise(object o, Serialiser s)
+    {
+      if (s == null)
+        return new TokClassDef();
+      TokClassDef t = (TokClassDef)o;
+      if (s.Encode)
+      {
+        s.Serialise(t.m_name);
+        s.Serialise(t.m_yynum);
+        return null;
+      }
+      t.m_name = (string)s.Deserialise();
+      t.m_yynum = (int)s.Deserialise();
+      return t;
+    }
+  }
+
+  /// <exclude/>
+  public class Dfa : LNode
+  {
+    /// <exclude/>
+    Dfa() { }
 #if (GENTIME)
         /// <exclude/>
 		public Dfa(TokensGen tks) : base(tks) 
@@ -86,54 +82,54 @@ namespace Tools
 			m_tokens = tks.m_tokens;
 		}
 #endif
-        /// <exclude/>
-        YyLexer m_tokens = null;
-        /// <exclude/>
-		public static void SetTokens(YyLexer tks, Hashtable h) // needed after deserialisation
-		{
-			foreach (Dfa v in h.Values)
-			{
-				if (v.m_tokens!=null)
-					continue;
-				v.m_tokens = tks;
-				Dfa.SetTokens(tks,v.m_map);
-			}
-		}
-        /// <exclude/>
-		public Hashtable m_map = new Hashtable(); // char->Dfa: arcs leaving this node
-        /// <exclude/>
-        public class Action 
-		{
-            /// <exclude/>
-			public int a_act;
-            /// <exclude/>
-			public Action a_next;
-            /// <exclude/>
-			public Action(int act,Action next) { a_act = act; a_next = next; }
-			Action() {}
-            /// <exclude/>
-			public static object Serialise(object o,Serialiser s)
-			{
-				if (s==null)
-					return new Action();
-				Action a = (Action)o;
-				if (s.Encode)
-				{
-					s.Serialise(a.a_act);
-					s.Serialise(a.a_next);
-					return null;
-				}
-				a.a_act = (int)s.Deserialise();
-				a.a_next = (Action)s.Deserialise();
-				return a;
-			}
-		}
-        /// <exclude/>
-		public string m_tokClass = ""; // token class name if m_actions!=null
-        /// <exclude/>
-		public Action m_actions = null; // for old-style REJECT
-        /// <exclude/>
-		public int m_reswds = -1; // 4.7 for ResWds handling
+    /// <exclude/>
+    YyLexer m_tokens = null;
+    /// <exclude/>
+    public static void SetTokens(YyLexer tks, Hashtable h) // needed after deserialisation
+    {
+      foreach (Dfa v in h.Values)
+      {
+        if (v.m_tokens != null)
+          continue;
+        v.m_tokens = tks;
+        Dfa.SetTokens(tks, v.m_map);
+      }
+    }
+    /// <exclude/>
+    public Hashtable m_map = new Hashtable(); // char->Dfa: arcs leaving this node
+    /// <exclude/>
+    public class Action
+    {
+      /// <exclude/>
+      public int a_act;
+      /// <exclude/>
+      public Action a_next;
+      /// <exclude/>
+      public Action(int act, Action next) { a_act = act; a_next = next; }
+      Action() { }
+      /// <exclude/>
+      public static object Serialise(object o, Serialiser s)
+      {
+        if (s == null)
+          return new Action();
+        Action a = (Action)o;
+        if (s.Encode)
+        {
+          s.Serialise(a.a_act);
+          s.Serialise(a.a_next);
+          return null;
+        }
+        a.a_act = (int)s.Deserialise();
+        a.a_next = (Action)s.Deserialise();
+        return a;
+      }
+    }
+    /// <exclude/>
+    public string m_tokClass = ""; // token class name if m_actions!=null
+    /// <exclude/>
+    public Action m_actions = null; // for old-style REJECT
+    /// <exclude/>
+    public int m_reswds = -1; // 4.7 for ResWds handling
 #if (GENTIME)
         /// <exclude/>
 		void AddAction(int act) 
@@ -352,29 +348,29 @@ namespace Tools
 			}
 		}
 #endif
-        /// <exclude/>
-        public static object Serialise(object o,Serialiser s)
-		{
-			if (s==null)
-				return new Dfa();
-			Dfa d = (Dfa)o;
-			if (s.Encode)
-			{
-				s.Serialise(d.m_state);
-				s.Serialise(d.m_map);
-				s.Serialise(d.m_actions);
-				s.Serialise(d.m_tokClass);
-				s.Serialise(d.m_reswds);
-				return null;
-			}
-			d.m_state = (int)s.Deserialise();
-			d.m_map = (Hashtable)s.Deserialise();
-			d.m_actions = (Action)s.Deserialise();
-			d.m_tokClass = (string)s.Deserialise();
-			d.m_reswds = (int)s.Deserialise();
-			return d;
-		}
-	}
+    /// <exclude/>
+    public static object Serialise(object o, Serialiser s)
+    {
+      if (s == null)
+        return new Dfa();
+      Dfa d = (Dfa)o;
+      if (s.Encode)
+      {
+        s.Serialise(d.m_state);
+        s.Serialise(d.m_map);
+        s.Serialise(d.m_actions);
+        s.Serialise(d.m_tokClass);
+        s.Serialise(d.m_reswds);
+        return null;
+      }
+      d.m_state = (int)s.Deserialise();
+      d.m_map = (Hashtable)s.Deserialise();
+      d.m_actions = (Action)s.Deserialise();
+      d.m_tokClass = (string)s.Deserialise();
+      d.m_reswds = (int)s.Deserialise();
+      return d;
+    }
+  }
 #if (GENTIME)
     /// <exclude/>
 	public class Regex
@@ -1203,15 +1199,15 @@ namespace Tools
 		public bool AtEnd { get { return m_node==null; } }
 	}
 #endif
+  /// <exclude/>
+  public class ResWds
+  {
     /// <exclude/>
-    public class ResWds
-	{
-        /// <exclude/>
-		public bool m_upper = false;
-        /// <exclude/>
-		public Hashtable m_wds = new Hashtable(); // string->string (token class name)
-        /// <exclude/>
-        public ResWds() {}
+    public bool m_upper = false;
+    /// <exclude/>
+    public Hashtable m_wds = new Hashtable(); // string->string (token class name)
+    /// <exclude/>
+    public ResWds() { }
 #if (GENTIME)
         /// <exclude/>
 		public static ResWds New(TokensGen tks,string str)
@@ -1254,32 +1250,32 @@ namespace Tools
 			return null;
 		}
 #endif
-        /// <exclude/>
-		public void Check(Lexer yyl,ref TOKEN tok)
-		{
-			string str = tok.yytext;
-			if (m_upper)
-				str = str.ToUpper();
-			object o = m_wds[str];
-			if (o==null)
-				return;
-			tok = (TOKEN)Tfactory.create((string)o,yyl);
-		}
-        /// <exclude/>
-		public static object Serialise(object o,Serialiser s)
-		{
-			if (s==null)
-				return new ResWds();
-			ResWds r = (ResWds)o;
-			if (s.Encode)
-			{
-				s.Serialise(r.m_upper);
-				s.Serialise(r.m_wds);
-				return null;
-			}
-			r.m_upper = (bool)s.Deserialise();
-			r.m_wds = (Hashtable)s.Deserialise();
-			return r;
-		}
-	}
+    /// <exclude/>
+    public void Check(Lexer yyl, ref TOKEN tok)
+    {
+      string str = tok.yytext;
+      if (m_upper)
+        str = str.ToUpper();
+      object o = m_wds[str];
+      if (o == null)
+        return;
+      tok = (TOKEN)Tfactory.create((string)o, yyl);
+    }
+    /// <exclude/>
+    public static object Serialise(object o, Serialiser s)
+    {
+      if (s == null)
+        return new ResWds();
+      ResWds r = (ResWds)o;
+      if (s.Encode)
+      {
+        s.Serialise(r.m_upper);
+        s.Serialise(r.m_wds);
+        return null;
+      }
+      r.m_upper = (bool)s.Deserialise();
+      r.m_wds = (Hashtable)s.Deserialise();
+      return r;
+    }
+  }
 }
