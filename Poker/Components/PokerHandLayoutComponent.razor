@@ -1,123 +1,133 @@
 ﻿@inject SvgCards svgCards
+@inject IJSRuntime JSRuntime
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="layout-cards">
 
-<div class="layout-cards">
+            @{
+                int i = 0;
+                <div class="hand-area">
 
-    @{
-        int i = 0;
-        <div class="hand-area">
-
-            @for (int c = 0; c < TopHand.CardCount; c++)
-            {
-                var card = i;
-                <div @ondragstart="(e)=>Ondragstart(e, Cards[card])" ondragover="event.preventDefault();" @ondrop="(e)=>Ondrop(e, Cards[card])" draggable="true" class="draggable svg-card-wrapper card-0">
-                    @(svgCards.Faces[Cards[card]])
+                    @for (int c = 0; c < TopHand.CardCount; c++)
+                    {
+                        var card = i;
+                        <div @ondragstart="(e)=>Ondragstart(e, Cards[card])" ondragover="event.preventDefault();" @ondrop="(e)=>Ondrop(e, Cards[card])" draggable="true" class="draggable svg-card-wrapper card-0">
+                            @(svgCards.Faces[Cards[card]])
+                        </div>
+                        i++;
+                    }
                 </div>
-                i++;
+            }
+            @{
+                <div class="w-100"></div>
+                <div class="hand-area">
+                    @for (int c = 0; c < MiddleHand.CardCount; c++)
+                    {
+                        var card = i;
+                        <div @ondragstart="(e)=>Ondragstart(e, Cards[card])" ondragover="event.preventDefault();" @ondrop="(e)=>Ondrop(e, Cards[card])" draggable="true" class="draggable svg-card-wrapper card-0">
+                            @(svgCards.Faces[Cards[card]])
+                        </div>
+                        i++;
+                    }
+                </div>
+            }
+            @{
+                <div class="w-100"></div>
+                <div class="hand-area">
+                    @for (int c = 0; c < BottomHand.CardCount; c++)
+                    {
+                        var card = i;
+                        <div @ondragstart="(e)=>Ondragstart(e, Cards[card])" ondragover="event.preventDefault();" @ondrop="(e)=>Ondrop(e, Cards[card])" draggable="true" class="draggable svg-card-wrapper card-0">
+                            @(svgCards.Faces[Cards[card]])
+                        </div>
+                        i++;
+                    }
+                </div>
             }
         </div>
-    }
-    @{
-        <div class="w-100"></div>
-        <div class="hand-area">
-            @for (int c = 0; c < MiddleHand.CardCount; c++)
-            {
-                var card = i;
-                <div @ondragstart="(e)=>Ondragstart(e, Cards[card])" ondragover="event.preventDefault();" @ondrop="(e)=>Ondrop(e, Cards[card])" draggable="true" class="draggable svg-card-wrapper card-0">
-                    @(svgCards.Faces[Cards[card]])
-                </div>
-                i++;
-            }
+        <div class="col-auto my-auto"><PokerChipStackComponent Chips="@(Chips)" /></div>
+        <button class="btn btn-primary col-2 my-auto" @onclick="(e)=>LayoutSet()">Set Hand</button>
+    </div>
+    <div class="row mt-2 no-gutters justify-content-center">
+        <div class="progress col-8">
+            <div id="countdown" class="progress-bar bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-    }
-    @{
-        <div class="w-100"></div>
-        <div class="hand-area">
-            @for (int c = 0; c < BottomHand.CardCount; c++)
-            {
-                var card = i;
-                <div @ondragstart="(e)=>Ondragstart(e, Cards[card])" ondragover="event.preventDefault();" @ondrop="(e)=>Ondrop(e, Cards[card])" draggable="true" class="draggable svg-card-wrapper card-0">
-                    @(svgCards.Faces[Cards[card]])
-                </div>
-                i++;
-            }
-        </div>
-    }
+    </div>
 </div>
-<div class="col-auto my-auto"><PokerChipStackComponent Chips="@(Chips)" /></div>
-<button class="btn btn-primary col-2 my-auto" @onclick="(e)=>LayoutSet()">Set Hand</button>
 
 
-@code {
-  [Parameter]
-  public Seat Seat { get; set; }
-  [Parameter]
-  public BaseDeck Deck { get; set; }
-  [Parameter]
-  public int Chips { get; set; }
+    @code {
+        [Parameter]
+        public Seat Seat { get; set; }
+        [Parameter]
+        public BaseDeck Deck { get; set; }
+        [Parameter]
+        public int Chips { get; set; }
 
-  private TaiwaneseHand Hand;
-  private List<int> Cards;
-  private int card_dragging;
-  private BaseHand TopHand, MiddleHand, BottomHand;
-  private System.Threading.CancellationTokenSource giveThemTime;
+        private TaiwaneseHand Hand;
+        private List<int> Cards;
+        private int card_dragging;
+        private BaseHand TopHand, MiddleHand, BottomHand;
+        private System.Threading.CancellationTokenSource giveThemTime;
 
-  protected async override Task OnInitializedAsync()
-  {
-      Hand = Seat.Hand as TaiwaneseHand;
-      (TopHand, MiddleHand, BottomHand) = Hand.StartManualLayout();
+        protected async override Task OnInitializedAsync()
+        {
+            Hand = Seat.Hand as TaiwaneseHand;
+            (TopHand, MiddleHand, BottomHand) = Hand.StartManualLayout();
 
-      Random rnd = new Random();
-      Cards = new List<int>();
+            Random rnd = new Random();
+            Cards = new List<int>();
 
-      foreach (var card in Deck.CardNumbers(TopHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
-      foreach (var card in Deck.CardNumbers(MiddleHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
-      foreach (var card in Deck.CardNumbers(BottomHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
+            foreach (var card in Deck.CardNumbers(TopHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
+            foreach (var card in Deck.CardNumbers(MiddleHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
+            foreach (var card in Deck.CardNumbers(BottomHand.CardsMask).OrderBy(x => rnd.Next())) Cards.Add(card);
 
-      giveThemTime = new System.Threading.CancellationTokenSource();
-      Task WaitTask = Task.Delay(Convert.ToInt32(30 * 1000.0), giveThemTime.Token);
-      WaitTask.ContinueWith(t => TimedOut(), TaskContinuationOptions.OnlyOnRanToCompletion);
-  }
+            giveThemTime = new System.Threading.CancellationTokenSource();
+            JSRuntime.InvokeVoidAsync("startTimer", 30);
+            Task WaitTask = Task.Delay(Convert.ToInt32(30 * 1000.0), giveThemTime.Token);
+            await WaitTask.ContinueWith(t => TimedOut(), TaskContinuationOptions.OnlyOnRanToCompletion);
+        }
 
-  private void LayoutSet()
-  {
-      giveThemTime.Cancel();
-      Hand.CompleteManualLayout();
-  }
+        private void LayoutSet()
+        {
+            giveThemTime.Cancel();
+            Hand.CompleteManualLayout();
+        }
 
-  private void TimedOut()
-  {
-      Seat.SittingOut = true;
-      Hand.CompleteManualLayout();
-  }
+        private void TimedOut()
+        {
+            Seat.SittingOut = true;
+            Hand.CompleteManualLayout();
+        }
 
-  private void Ondragstart(DragEventArgs e, int card)
-  {
-      // Start Dragging the card
-      card_dragging = card;
-  }
+        private void Ondragstart(DragEventArgs e, int card)
+        {
+            // Start Dragging the card
+            card_dragging = card;
+        }
 
-  private void Ondrop(DragEventArgs e, int card)
-  {
-      // Swap this Card with the card being dragged
-      var card1 = Cards.IndexOf(card_dragging);
-      var card2 = Cards.IndexOf(card);
+        private void Ondrop(DragEventArgs e, int card)
+        {
+            // Swap this Card with the card being dragged
+            var card1 = Cards.IndexOf(card_dragging);
+            var card2 = Cards.IndexOf(card);
 
-      (Cards[card1], Cards[card2]) = (Cards[card2], Cards[card1]);
+            (Cards[card1], Cards[card2]) = (Cards[card2], Cards[card1]);
 
-      // Reset the Hands
-      TopHand.CardsMask = 0UL;
-      MiddleHand.CardsMask = 0UL;
-      BottomHand.CardsMask = 0UL;
+            // Reset the Hands
+            TopHand.CardsMask = 0UL;
+            MiddleHand.CardsMask = 0UL;
+            BottomHand.CardsMask = 0UL;
 
-      int i = 0;
-      for (int c = 0; c < TopHand.CardCount; c++) TopHand.AddCard(Cards[i++]);
-      for (int c = 0; c < MiddleHand.CardCount; c++) MiddleHand.AddCard(Cards[i++]);
-      for (int c = 0; c < BottomHand.CardCount; c++) BottomHand.AddCard(Cards[i++]);
+            int i = 0;
+            for (int c = 0; c < TopHand.CardCount; c++) TopHand.AddCard(Cards[i++]);
+            for (int c = 0; c < MiddleHand.CardCount; c++) MiddleHand.AddCard(Cards[i++]);
+            for (int c = 0; c < BottomHand.CardCount; c++) BottomHand.AddCard(Cards[i++]);
 
-      // Store in Hand
-      Hand.TopHand = TopHand;
-      Hand.MiddleHand = MiddleHand;
-      Hand.BottomHand = BottomHand;
-  }
+            // Store in Hand
+            Hand.TopHand = TopHand;
+            Hand.MiddleHand = MiddleHand;
+            Hand.BottomHand = BottomHand;
+        }
 
-}
+    }

@@ -6,12 +6,12 @@
   margin-bottom: 8%; }
   .poker-table-holder .player-controls-1 {
     position: absolute;
-    bottom: -20px;
-    left: 10px; }
+    bottom: -10%;
+    right: 70%; }
   .poker-table-holder .player-controls-2 {
     position: absolute;
-    bottom: -20px;
-    right: 10px; }
+    bottom: -10%;
+    left: 70%; }
 
 .poker-table {
   background-image: url("../images/table.png");

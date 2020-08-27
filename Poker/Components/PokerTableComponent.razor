@@ -82,44 +82,46 @@
                             </div>
                         </div>
                     }
+
+                    @if (playersSeat != null)
+                    {
+                        <div class="player-controls-1">
+                            <div class="row mb-1 justify-content-end">
+                                <label for="addChips" class="col-auto h2 col-form-label">Chips :</label>
+                                <input class="form-control col-3" name="addChips" @bind="addChips" />
+                                <button class="btn btn-primary ml-3 col-auto" @onclick="AddChips">
+                                    <span class="oi oi-plus"></span>
+                                </button>
+                            </div>
+                            <div class="row mb-1 justify-content-end">
+                                <button class="btn btn-primary col-auto" @onclick="AddComputer">
+                                    <span class="oi oi-plus"></span>
+                                    <span class="oi oi-monitor"></span>
+                                </button>
+                                <button class="btn btn-primary ml-3 col-auto" @onclick="RemoveComputer">
+                                    <span class="oi oi-minus"></span>
+                                    <span class="oi oi-monitor"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="player-controls-2">
+                            <div class="row mb-1 justify-content-start">
+                                <select class="form-control" @onchange=@PlayerStatus>
+                                    <option value="Ready" selected="@(initStatus == "Ready")">Deal Me In</option>
+                                    <option value="Sitting Out" selected="@(initStatus == "Sitting Out")">Sitting Out</option>
+                                    <option value="Leaving" selected="@(initStatus == "Leaving")">Leaving</option>
+                                </select>
+                            </div>
+                            <div class="row mb-1 justify-content-start">
+                                <select class="form-control" @onchange=@PlayerWaitStatus>
+                                    <option value="Pause" selected="@(initWaitStatus == "Pause")">Please Pause</option>
+                                    <option value="Play On" selected="@(initWaitStatus == "Play On")">Play On</option>
+                                    <option value="Play One Hand">Play One Hand</option>
+                                </select>
+                            </div>
+                        </div>
+                    }
                 </div>
-                @if (playersSeat != null) {
-                <div class="form-group player-controls-1">
-                    <div class="row mb-1 align-items-center">
-                        <label for="addChips" class="col-auto h2 col-form-label">Chips :</label>
-                        <input class="form-control col-3" name="addChips" @bind="addChips" />
-                        <button class="btn btn-primary ml-3 col-auto" @onclick="AddChips">
-                            <span class="oi oi-plus"></span>
-                        </button>
-                    </div>
-                    <div class="row mb-1 align-items-center">
-                        <button class="btn btn-primary col-auto" @onclick="AddComputer">
-                            <span class="oi oi-plus"></span>
-                            <span class="oi oi-monitor"></span>
-                        </button>
-                        <button class="btn btn-primary ml-3 col-auto" @onclick="RemoveComputer">
-                            <span class="oi oi-minus"></span>
-                            <span class="oi oi-monitor"></span>
-                        </button>
-                    </div>
-                </div>
-                <div class="form-group player-controls-2">
-                    <div class="row mb-1 align-items-center">
-                        <select class="form-control" @onchange=@PlayerStatus>
-                            <option value="Ready" selected="@(initStatus == "Ready")">Deal Me In</option>
-                            <option value="Sitting Out" selected="@(initStatus == "Sitting Out")">Sitting Out</option>
-                            <option value="Leaving" selected="@(initStatus == "Leaving")">Leaving</option>
-                        </select>
-                    </div>
-                    <div class="row mb-1 align-items-center">
-                        <select class="form-control" @onchange=@PlayerWaitStatus>
-                            <option value="Pause" selected="@(initWaitStatus == "Pause")">Please Pause</option>
-                            <option value="Play On" selected="@(initWaitStatus == "Play On")">Play On</option>
-                            <option value="Play One Hand">Play One Hand</option>
-                        </select>
-                    </div>
-                </div>
-                }
             </div>
         }
     }

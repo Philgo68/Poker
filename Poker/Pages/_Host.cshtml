@@ -15,13 +15,40 @@
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
     <script src="_content/BlazorStrap/blazorStrap.js"></script>
-    <!-- for resizing chips to match table -->
     <script>
+        // for resizing chips to match table
         function setTableSize() {
             const tables = document.querySelectorAll(".poker-table");
             for (const table of tables) {
                 table.style.setProperty('--table-size', table.offsetWidth);
             }
+        }
+
+        // for displaying timers
+        function startTimer(seconds) {
+            var start_time = new Date().getTime();
+            console.log(start_time);
+            var x = setInterval(function () {
+                var bar = document.getElementById("countdown");
+                if (bar) {
+                    var now = new Date().getTime();
+                    console.log(now - start_time);
+                    var barpercent = 100 * (1 - ((now - start_time) / (seconds * 1000)));
+                    // If the count down is finished stop timer
+                    if (barpercent <= 0) {
+                        clearInterval(x);
+                        bar.style.width = '0%';
+                    } else {
+                        bar.style.width = barpercent + '%';
+                        if (barpercent > 50) 
+                            bar.setAttribute('class', 'progress-bar bg-success');
+                        else if (barpercent > 16.5)
+                            bar.setAttribute('class', 'progress-bar bg-warning');
+                        else
+                            bar.setAttribute('class', 'progress-bar bg-danger');
+                    }
+                }
+            }, 200);
         }
     </script>
     <!--  For Generating Chips
