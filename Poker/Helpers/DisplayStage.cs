@@ -8,7 +8,8 @@
     Scooping,
     PotScooped,
     Delivering,
-    DeliverPot
+    DeliverPot,
+    PotDelivered
   }
 
 }

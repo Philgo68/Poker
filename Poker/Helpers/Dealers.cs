@@ -22,7 +22,6 @@ namespace Poker.Helpers
       return _dealers.GetOrAdd(table.Id, (key) =>
       {
         var dealer = new TableDealer(_pokerDbContext, table);
-        dealer.TransitionToNextPhase();
         return dealer;
       });
     }

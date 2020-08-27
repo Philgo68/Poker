@@ -19,6 +19,8 @@ namespace Poker.Models
     {
       PhaseActions = new List<Func<TableDealer, DisplayStage[]>>();
 
+      var chipMovingPhases = new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot, DisplayStage.PotDelivered };
+
       //Reset table for new hand
       PhaseActions.Add((tableDealer) =>
       {
@@ -92,7 +94,7 @@ namespace Poker.Models
         tableDealer.Table.PhaseMessage = "";
         PlayTopHand(tableDealer.Table);
         LogTable(tableDealer.Table, "Top Hand 1");
-        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        return chipMovingPhases;
       });
 
       //Play Middle Hand
@@ -102,7 +104,7 @@ namespace Poker.Models
         tableDealer.Table.PhaseMessage = "";
         PlayMiddleHand(tableDealer.Table);
         LogTable(tableDealer.Table, "Middle Hand 1");
-        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        return chipMovingPhases;
       });
 
       //Play Bottom Hand
@@ -112,7 +114,7 @@ namespace Poker.Models
         tableDealer.Table.PhaseMessage = "";
         PlayBottomHand(tableDealer.Table);
         LogTable(tableDealer.Table, "Bottom Hand 1");
-        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        return chipMovingPhases;
       });
 
       //Play Scoop Bonus
@@ -123,7 +125,7 @@ namespace Poker.Models
         if (PlayScoopBonus(tableDealer.Table))
         {
           LogTable(tableDealer.Table, "Scoop Bonus 1");
-          return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+          return chipMovingPhases;
         }
         else
         {
@@ -152,7 +154,7 @@ namespace Poker.Models
         tableDealer.Table.PhaseMessage = "";
         PlayTopHand(tableDealer.Table);
         LogTable(tableDealer.Table, "Top Hand 2");
-        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        return chipMovingPhases;
       });
 
       //Play Middle Hand
@@ -162,7 +164,7 @@ namespace Poker.Models
         tableDealer.Table.PhaseMessage = "";
         PlayMiddleHand(tableDealer.Table);
         LogTable(tableDealer.Table, "Middle Hand 2");
-        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        return chipMovingPhases;
       });
 
       //Play Bottom Hand
@@ -172,7 +174,7 @@ namespace Poker.Models
         tableDealer.Table.PhaseMessage = "";
         PlayBottomHand(tableDealer.Table);
         LogTable(tableDealer.Table, "Bottom Hand 2");
-        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+        return chipMovingPhases;
       });
 
       //Play Scoop Bonus
@@ -183,7 +185,7 @@ namespace Poker.Models
         if (PlayScoopBonus(tableDealer.Table))
         {
           LogTable(tableDealer.Table, "Scoop Bonus 2");
-          return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.BetsOut, DisplayStage.Scooping, DisplayStage.PotScooped, DisplayStage.Delivering, DisplayStage.DeliverPot };
+          return chipMovingPhases;
         }
         else
         {
@@ -196,7 +198,7 @@ namespace Poker.Models
       {
         tableDealer.Table.PhaseTitle = "Hand Review";
         tableDealer.Table.PhaseMessage = "";
-        if (tableDealer.Table.SeatsWithHands().Any(s => s.PleasePause == 1))
+        if (tableDealer.Table.SeatsWithHands().Any(s => s.PleasePause == 1 && !s.SittingOut))
         {
           tableDealer.CleanChips();
           return null;

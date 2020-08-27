@@ -228,6 +228,7 @@ namespace Poker.Models
     const double standardTime = 2;
 
     private bool _waiting_for_something = false;
+    private bool _transitioning = false;
 
     public TableDealer(PokerDbContext dbContext, Table table)
     {
@@ -244,8 +245,10 @@ namespace Poker.Models
         s.StateHasChangedDelegate += StateHasChanged;
       }
 
-
       SetupDisplayActions();
+
+      // Start the action
+      TransitionToNextPhase();
     }
 
     public Table Table { get; private set; }
@@ -282,7 +285,7 @@ namespace Poker.Models
           seat.ChipsOut = 0;
         }
         NotifyStateChanged();
-        return standardTime / 3;
+        return standardTime / 4;
       };
 
       _displayActions[DisplayStage.Scooping] = () =>
@@ -318,11 +321,22 @@ namespace Poker.Models
         foreach (var seat in Table.SeatsWithHands())
         {
           seat.ChipsMoving = seat.ChipsIn;
+        }
+        NotifyStateChanged();
+        return standardTime;
+      };
+
+      _displayActions[DisplayStage.PotDelivered] = () =>
+      {
+        Table.DisplayPhase = "delivered";
+        foreach (var seat in Table.SeatsWithHands())
+        {
+          seat.ChipsMoving = 0;
           seat.Chips += seat.ChipsIn;
           seat.ChipsIn = 0;
         }
         NotifyStateChanged();
-        return standardTime;
+        return standardTime / 4;
       };
 
     }
@@ -386,6 +400,9 @@ namespace Poker.Models
 
     public void TransitionToNextPhase()
     {
+      if (_transitioning) return;
+      _transitioning = true;
+
       _gamePhase++;
 
       if (_gamePhase >= Table.Game.PhaseCount)
@@ -406,6 +423,8 @@ namespace Poker.Models
       {
         throw new Exception("Chips are out of balance!!");
       }
+
+      _transitioning = false;
 
       if (_displayStages == null)
       {

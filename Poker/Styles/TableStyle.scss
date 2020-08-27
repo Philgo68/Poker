@@ -48,6 +48,11 @@
         width: 20%;
     }
 
+    .seat.winner {
+        box-shadow: 0px 0px 30px 10px #ffdb00;
+        background-color: #ffdb00BB;
+    }
+
     .bet-location {
         z-index: 5;
     }

@@ -28,7 +28,7 @@
                     {
                         <div id="player@((seat.Position + (Table.TotalSeats - FromSeat)) % Table.TotalSeats)">
                             <div class="seat-location">
-                                <div class="seat">
+                                <div class="seat @(seat.ChipsIn > 0 ? "winner" : "")">
                                     <div class="cards">
                                         @if (seat.Hand != null)
                                         {
@@ -185,6 +185,8 @@
       var status = e.Value.ToString();
       playersSeat.SittingOut = status == "Sitting Out";
       playersSeat.Leaving = status == "Leaving";
+      if (playersSeat.SittingOut || playersSeat.Leaving)
+          playersSeat.PleasePause = 0;
   }
 
   void PlayerWaitStatus(ChangeEventArgs e)
