@@ -168,16 +168,16 @@
           if (user.Identity.IsAuthenticated)
           {
               var player = UserManager.GetUserAsync(user).Result;
-              var chips = Math.Min(500, player.Bankroll);
-              player.Bankroll = player.Bankroll - chips;
-              var heroSeat = table.OccupySeat(player, chips);
+              var chips = 500; // Math.Min(500, player.GetBankroll());
+              //player.RemoveFromBankroll(chips);
+              var heroSeat = table.Dealer.OccupySeat(player, chips);
               fromSeat = heroSeat.Position;
           }
 
           hand_cnt = hand_cnt ?? 1;
           for (var i = 0; i < hand_cnt; i++)
           {
-              table.OccupySeat(null);
+              table.Dealer.OccupySeat(null);
           }
 
           table.StateHasChangedDelegate += MyChangeHandler;
@@ -188,7 +188,7 @@
 
           if (true && (game.GetType() == typeof(Taiwanese)))
           {
-              dealer = Dealers.DealerForTable(table);
+              dealer = Dealers.DealerForTable(table.Id);
           }
           else
           {
@@ -272,7 +272,6 @@
               // Get a table from the database started
               table = await PokerDbContext.Tables
                   .Include(table => table.Seats)
-                      .ThenInclude(s => s.Player)
                   .FirstOrDefaultAsync();
               fromSeat = 0;
 
@@ -284,7 +283,7 @@
               {
                   table.StateHasChangedDelegate += MyChangeHandler;
 
-                  dealer = Dealers.DealerForTable(table);
+                  dealer = Dealers.DealerForTable(table.Id);
                   return "Table Running";
               }
           }
@@ -294,7 +293,6 @@
               //table = dealer.Table;
               table = PokerDbContext.Tables
                 .Include(table => table.Seats)
-                    .ThenInclude(s => s.Player)
                 .FirstOrDefault();
               Random rnd = new Random();
               fromSeat = rnd.Next(table.TotalSeats - 1) + 1;

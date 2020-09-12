@@ -52,7 +52,7 @@ namespace Poker.Models
     public long Loses { get; set; }
     public long Ties { get; set; }
     public bool Changed { get; set; }
-    public (int, uint) LastEvaluation { get; set; }
+    public HandEvaluation LastEvaluation { get; set; }
     public virtual decimal Percent => 100.0m * Math.Round((Wins + Ties / 2.0m) / (Wins + Ties + Loses), 10);
     public virtual int CompareTo(object obj)
     {
@@ -76,12 +76,12 @@ namespace Poker.Models
 
     BaseHand IHandHolder.Hand => this;
 
-    public virtual (int, uint) Evaluate(ulong board)
+    public virtual HandEvaluation Evaluate(ulong board)
     {
       return Evaluate(CardsMask, board);
     }
 
-    public virtual (int, uint) Evaluate(ulong hero, ulong board)
+    public virtual HandEvaluation Evaluate(ulong hero, ulong board)
     {
       // Default to Poker Evaluation of the Hand
       return Deck.PokerEvaluate(hero, board);
@@ -154,16 +154,16 @@ namespace Poker.Models
     public virtual int PlayAgainst(ulong heroFiller, BaseHand[] opponents, ulong[] opsFillers, ulong boardMask)
     {
       var tied = false;
-      uint villain = 0;
-      (_, uint hero) = this.Evaluate(CardsMask | heroFiller, boardMask);
+      HandEvaluation villain = new HandEvaluation();
+      HandEvaluation hero = Evaluate(CardsMask | heroFiller, boardMask);
       for (var i = 0; i < opsFillers.Length; i++)
       {
-        (_, villain) = this.Evaluate(opponents[i].CardsMask | opsFillers[i], boardMask);
+        villain = this.Evaluate(opponents[i].CardsMask | opsFillers[i], boardMask);
 
-        if (villain > hero) { break; }
-        if (villain == hero) { tied = true; }
+        if (villain.Value > hero.Value) { break; }
+        if (villain.Value == hero.Value) { tied = true; }
       }
-      if (villain > hero)
+      if (villain.Value > hero.Value)
       {
         return -1;
       }

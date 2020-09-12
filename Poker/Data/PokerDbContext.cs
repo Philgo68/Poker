@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Poker.Models;
+using System;
+using System.Data.Entity.Infrastructure;
 
 namespace Poker.Data
 {
@@ -26,5 +29,6 @@ namespace Poker.Data
       //modelBuilder.UsePropertyAccessMode(PropertyAccessMode.PreferProperty);
     }
   }
+
 }
 

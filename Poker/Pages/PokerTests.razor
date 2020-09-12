@@ -58,18 +58,18 @@
     @if (table != null)
     {
         <div class="poker-hand">
-            <PokerHandComponent Hand=@table.Hero().Hand Deck=@table.SampleDeck ShowBlanks=@true />
+            <PokerHandComponent Hand=@table.Hero().Hand ShowBlanks=@true />
         </div>
         <div class="d-inline-block m-2">vs.</div>
         @foreach (var seat in @table.Opponents())
         {
             <div class="poker-hand">
-                <PokerHandComponent Hand=@seat.Hand Deck=@table.SampleDeck ShowBlanks=@true />
+                <PokerHandComponent Hand=@seat.Hand ShowBlanks=@true />
             </div>
         }
         <div class="d-inline-block m-2">on</div>
         <div class="poker-hand">
-            <PokerHandComponent Hand=@board Deck=@table.SampleDeck ShowBlanks=@true />
+            <PokerHandComponent Hand=@board ShowBlanks=@true />
         </div>
     }
 

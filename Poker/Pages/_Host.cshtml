@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
     <script src="_content/BlazorStrap/blazorStrap.js"></script>
+    <script src="https://kit.fontawesome.com/8a6c01421f.js" crossorigin="anonymous"></script>
     <script>
         // for resizing chips to match table
         function setTableSize() {
@@ -25,14 +26,14 @@
         }
 
         // for displaying timers
-        function startTimer(seconds) {
+        function startTimer(seconds, elementId) {
             var start_time = new Date().getTime();
-            console.log(start_time);
             var x = setInterval(function () {
-                var bar = document.getElementById("countdown");
+                var bar = document.getElementById(elementId);
                 if (bar) {
+                    bar.classList.remove('hidden');
+                    bar = bar.firstElementChild;
                     var now = new Date().getTime();
-                    console.log(now - start_time);
                     var barpercent = 100 * (1 - ((now - start_time) / (seconds * 1000)));
                     // If the count down is finished stop timer
                     if (barpercent <= 0) {
@@ -40,13 +41,15 @@
                         bar.style.width = '0%';
                     } else {
                         bar.style.width = barpercent + '%';
-                        if (barpercent > 50) 
+                        if (barpercent > 50)
                             bar.setAttribute('class', 'progress-bar bg-success');
                         else if (barpercent > 16.5)
                             bar.setAttribute('class', 'progress-bar bg-warning');
                         else
                             bar.setAttribute('class', 'progress-bar bg-danger');
                     }
+                } else {
+                    clearInterval(x);
                 }
             }, 200);
         }
@@ -77,11 +80,19 @@
     </script>
     <link rel='stylesheet' type='text/css' href='https://www.x3dom.org/release/x3dom.css' />
     -->
+    <style>
+        .blurred {
+            filter: url(#blurred);
+            -webkit-filter: url(#blurred);
+            opacity: 0.95;
+        }
+    </style>
     <link href="css/TableStyle.css" rel="stylesheet" />
+
 </head>
 <body onresize="setTableSize()">
     <app>
-        <component type="typeof(App)" render-mode="ServerPrerendered" />
+        <component type="typeof(App)" render-mode="Server" />
     </app>
 
     <div id="blazor-error-ui">
@@ -97,4 +108,11 @@
 
     <script src="_framework/blazor.server.js"></script>
 </body>
+<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
+    <defs>
+        <filter id="blurred">
+            <feGaussianBlur stdDeviation="1.4" />
+        </filter>
+    </defs>
+</svg>
 </html>

@@ -78,7 +78,7 @@ namespace Poker.Areas.Identity.Pages.Account
       ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
       if (ModelState.IsValid)
       {
-        var user = new Player { UserName = Input.Email, Email = Input.Email, ScreenName = Input.ScreenName, Bankroll = 500, AddedChips = 500 };
+        var user = new Player { UserName = Input.Email, Email = Input.Email, ScreenName = Input.ScreenName, AddedChips = 500, Bankroll = 500 };
         var result = await _userManager.CreateAsync(user, Input.Password);
         if (result.Succeeded)
         {

@@ -2,6 +2,34 @@
 
 namespace Poker.Models
 {
+
+  public enum HandTypes
+  {
+    HighCard = 0,
+    Pair = 1,
+    TwoPair = 2,
+    Trips = 3,
+    Straight = 4,
+    Flush = 5,
+    FullHouse = 6,
+    FourOfAKind = 7,
+    StraightFlush = 8
+  }
+
+  public struct HandEvaluation
+  {
+    public HandTypes Type;
+    public uint Value;
+    public ulong Cards;
+
+    public HandEvaluation(ulong cards, HandTypes type, uint value)
+    {
+      Cards = cards;
+      Type = type;
+      Value = value;
+    }
+  }
+
   public abstract class BaseGame
   {
 
@@ -29,18 +57,18 @@ namespace Poker.Models
 
     public abstract int PhaseCount { get; }
 
-    public virtual (int, uint) Evaluate(BaseHand hand)
+    public virtual HandEvaluation Evaluate(BaseHand hand)
     {
       return Evaluate(hand.CardsMask);
     }
-    public virtual (int, uint) Evaluate(BaseHand hand, BaseHand board)
+    public virtual HandEvaluation Evaluate(BaseHand hand, BaseHand board)
     {
       return Evaluate(hand.CardsMask, board.CardsMask);
     }
-    public virtual (int, uint) Evaluate(ulong hand, ulong board)
+    public virtual HandEvaluation Evaluate(ulong hand, ulong board)
     {
       return Evaluate(hand | board);
     }
-    public abstract (int, uint) Evaluate(ulong cards);
+    public abstract HandEvaluation Evaluate(ulong cards);
   }
 }

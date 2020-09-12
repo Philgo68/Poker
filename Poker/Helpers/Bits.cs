@@ -4,6 +4,8 @@
 // Originally ported by Keith Rule - Sept 2005, updated May 2006
 // Reorganized and extended by Chris Lasswell - March 2020
 
+using System.ComponentModel.DataAnnotations;
+
 namespace Poker.Helpers
 {
   public class Bits
@@ -34,6 +36,22 @@ namespace Poker.Helpers
       return r;
     }
 
+    public static uint LeftBits(uint bitField, int count)
+    {
+      if (count == 0) return 0;
+      int r = 0;
+      while (BitCount(bitField) > count)
+      {
+        r++;
+        bitField >>= 1;
+      }
+      return bitField << r;
+    }
+
+    public static bool Contains(ulong bitField, int card)
+    {
+      return (bitField & (0x1UL << card)) != 0;
+    }
 
     /// <summary>
     /// Fast Bitcounting method (https://en.wikipedia.org/wiki/Hamming_weight)

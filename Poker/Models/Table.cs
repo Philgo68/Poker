@@ -45,6 +45,8 @@ namespace Poker.Models
       Board = null;
       OldBoard = null;
       SampleDeck = Game.GetDeck();
+
+      HighlightCards = (0x1UL << 51) + 0x1UL;
     }
 
     // Creating a new table
@@ -66,15 +68,16 @@ namespace Poker.Models
     public string PhaseTitle { get; set; }
 
     [NotMapped]
-    public string PhaseMessage { get; set; }
-
-    public void OnAfterLoad()
-    {
-      foreach (var seat in AllSeats())
-      {
-        seat.StateHasChangedDelegate += StateHasChanged;
+    public string PhaseMessage {
+      get => phaseMessage;
+      set {
+        HighlightCards = 0;
+        phaseMessage = value; 
       }
     }
+
+    [NotMapped]
+    public ulong HighlightCards { get; set; }
 
     public event Action StateHasChangedDelegate;
 
@@ -88,8 +91,10 @@ namespace Poker.Models
       NotifyStateChanged();
     }
 
+
     [NotMapped]
     public TableDealer Dealer;
+    private string phaseMessage;
 
     [NotMapped]
     public BaseHand Board { get; private set; }
@@ -103,38 +108,9 @@ namespace Poker.Models
     [NotMapped]
     public int Pot { get; set; }
 
-    public Seat OccupySeat(Player player = null, int chips = 500)
-    {
-      // Find a seat for them
-      var positions = new HashSet<int?>();
-      for (var i = 0; i < TotalSeats; i++)
-      {
-        positions.Add(i);
-      };
-
-      foreach (var seat in Seats)
-      {
-        positions.Remove(seat.Position);
-      }
-
-      var openPosition = positions.FirstOrDefault();
-
-      if (openPosition != null)
-      {
-        player ??= new Player() { ScreenName = $"Computer:{Guid.NewGuid()}", Computer = true };
-        var seat = new Seat(openPosition.Value, player, chips);
-        if (Dealer != null)
-          seat.StateHasChangedDelegate += Dealer.StateHasChanged;
-        Seats.Add(seat);
-        StateHasChanged();
-        return seat;
-      }
-      return null;
-    }
-
     public Seat PlayerSeat(Player player)
     {
-      return Seats.FirstOrDefault(s => s.Player.Id == player.Id);
+      return Seats.FirstOrDefault(s => s.PlayerId == player.Id);
     }
 
     public IEnumerable<Seat> AllSeats()
@@ -149,7 +125,7 @@ namespace Poker.Models
     {
       foreach (var seat in Seats)
       {
-        if (seat != null && ((!seat.SittingOut && seat.Chips > 0) || seat.ChipsOut > 0 || seat.ChipsIn > 0 || seat.ChipsMoving > 0))
+        if (seat != null && ((!(seat.Status == SeatStatus.SittingOut) && seat.Chips > 0) || seat.ChipsOut > 0 || seat.ChipsIn > 0 || seat.ChipsMoving > 0))
           yield return seat;
       }
     }
@@ -178,11 +154,18 @@ namespace Poker.Models
       }
     }
 
-
     public void SetBoard(BaseHand board)
     {
       OldBoard = Board;
       Board = board;
+    }
+
+    public string CardClass(int card)
+    {
+      if ((HighlightCards != 0) && !Bits.Contains(HighlightCards, card))
+        return "blurred";
+      else
+        return "";
     }
     /*
         public void Reset(ulong dealtCards)
@@ -230,7 +213,7 @@ namespace Poker.Models
     private bool _waiting_for_something = false;
     private bool _transitioning = false;
 
-    public TableDealer(PokerDbContext dbContext, Table table)
+    public TableDealer(PokerDbContext dbContext, Players players, Table table)
     {
       Table = table;
       table.Dealer = this;
@@ -238,11 +221,14 @@ namespace Poker.Models
       Deck = Table.Game.GetDeck();
       _gamePhase = -1;
       _dbContext = dbContext;
+      _players = players;
 
-      // Ask all the Seats to tell me when they have changed
+      // Ask all the Seats to tell me when they have changed, and make sure Players are loaded
       foreach (var s in table.Seats)
       {
         s.StateHasChangedDelegate += StateHasChanged;
+        if (s.Player == null)
+          s.Player = players.SingularPlayer(s.PlayerId);
       }
 
       SetupDisplayActions();
@@ -256,6 +242,7 @@ namespace Poker.Models
 
     private int _gamePhase;
     private PokerDbContext _dbContext;
+    private Players _players;
     private DisplayStage[] _displayStages;
     private Dictionary<DisplayStage, Func<double>> _displayActions;
     private void SetupDisplayActions()
@@ -353,6 +340,61 @@ namespace Poker.Models
       if (_waiting_for_something) TransitionToNextPhase();
     }
 
+
+    public Seat OccupySeat(Player player = null, int chips = 500)
+    {
+      // Find a seat for them
+      var positions = new HashSet<int?>();
+      for (var i = 0; i < Table.TotalSeats; i++)
+      {
+        positions.Add(i);
+      };
+
+      foreach (var seat in Table.Seats)
+      {
+        positions.Remove(seat.Position);
+      }
+
+      var openPosition = positions.FirstOrDefault();
+
+      if (openPosition != null)
+      {
+        if (player == null)
+        {
+          player = new Player() { ScreenName = $"Computer:{Guid.NewGuid()}", Computer = true };
+          _dbContext.Add(player);
+        }
+        var seat = new Seat(openPosition.Value, player, chips);
+        Table.Seats.Add(seat);
+        seat.StateHasChangedDelegate += StateHasChanged;
+        StateHasChanged();
+
+        return seat;
+      }
+      return null;
+    }
+
+    public void AddComputer()
+    {
+      Table.Dealer.OccupySeat(null);
+    }
+
+    public void RemoveComputer()
+    {
+      var rnd = new Random();
+      int count = Table.OccupiedSeats().Where(s => s.Player.Computer && s.Status != SeatStatus.Leaving).Count();
+      foreach (var computerSeat in Table.OccupiedSeats().Where(s => s.Player.Computer && s.Status != SeatStatus.Leaving))
+      {
+        if (rnd.Next(count) == 0)
+        {
+          computerSeat.Status = SeatStatus.Leaving;
+          return;
+        }
+        count--;
+      }
+      return;
+    }
+
     public void SetBoard(BaseHand _board)
     {
       Table.SetBoard(_board);
@@ -398,8 +440,52 @@ namespace Poker.Models
       }
     }
 
+    private CancellationTokenSource giveThemTime;
+
     public void TransitionToNextPhase()
     {
+      // Let players leave with their chips
+      LetPlayersLeave();
+
+      var handEnded = (_gamePhase >= Table.Game.PhaseCount - 1);
+
+      // If hand is over and someone wants to wait
+      if (handEnded && Table.SeatsWithHands().Any(s => s.Status == SeatStatus.PleasePause))
+      {
+        // if we aren't already waiting
+        if (giveThemTime == null)
+        {
+          // Start timer
+          Table.PhaseTitle = "Hand Review";
+          Table.PhaseMessage = "";
+          CleanChips();
+          NotifyStateChanged();
+
+          _waiting_for_something = true;
+          giveThemTime = new CancellationTokenSource();
+          Task WaitTask = Task.Delay(Convert.ToInt32(30 * 1000.0), giveThemTime.Token);
+          WaitTask.ContinueWith(t =>
+          {
+            // Reset Pause request for all seats.
+            foreach (var s in Table.AllSeats())
+            {
+              if (s.Status == SeatStatus.PleasePause) s.Status = SeatStatus.PlayOne;
+            }
+            TransitionToNextPhase();
+          }, TaskContinuationOptions.OnlyOnRanToCompletion);
+        }
+        // Don't move on yet
+        return;
+      }
+
+      if (giveThemTime != null)
+      {
+        _waiting_for_something = false;
+        giveThemTime.Cancel();
+        giveThemTime.Dispose();
+        giveThemTime = null;
+      }
+
       if (_transitioning) return;
       _transitioning = true;
 
@@ -455,9 +541,43 @@ namespace Poker.Models
       }
     }
 
-    public void StoreTable()
+    public void SaveData()
     {
       _dbContext.SaveChanges();
+    }
+
+    public void LetPlayersLeave()
+    {
+      var leavingComputers = new List<Player>();
+      foreach (var seat in Table.Seats.Where(s => s.Status == SeatStatus.Leaving && s.Hand == null))
+      {
+        _dbContext.Remove(seat);
+        if (seat.Player.Computer)
+        {
+          leavingComputers.Add(seat.Player);
+        }
+        else
+        {
+          var player = _players.SingularPlayer(seat.Player.Id);
+          player.Bankroll += seat.Chips;
+        }
+      }
+      if (Table.Seats.RemoveAll(s => s.Status == SeatStatus.Leaving && s.Hand == null) > 0)
+      {
+        SaveData();
+
+        foreach (var player in leavingComputers)
+          _dbContext.Remove(player);
+        if (leavingComputers.Count > 0) SaveData();
+
+        if (Table.Seats.Count == 0)
+        {
+          _dbContext.Remove(Table);
+          SaveData();
+        }
+      }
+
+      NotifyStateChanged();
     }
 
     public void CleanTableForNewHand()
@@ -473,14 +593,6 @@ namespace Poker.Models
       // Clear the Board
       SetBoard(null);
 
-      // Let players leave with their chips
-      foreach (var seat in Table.Seats.Where(s => s.Leaving))
-      {
-        seat.Player.Bankroll += seat.Chips;
-        seat.Chips = 0;
-      }
-      Table.Seats.RemoveAll(s => s.Leaving);
-
       // Clean the Seat hands
       foreach (var seat in Table.AllSeats())
       {
@@ -490,11 +602,12 @@ namespace Poker.Models
         }
       }
 
+      LetPlayersLeave();
+
+      SaveData();
+
       // Repaint the cleaned table
       NotifyStateChanged();
-
-      // Save to database
-      StoreTable();
 
     }
   }
@@ -581,15 +694,15 @@ namespace Poker.Models
     {
       var boardMask = Board.CardsMask | boardFiller.CardsMask;
       var tied = false;
-      uint villain = 0;
-      uint hero = 0;
+      HandEvaluation hero;
+      HandEvaluation villain = new HandEvaluation();
 
       if (fillers[0].Changed || boardFiller.Changed)
       {
         fillers[0].LastEvaluation = Table.Game.Evaluate(Table.Seats[0].Hand.CardsMask | fillers[0].CardsMask, boardMask);
         fillers[0].Changed = false;
       }
-      (_, hero) = fillers[0].LastEvaluation;
+      hero = fillers[0].LastEvaluation;
       for (var i = 1; i < Table.TotalSeats; i++)
       {
         if (Table.Seats[i] != null)
@@ -599,13 +712,13 @@ namespace Poker.Models
             fillers[i].LastEvaluation = Table.Game.Evaluate(Table.Seats[i].Hand.CardsMask | fillers[i].CardsMask, boardMask);
             fillers[i].Changed = false;
           }
-          (_, villain) = fillers[i].LastEvaluation;
+          villain = fillers[i].LastEvaluation;
 
-          if (villain > hero) { break; }
-          if (villain == hero) { tied = true; }
+          if (villain.Value > hero.Value) { break; }
+          if (villain.Value == hero.Value) { tied = true; }
         }
       }
-      if (villain > hero)
+      if (villain.Value > hero.Value)
       {
         return -1;
       }

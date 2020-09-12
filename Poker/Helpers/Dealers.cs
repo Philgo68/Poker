@@ -1,4 +1,7 @@
-﻿using Poker.Data;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Poker.Data;
 using Poker.Models;
 using System;
 using System.Collections.Concurrent;
@@ -9,20 +12,30 @@ namespace Poker.Helpers
   public class Dealers
   {
     private readonly ConcurrentDictionary<Guid, TableDealer> _dealers;
-    private readonly PokerDbContext _pokerDbContext;
+    private Players _players;
+    private IApplicationBuilder _provider;
 
-    public Dealers(PokerDbContext db)
+    public Dealers()
     {
-      _pokerDbContext = db;
       _dealers = new ConcurrentDictionary<Guid, TableDealer>();
     }
 
-    public TableDealer DealerForTable(Table table)
+    public void SetProvider(IApplicationBuilder provider)
     {
-      return _dealers.GetOrAdd(table.Id, (key) =>
+      _provider = provider;
+      _players = _provider.ApplicationServices.CreateScope().ServiceProvider.GetService<Players>();
+    }
+
+    public TableDealer DealerForTable(Guid tableId)
+    {
+      return _dealers.GetOrAdd(tableId, (key) =>
       {
-        var dealer = new TableDealer(_pokerDbContext, table);
-        return dealer;
+        PokerDbContext dbContext = _provider.ApplicationServices.CreateScope().ServiceProvider.GetService<PokerDbContext>();
+        var table = dbContext.Tables
+          .Include(t => t.Seats)
+          .SingleOrDefault(t => t.Id == tableId);
+        if (table == null) { return null; }
+        return new TableDealer(dbContext, _players, table);
       });
     }
 

@@ -153,19 +153,19 @@ namespace Poker.Models
       }
       return result.TrimEnd(new Char[] { ',', ' ' });
     }
-    public virtual (int, uint) PokerEvaluate(ulong cards, int numberOfCards) => (0, 0);
-    public virtual (int, uint) PokerEvaluate(ulong cards)
+    public virtual HandEvaluation PokerEvaluate(ulong cards, int numberOfCards) => new HandEvaluation(0, 0, 0);
+    public virtual HandEvaluation PokerEvaluate(ulong cards)
     {
       return PokerEvaluate(cards, Bits.BitCount(cards));
     }
-    public virtual (int, uint) PokerEvaluate(ulong hand, ulong board)
+    public virtual HandEvaluation PokerEvaluate(ulong hand, ulong board)
     {
       return PokerEvaluate(hand | board);
     }
-    public virtual (int, uint) PokerEvaluate(ulong hand, ulong board, int numberOfCards)
+    public virtual HandEvaluation PokerEvaluate(ulong hand, ulong board, int numberOfCards)
     {
       return PokerEvaluate(hand | board, numberOfCards);
     }
-    public virtual (int, uint) OmahaEvaluate(ulong hand, ulong board) => (0, 0);
+    public virtual HandEvaluation OmahaEvaluate(ulong hand, ulong board) => new HandEvaluation(0, 0, 0);
   }
 }

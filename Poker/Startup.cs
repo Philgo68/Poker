@@ -1,14 +1,19 @@
+using BlazorComponentUtilities;
 using BlazorStrap;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using Poker.Areas.Identity;
 using Poker.Data;
 using Poker.Models;
+using System;
 
 namespace Poker
 {
@@ -28,9 +33,9 @@ namespace Poker
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
     public void ConfigureServices(IServiceCollection services)
     {
-      var db = new PokerDbContext(new DbContextOptionsBuilder<PokerDbContext>().UseSqlite(Configuration.GetConnectionString("PokerContextConnection")).Options);
-      services.AddSingleton(db);
-      //services.AddDbContext<PokerDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("PokerContextConnection")));
+      //var db = new PokerDbContext(new DbContextOptionsBuilder<PokerDbContext>().UseSqlite(Configuration.GetConnectionString("PokerContextConnection")).Options);
+      //services.AddSingleton(db);
+      services.AddDbContext<PokerDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("PokerContextConnection")));
       services.AddDefaultIdentity<Player>(options => options.SignIn.RequireConfirmedAccount = true)
         .AddEntityFrameworkStores<PokerDbContext>()
         .AddUserValidator<ScreenNameValidator<Player>>();
@@ -39,7 +44,8 @@ namespace Poker
       services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<Player>>();
       services.AddHttpClient();
       services.AddSingleton(new Helpers.SvgCards());
-      services.AddSingleton(new Helpers.Dealers(db));
+      services.AddSingleton(new Helpers.Dealers());
+      services.AddSingleton(new Helpers.Players());
 
       services.AddBootstrapCss();
 
@@ -49,7 +55,7 @@ namespace Poker
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PokerDbContext db)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PokerDbContext db, Helpers.Dealers dealers, Helpers.Players players)
     {
       if (env.IsDevelopment())
       {
@@ -64,17 +70,39 @@ namespace Poker
       }
 
       app.UseHttpsRedirection();
+
+      if (!env.IsDevelopment())
+      {
+        app.UseStaticFiles(new StaticFileOptions
+        {
+          OnPrepareResponse = ctx =>
+          {
+            if (ctx.File.PhysicalPath.Contains("wwwroot"))
+            {
+              ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age=86400");
+            }
+            else
+            {
+              ctx.Context.Response.Headers.Append("Cache-Control", $"no-cache");
+            }
+          }
+        });
+      }
+
       app.UseStaticFiles();
 
-      var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
       // Add new mappings
-      provider.Mappings[".glb"] = "application/octet-stream";
-      app.UseStaticFiles(new StaticFileOptions
-      {
-        ContentTypeProvider = provider
-      });
+      //var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
+      //provider.Mappings[".glb"] = "application/octet-stream";
+      //app.UseStaticFiles(new StaticFileOptions
+      //{
+      //  ContentTypeProvider = provider
+      //});
 
       db.Database.EnsureCreated();
+
+      dealers.SetProvider(app);
+      players.SetProvider(app);
 
       app.UseRouting();
 

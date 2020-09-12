@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Poker.Models;
+using System.Text.RegularExpressions;
 
 namespace Poker.Helpers
 {
@@ -8,44 +9,66 @@ namespace Poker.Helpers
     public MarkupString BackRed { get; set; }
     public MarkupString BackBlack { get; set; }
     public MarkupString[] Faces { get; set; }
+    public MarkupString[] FacesAsImage { get; set; }
 
     public SvgCards()
     {
       LoadCards();
     }
 
+    // Utility used to make mass adjustments to the SVG files or to imbed the SVG in the page
     private MarkupString LoadFile(string name)
     {
       string svg = System.IO.File.ReadAllText($"wwwroot/images/cards/{name}.svg");
 
-      // <svg xmlns="http://www.w3.org/2000/svg" class="        card" face="2B" height="3.5in" preserveAspectRatio="none" viewBox="-120 -168 240 336" width="2.5in"><defs><pattern id="B2" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M3 0L6 3L3 6L0 3Z" fill="red"></path></pattern></defs><rect width="239" height="335" x="-119.5" y="-167.5" rx="12" ry="12" fill="white" stroke="black"></rect><rect fill="url(#B2)" width="216" height="312" x="-108" y="-156" rx="12" ry="12"></rect></svg>
-      // <svg xmlns="http://www.w3.org/2000/svg" class="playing-card" face="2B" viewBox="-120 -168 240 336"><defs><pattern id = "B2" width="6" height="6" patternUnits="userSpaceOnUse"><path d = "M3 0L6 3L3 6L0 3Z" fill="red"></path></pattern></defs><rect width = "239" height="335" x="-119.5" y="-167.5" rx="12" ry="12" fill="white" stroke="black"></rect><rect fill = "url(#B2)" width="216" height="312" x="-108" y="-156" rx="12" ry="12"></rect></svg>
-
       //svg = svg.Replace("class=\"card\"", "class=\"playing-card\"");
       //svg = svg.Replace("height=\"3.5in\"", "");
-      //svg = svg.Replace("width=\"2.5in\"", "");
+      //svg = svg.Replace("width=\"2.5in\"", ""); 
       //svg = svg.Replace("preserveAspectRatio=\"none\"", "");
 
+      //svg = svg.Replace("class=\"playing-card\"", "");
+      //svg = svg.Replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>", "");
+      //svg = svg.Replace("\n", "");
+      //svg = svg.Replace("\r", "");
+
+      // Squeezes multiple spaces down to one
+      //Regex regex = new Regex("[ ]{2,}", RegexOptions.None);
+      //svg = regex.Replace(svg, " ");
+
       //System.IO.File.WriteAllText($"wwwroot/images/cards/{name}.svg", svg);
+
+      svg = svg.Replace("face=\"", "class=\"playing-card\" face=\"");
 
       return new MarkupString(svg);
     }
 
     public void LoadCards()
     {
-      //BackRed = new MarkupString(await httpClient.GetStringAsync("images/BackRed.svg"));
-      //BackBlack = new MarkupString(await httpClient.GetStringAsync("images/BackBlack.svg"));
+      //var test = LoadFile("BackRed");
+      //test = LoadFile("BackBlack");
 
-      BackRed = LoadFile("BackRed");
-      BackBlack = LoadFile("BackBlack");
+      BackRed = (MarkupString)$"<object class='playing-card' type='image/svg+xml' data='images/cards/BackRed.svg'></object>";
+      BackBlack = (MarkupString)$"<object class='playing-card' type='image/svg+xml' data='images/cards/BackBlack.svg'></object>";
+
       var deck = new StandardDeck();
       int i = 0;
       Faces = new MarkupString[deck.Suits * deck.Ranks];
+      FacesAsImage = new MarkupString[deck.Suits * deck.Ranks];
       foreach (var suit in deck.SuitDescriptions)
       {
         foreach (var rank in deck.RankDescriptions)
         {
-          Faces[i++] = LoadFile($"{rank}{suit}");
+          //test = LoadFile($"{rank}{suit}");
+          
+          // Embeded SVG too large, sends cards too often
+          //Faces[i++] = LoadFile($"{rank}{suit}");
+          
+          // Send the SVG as an object so it can be cached 
+          Faces[i] = (MarkupString)$"<object class='playing-card' type='image/svg+xml' data='images/cards/{rank}{suit}.svg'></object>";
+          
+          // Send the SVG as an image so it can be cached (Note: sending as an image works, but does not rotate and scale like an SVG should
+          FacesAsImage[i] = (MarkupString)$"<img class='playing-card' src='images/cards/{rank}{suit}.svg'>";
+          i++;
         }
       }
     }

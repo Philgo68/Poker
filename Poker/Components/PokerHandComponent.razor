@@ -7,13 +7,13 @@
         if (tHand != null)
         {
             <div class="top-hand">
-                <PokerHandComponent Hand=@tHand.TopHand Deck=@Deck ShowBlanks=@ShowBlanks PlayersSeat=@PlayersSeat />
+                <PokerHandComponent Hand=@tHand.TopHand ShowBlanks=@ShowBlanks PlayersSeat=@PlayersSeat />
             </div>
             <div class="middle-hand">
-                <PokerHandComponent Hand=@tHand.MiddleHand Deck=@Deck ShowBlanks=@ShowBlanks PlayersSeat=@PlayersSeat />
+                <PokerHandComponent Hand=@tHand.MiddleHand ShowBlanks=@ShowBlanks PlayersSeat=@PlayersSeat />
             </div>
             <div class="bottom-hand">
-                <PokerHandComponent Hand=@tHand.BottomHand Deck=@Deck ShowBlanks=@ShowBlanks PlayersSeat=@PlayersSeat />
+                <PokerHandComponent Hand=@tHand.BottomHand ShowBlanks=@ShowBlanks PlayersSeat=@PlayersSeat />
             </div>
         }
         else
@@ -25,11 +25,15 @@
                     var klass = Hand.CommunityCards ? "community-cards" : "";
                     <div class="svg-hand-wrapper cards-@(cards) @(klass) ">
                         <div class="svg-hand-rotator cards-@(cards)">
-                            @foreach (var card in Deck.CardNumbers(Hand.CardsMask))
+                            @foreach (var card in Table.SampleDeck.CardNumbers(Hand.CardsMask))
                             {
                             <div class="svg-card-wrapper card-@(i++)">
                                 @{ if (Hand.Revealed || PlayersSeat)
-                                    @(svgCards.Faces[card])
+                                   {
+                                      <div class="@Table.CardClass(card)">
+                                        @(svgCards.Faces[card])
+                                      </div>
+                                   }
                                    else
                                     @(svgCards.BackRed)
                                 }
@@ -50,10 +54,11 @@
 }
 
 @code {
+  [CascadingParameter]
+  public Table Table { get; set; }
+
   [Parameter]
   public BaseHand Hand { get; set; }
-  [Parameter]
-  public BaseDeck Deck { get; set; }
   [Parameter]
   public bool ShowBlanks { get; set; }
   [Parameter]

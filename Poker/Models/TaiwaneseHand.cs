@@ -160,20 +160,20 @@ namespace Poker.Models
 
     public int ScoreTopHand(ulong boardmask)
     {
-      (var handType, _) = TexasHoldem.EvaluateHand(TopHand.CardsMask | boardmask);
-      return Taiwanese.PointTopHand(handType);
+      var hand = TexasHoldem.EvaluateHand(TopHand.CardsMask | boardmask);
+      return Taiwanese.PointTopHand(hand.Type);
     }
 
     public int ScoreMiddleHand(ulong boardmask)
     {
-      (var handType, _) = TexasHoldem.EvaluateHand(MiddleHand.CardsMask | boardmask);
-      return Taiwanese.PointMiddleHand(handType);
+      var hand = TexasHoldem.EvaluateHand(MiddleHand.CardsMask | boardmask);
+      return Taiwanese.PointMiddleHand(hand.Type);
     }
 
     public int ScoreBottomHand(ulong boardmask)
     {
-      (var handType, _) = Omaha.EvaluateHand(BottomHand.CardsMask, boardmask);
-      return Taiwanese.PointBottomHand(handType);
+      var hand = Omaha.EvaluateHand(BottomHand.CardsMask, boardmask);
+      return Taiwanese.PointBottomHand(hand.Type);
     }
 
     public void ScoreOnBoard(ulong boardmask)
@@ -187,38 +187,38 @@ namespace Poker.Models
       int wins = 0, loses = 0;
 
       // Top hands
-      (int heroType, uint hero) = PokerGame.EvaluateHand(TopHand.CardsMask | heroFiller | boardMask);
+      var hero = PokerGame.EvaluateHand(TopHand.CardsMask | heroFiller | boardMask);
 
       // Must check them all to get the best opponent hand
       var rankTies = 0;
       var typeTies = 0;
-      (int villianType, uint villain) = PokerGame.EvaluateHand(((TaiwaneseHand)opponents[0]).TopHand.CardsMask | opsFillers[0] | boardMask);
+      var villain = PokerGame.EvaluateHand(((TaiwaneseHand)opponents[0]).TopHand.CardsMask | opsFillers[0] | boardMask);
       for (var i = 1; i < opponents.Length; i++)
       {
-        (int checkType, uint check) = PokerGame.EvaluateHand(((TaiwaneseHand)opponents[i]).TopHand.CardsMask | opsFillers[i] | boardMask);
-        if (check > villain)
+        var check = PokerGame.EvaluateHand(((TaiwaneseHand)opponents[i]).TopHand.CardsMask | opsFillers[i] | boardMask);
+        if (check.Value > villain.Value)
         {
           rankTies = 0;
-          if (checkType > villianType) typeTies = 0;
-          (villianType, villain) = (checkType, check);
+          if (check.Type > villain.Type) typeTies = 0;
+          villain = check;
         }
-        else if (check == villain)
+        else if (check.Value == villain.Value)
         {
           rankTies++;
           typeTies++;
         }
-        else if (checkType == villianType) typeTies++;
+        else if (check.Type == villain.Type) typeTies++;
       }
 
-      switch (hero.CompareTo(villain))
+      switch (hero.Value.CompareTo(villain.Value))
       {
         case 1:
           wins += 1 * opponents.Length;  // one from all the beaten players
-          wins += Taiwanese.PointTopHand(heroType) * (opponents.Length - ((heroType > villianType) ? 0 : typeTies));  // Bonus from all players (subtracting all those with the same type of hand
+          wins += Taiwanese.PointTopHand(hero.Type) * (opponents.Length - ((hero.Type > villain.Type) ? 0 : typeTies));  // Bonus from all players (subtracting all those with the same type of hand
           winCnt++;
           break;
         case -1:
-          loses += 1 + ((villianType > heroType) ? Taiwanese.PointTopHand(villianType) : 0); // one to the villain's pot plus the villain's bonus if it's a better type
+          loses += 1 + ((villain.Type > hero.Type) ? Taiwanese.PointTopHand(villain.Type) : 0); // one to the villain's pot plus the villain's bonus if it's a better type
           winCnt--;
           break;
         default:
@@ -226,38 +226,38 @@ namespace Poker.Models
       }
 
       // Middle hands
-      (heroType, hero) = PokerGame.EvaluateHand(MiddleHand.CardsMask | heroFiller | boardMask);
+      hero = PokerGame.EvaluateHand(MiddleHand.CardsMask | heroFiller | boardMask);
 
       // Must check them all to get the best opponent hand
       rankTies = 0;
       typeTies = 0;
-      (villianType, villain) = PokerGame.EvaluateHand(((TaiwaneseHand)opponents[0]).MiddleHand.CardsMask | opsFillers[0] | boardMask);
+      villain = PokerGame.EvaluateHand(((TaiwaneseHand)opponents[0]).MiddleHand.CardsMask | opsFillers[0] | boardMask);
       for (var i = 1; i < opponents.Length; i++)
       {
-        (int checkType, uint check) = PokerGame.EvaluateHand(((TaiwaneseHand)opponents[i]).MiddleHand.CardsMask | opsFillers[i] | boardMask);
-        if (check > villain)
+        var check = PokerGame.EvaluateHand(((TaiwaneseHand)opponents[i]).MiddleHand.CardsMask | opsFillers[i] | boardMask);
+        if (check.Value > villain.Value)
         {
           rankTies = 0;
-          if (checkType > villianType) typeTies = 0;
-          (villianType, villain) = (checkType, check);
+          if (check.Type > villain.Type) typeTies = 0;
+          villain = check;
         }
-        else if (check == villain)
+        else if (check.Value == villain.Value)
         {
           rankTies++;
           typeTies++;
         }
-        else if (checkType == villianType) typeTies++;
+        else if (check.Type == villain.Type) typeTies++;
       }
 
-      switch (hero.CompareTo(villain))
+      switch (hero.Value.CompareTo(villain.Value))
       {
         case 1:
           wins += 2 * opponents.Length;  // 2 from all the beaten players
-          wins += Taiwanese.PointMiddleHand(heroType) * (opponents.Length - ((heroType > villianType) ? 0 : typeTies));  // Bonus from all players (subtracting all those with the same type of hand
+          wins += Taiwanese.PointMiddleHand(hero.Type) * (opponents.Length - ((hero.Type > villain.Type) ? 0 : typeTies));  // Bonus from all players (subtracting all those with the same type of hand
           winCnt++;
           break;
         case -1:
-          loses += 2 + ((villianType > heroType) ? Taiwanese.PointMiddleHand(villianType) : 0); // 2 to the villain's pot plus the villain's bonus if it's a better type
+          loses += 2 + ((villain.Type > hero.Type) ? Taiwanese.PointMiddleHand(villain.Type) : 0); // 2 to the villain's pot plus the villain's bonus if it's a better type
           winCnt--;
           break;
         default:
@@ -267,38 +267,38 @@ namespace Poker.Models
 
       //TODO switch to Omaha evaluation
       // Bottom hands
-      (heroType, hero) = PokerGame.EvaluateHand(BottomHand.CardsMask | heroFiller | boardMask);
+      hero = PokerGame.EvaluateHand(BottomHand.CardsMask | heroFiller | boardMask);
 
       // Must check them all to get the best opponent hand
       rankTies = 0;
       typeTies = 0;
-      (villianType, villain) = PokerGame.EvaluateHand(((TaiwaneseHand)opponents[0]).BottomHand.CardsMask | opsFillers[0] | boardMask);
+      villain = PokerGame.EvaluateHand(((TaiwaneseHand)opponents[0]).BottomHand.CardsMask | opsFillers[0] | boardMask);
       for (var i = 1; i < opponents.Length; i++)
       {
-        (int checkType, uint check) = PokerGame.EvaluateHand(((TaiwaneseHand)opponents[i]).BottomHand.CardsMask | opsFillers[i] | boardMask);
-        if (check > villain)
+        var check = PokerGame.EvaluateHand(((TaiwaneseHand)opponents[i]).BottomHand.CardsMask | opsFillers[i] | boardMask);
+        if (check.Value > villain.Value)
         {
           rankTies = 0;
-          if (checkType > villianType) typeTies = 0;
-          (villianType, villain) = (checkType, check);
+          if (check.Type > villain.Type) typeTies = 0;
+          villain = check;
         }
-        else if (check == villain)
+        else if (check.Value == villain.Value)
         {
           rankTies++;
           typeTies++;
         }
-        else if (checkType == villianType) typeTies++;
+        else if (check.Type == villain.Type) typeTies++;
       }
 
-      switch (hero.CompareTo(villain))
+      switch (hero.Value.CompareTo(villain.Value))
       {
         case 1:
           wins += 3 * opponents.Length;  // 3 from all the beaten players
-          wins += Taiwanese.PointBottomHand(heroType) * (opponents.Length - ((heroType > villianType) ? 0 : typeTies));  // Bonus from al players (subtracting all those with the same type of hand
+          wins += Taiwanese.PointBottomHand(hero.Type) * (opponents.Length - ((hero.Type > villain.Type) ? 0 : typeTies));  // Bonus from al players (subtracting all those with the same type of hand
           winCnt++;
           break;
         case -1:
-          loses += 3 + ((villianType > heroType) ? Taiwanese.PointBottomHand(villianType) : 0); // 3 to the villain's pot plus the villain's bonus if it's a better type
+          loses += 3 + ((villain.Type > hero.Type) ? Taiwanese.PointBottomHand(villain.Type) : 0); // 3 to the villain's pot plus the villain's bonus if it's a better type
           winCnt--;
           break;
         default:

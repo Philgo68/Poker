@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Authors>Chris Lasswell</Authors>
     <Product>Home Game Poker</Product>
+    <UserSecretsId>477f7390-5b70-4122-9ca6-f29b5e39414d</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -29,6 +29,11 @@ namespace Poker.Models
         // more than one player and at least one non-computer
         if (tableDealer.Table.OccupiedSeats().Count() > 1 && tableDealer.Table.OccupiedSeats().Any(s => !s.Player.Computer))
         {
+          // Reset Pause request for all seats.
+          foreach (var s in tableDealer.Table.AllSeats())
+          {
+            if (s.Status == SeatStatus.PlayOne) s.Status = SeatStatus.PleasePause;
+          }
           return new DisplayStage[] { };
         }
         else
@@ -84,7 +89,7 @@ namespace Poker.Models
         var board = GetBoard();
         tableDealer.Deck.CompleteCards(board);
         tableDealer.Table.SetBoard(board);
-        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.DealtCards };
+        return new DisplayStage[] { DisplayStage.DealtCards };
       });
 
       //Play Top Hand
@@ -144,7 +149,7 @@ namespace Poker.Models
         var board = GetBoard();
         tableDealer.Deck.CompleteCards(board);
         tableDealer.Table.SetBoard(board);
-        return new DisplayStage[] { DisplayStage.DealtCards, DisplayStage.DealtCards };
+        return new DisplayStage[] { DisplayStage.DealtCards };
       });
 
       //Play Top Hand
@@ -189,27 +194,8 @@ namespace Poker.Models
         }
         else
         {
-          return new DisplayStage[] { };
+          return new DisplayStage[] {};
         }
-      });
-
-      //Check For Pause
-      PhaseActions.Add((tableDealer) =>
-      {
-        tableDealer.Table.PhaseTitle = "Hand Review";
-        tableDealer.Table.PhaseMessage = "";
-        if (tableDealer.Table.SeatsWithHands().Any(s => s.PleasePause == 1 && !s.SittingOut))
-        {
-          tableDealer.CleanChips();
-          return null;
-        }
-
-        // Reset Pause request for all seats.
-        foreach (var s in tableDealer.Table.AllSeats())
-        {
-          s.PleasePause = Math.Abs(s.PleasePause);
-        }
-        return new DisplayStage[] { };
       });
     }
 
@@ -246,55 +232,60 @@ namespace Poker.Models
       return PhaseActions[game_phase](tableDealer);
     }
 
-    public static int PointTopHand(int handType)
+    public static int PointTopHand(HandTypes handType)
     {
       return handType switch
       {
-        2 => 1,
-        3 => 2,
-        4 => 3,
-        5 => 3,
-        6 => 4,
-        7 => 6,
-        8 => 12,
+        HandTypes.HighCard => 0,
+        HandTypes.Pair => 0,
+        HandTypes.TwoPair  => 1,
+        HandTypes.Trips => 2,
+        HandTypes.Straight => 3,
+        HandTypes.Flush => 3,
+        HandTypes.FullHouse => 4,
+        HandTypes.FourOfAKind => 6,
+        HandTypes.StraightFlush => 12,
         _ => 0
       };
     }
 
-    public static int PointMiddleHand(int handType)
+    public static int PointMiddleHand(HandTypes handType)
     {
       return handType switch
       {
-        2 => 0,
-        3 => 1,
-        4 => 2,
-        5 => 2,
-        6 => 3,
-        7 => 5,
-        8 => 10,
+        HandTypes.HighCard => 0,
+        HandTypes.Pair => 0,
+        HandTypes.TwoPair => 0,
+        HandTypes.Trips => 1,
+        HandTypes.Straight => 2,
+        HandTypes.Flush => 2,
+        HandTypes.FullHouse => 3,
+        HandTypes.FourOfAKind => 5,
+        HandTypes.StraightFlush => 10,
         _ => 0
       };
     }
 
-    public static int PointBottomHand(int handType)
+    public static int PointBottomHand(HandTypes handType)
     {
       return handType switch
       {
-        2 => 0,
-        3 => 0,
-        4 => 0,
-        5 => 0,
-        6 => 2,
-        7 => 4,
-        8 => 8,
+        HandTypes.HighCard => 0,
+        HandTypes.Pair => 0,
+        HandTypes.TwoPair => 0,
+        HandTypes.Trips => 0,
+        HandTypes.Straight => 0,
+        HandTypes.Flush => 0,
+        HandTypes.FullHouse => 2,
+        HandTypes.FourOfAKind => 4,
+        HandTypes.StraightFlush => 8,
         _ => 0
       };
     }
 
     private void PlayTopHand(Table table)
     {
-      int bestType = 0;
-      uint bestValue = 0;
+      HandEvaluation best = new HandEvaluation();
 
       // Find best hand
       foreach (var seat in table.SeatsWithHands())
@@ -303,36 +294,37 @@ namespace Poker.Models
         {
           seat.HandsWon = 0;
           tHand.LastEvaluation = TexasHoldem.EvaluateHand(tHand.TopHand.CardsMask | table.Board.CardsMask);
-          if (tHand.LastEvaluation.Item2 > bestValue)
+          if (tHand.LastEvaluation.Value > best.Value)
           {
-            (bestType, bestValue) = (tHand.LastEvaluation);
+            best = tHand.LastEvaluation;
           }
         }
       }
 
       int base_chips = 1;
-      int bonus_chips = PointTopHand(bestType);
+      int bonus_chips = PointTopHand(best.Type);
 
       int pot = 0;
       int winners = 0;
       int bestCard = 0;
 
-      table.PhaseMessage = $"{TexasHoldem.HandTypeDescriptions[bestType]} ({base_chips}{(bonus_chips > 0 ? $" + {bonus_chips}" : "")})";
+      table.PhaseMessage = $"{TexasHoldem.HandTypeDescriptions[(int)best.Type]} ({base_chips}{(bonus_chips > 0 ? $" + {bonus_chips}" : "")})";
 
       // Determine chips out and pot size and number of winners and the best card from the winners
       foreach (var seat in table.SeatsWithHands())
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
-          if (tHand.LastEvaluation.Item2 == bestValue)
+          if (tHand.LastEvaluation.Value == best.Value)
           {
             winners++;
             seat.ChipsOut = 0;
             bestCard = Math.Max(bestCard, tHand.TopHand.BestCard());
+            table.HighlightCards |= TexasHoldem.FindCards(best);
           }
           else
           {
-            seat.ChipsOut = Math.Min(seat.Chips, base_chips + (tHand.LastEvaluation.Item1 == bestType ? 0 : bonus_chips));
+            seat.ChipsOut = Math.Min(seat.Chips, base_chips + (tHand.LastEvaluation.Type == best.Type ? 0 : bonus_chips));
           }
           pot += seat.ChipsOut;
         }
@@ -346,7 +338,7 @@ namespace Poker.Models
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
-          if (tHand.LastEvaluation.Item2 == bestValue)
+          if (tHand.LastEvaluation.Value == best.Value)
           {
             seat.ChipsIn = cut + (tHand.TopHand.BestCard() == bestCard ? remainder : 0);
             if (winners == 1)
@@ -362,8 +354,7 @@ namespace Poker.Models
 
     private void PlayMiddleHand(Table table)
     {
-      int bestType = 0;
-      uint bestValue = 0;
+      HandEvaluation best = new HandEvaluation();
 
       // Find best hand
       foreach (var seat in table.SeatsWithHands())
@@ -371,36 +362,37 @@ namespace Poker.Models
         if (seat.Hand is TaiwaneseHand tHand)
         {
           tHand.LastEvaluation = TexasHoldem.EvaluateHand(tHand.MiddleHand.CardsMask | table.Board.CardsMask);
-          if (tHand.LastEvaluation.Item2 > bestValue)
+          if (tHand.LastEvaluation.Value > best.Value)
           {
-            (bestType, bestValue) = (tHand.LastEvaluation);
+            best = tHand.LastEvaluation;
           }
         }
       }
 
       int base_chips = 2;
-      int bonus_chips = PointMiddleHand(bestType);
+      int bonus_chips = PointMiddleHand(best.Type);
 
       int pot = 0;
       int winners = 0;
       int bestCard = 0;
 
-      table.PhaseMessage = $"{TexasHoldem.HandTypeDescriptions[bestType]} ({base_chips}{(bonus_chips > 0 ? $" + {bonus_chips}" : "")})";
+      table.PhaseMessage = $"{TexasHoldem.HandTypeDescriptions[(int)best.Type]} ({base_chips}{(bonus_chips > 0 ? $" + {bonus_chips}" : "")})";
 
       // Determine chips out and pot size and number of winners and the best card from the winners
       foreach (var seat in table.SeatsWithHands())
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
-          if (tHand.LastEvaluation.Item2 == bestValue)
+          if (tHand.LastEvaluation.Value == best.Value)
           {
             winners++;
             seat.ChipsOut = 0;
             bestCard = Math.Max(bestCard, tHand.MiddleHand.BestCard());
+            table.HighlightCards |= TexasHoldem.FindCards(best);
           }
           else
           {
-            seat.ChipsOut = Math.Min(seat.Chips, base_chips + (tHand.LastEvaluation.Item1 == bestType ? 0 : bonus_chips));
+            seat.ChipsOut = Math.Min(seat.Chips, base_chips + (tHand.LastEvaluation.Type == best.Type ? 0 : bonus_chips));
           }
           pot += seat.ChipsOut;
         }
@@ -414,7 +406,7 @@ namespace Poker.Models
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
-          if (tHand.LastEvaluation.Item2 == bestValue)
+          if (tHand.LastEvaluation.Value == best.Value)
           {
             seat.ChipsIn = cut + (tHand.MiddleHand.BestCard() == bestCard ? remainder : 0);
             if (winners == 1)
@@ -430,8 +422,7 @@ namespace Poker.Models
 
     private void PlayBottomHand(Table table)
     {
-      int bestType = 0;
-      uint bestValue = 0;
+      HandEvaluation best = new HandEvaluation();
 
       // Find best hand
       foreach (var seat in table.SeatsWithHands())
@@ -439,36 +430,37 @@ namespace Poker.Models
         if (seat.Hand is TaiwaneseHand tHand)
         {
           tHand.LastEvaluation = Omaha.EvaluateHand(tHand.BottomHand.CardsMask, table.Board.CardsMask);
-          if (tHand.LastEvaluation.Item2 > bestValue)
+          if (tHand.LastEvaluation.Value > best.Value)
           {
-            (bestType, bestValue) = (tHand.LastEvaluation);
+            best = tHand.LastEvaluation;
           }
         }
       }
 
       int base_chips = 3;
-      int bonus_chips = PointBottomHand(bestType);
+      int bonus_chips = PointBottomHand(best.Type);
 
       int pot = 0;
       int winners = 0;
       int bestCard = 0;
 
-      table.PhaseMessage = $"{Omaha.HandTypeDescriptions[bestType]} ({base_chips}{(bonus_chips > 0 ? $" + {bonus_chips}" : "")})";
+      table.PhaseMessage = $"{Omaha.HandTypeDescriptions[(int)best.Type]} ({base_chips}{(bonus_chips > 0 ? $" + {bonus_chips}" : "")})";
 
       // Determine chips out and pot size and number of winners and the best card from the winners
       foreach (var seat in table.SeatsWithHands())
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
-          if (tHand.LastEvaluation.Item2 == bestValue)
+          if (tHand.LastEvaluation.Value == best.Value)
           {
             winners++;
             seat.ChipsOut = 0;
             bestCard = Math.Max(bestCard, tHand.BottomHand.BestCard());
+            table.HighlightCards |= Omaha.FindCards(best);
           }
           else
           {
-            seat.ChipsOut = Math.Min(seat.Chips, base_chips + (tHand.LastEvaluation.Item1 == bestType ? 0 : bonus_chips));
+            seat.ChipsOut = Math.Min(seat.Chips, base_chips + (tHand.LastEvaluation.Type == best.Type ? 0 : bonus_chips));
           }
           pot += seat.ChipsOut;
         }
@@ -482,7 +474,7 @@ namespace Poker.Models
       {
         if (seat.Hand is TaiwaneseHand tHand)
         {
-          if (tHand.LastEvaluation.Item2 == bestValue)
+          if (tHand.LastEvaluation.Value == best.Value)
           {
             seat.ChipsIn = cut + (tHand.BottomHand.BestCard() == bestCard ? remainder : 0);
             if (winners == 1)
@@ -535,217 +527,216 @@ namespace Poker.Models
       return scooped;
     }
 
-    public override (int, uint) Evaluate(ulong cards)
+    public override HandEvaluation Evaluate(ulong cards)
     {
       throw new ArgumentException("Taiwanese Evaluation must include a hand and a board.");
     }
-    public override (int, uint) Evaluate(BaseHand hand)
+    public override HandEvaluation Evaluate(BaseHand hand)
     {
       throw new ArgumentException("Taiwanese Evaluation must include a hand and a board.");
     }
 
-    public override (int, uint) Evaluate(ulong hand, ulong board)
+    public override HandEvaluation Evaluate(ulong hand, ulong board)
     {
       return EvaluateTaiwaneseHand(hand, board);
     }
 
-    public static (int, uint) EvaluateTaiwaneseHand(ulong hand, ulong board)
+    public static HandEvaluation EvaluateTaiwaneseHand(ulong hand, ulong board)
     {
       var handcards = Bits.IndividualMasks(hand);
       var boardcards = Bits.IndividualMasks(board);
-      int bestType, nextType;
-      uint bestRank, nextRank;
+      HandEvaluation best, next;
 
-      (bestType, bestRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[1] | boardcards[2]);
+      best = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[1] | boardcards[2]);
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[1] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[1] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[2] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[1] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[1] | boardcards[1] | boardcards[2] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[1] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[1] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[2] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[1] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[1] | boardcards[1] | boardcards[2] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[1] | boardcards[0] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[1] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[1] | boardcards[1] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[1] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[1] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
 
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[2] | boardcards[0] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[1] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[2] | boardcards[1] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
 
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[3] | boardcards[0] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[1] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[3] | boardcards[1] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[0] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[0] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
 
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[1] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[2] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[2] | boardcards[1] | boardcards[2] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[2] | boardcards[0] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[1] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[2] | boardcards[1] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[2] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
 
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[3] | boardcards[0] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[1] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[3] | boardcards[1] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[1] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[1] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
 
 
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[3]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[2] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[3]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[1] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[2] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[2] | handcards[3] | boardcards[1] | boardcards[2] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[2] | handcards[3] | boardcards[0] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[1] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[2] | handcards[3] | boardcards[1] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[2] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      (nextType, nextRank) = EvaluateHand(handcards[2] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
-      if (nextRank > bestRank) (bestType, bestRank) = (nextType, nextRank);
+      next = EvaluateHand(handcards[2] | handcards[3] | boardcards[2] | boardcards[3] | boardcards[4]);
+      if (next.Value > best.Value) best = next;
 
-      return (bestType, bestRank);
+      return best;
     }
 
   }

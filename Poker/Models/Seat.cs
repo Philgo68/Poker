@@ -1,4 +1,5 @@
-﻿using Poker.Interfaces;
+﻿using Poker.Helpers;
+using Poker.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,49 +15,21 @@ namespace Poker.Models
   {
     [NotMapped]
     private BaseHand hand;
-    private bool sittingOut;
-    private bool leaving;
-    private int pleasePause;
+
     private int startingChips;
 
     public Table Table;
-    public Player Player { get; set; }
+    public string PlayerId { get; set; }
     public int Chips { get; set; }
     public int Position { get; set; }
+    
+    private SeatStatus status;
+    public SeatStatus Status { get => status; set { status = value; StateHasChanged(); } }
+
+    [NotMapped]
+    public Player Player;
 
     public int ChipDelta => Chips - startingChips;
-
-    public bool SittingOut
-    {
-      get => sittingOut;
-      set
-      {
-        sittingOut = value;
-        StateHasChanged();
-      }
-    }
-
-    [NotMapped]
-    public bool Leaving
-    {
-      get => leaving;
-      set
-      {
-        leaving = value;
-        StateHasChanged();
-      }
-    }
-
-    [NotMapped]
-    public int PleasePause
-    {
-      get => pleasePause;
-      set
-      {
-        pleasePause = value;
-        StateHasChanged();
-      }
-    }
 
     [NotMapped]
     public BaseHand Hand
@@ -93,22 +66,21 @@ namespace Poker.Models
     {
       Position = -1;
       Hand = null;
-      Player = null;
+      PlayerId = null;
       Chips = 0;
       Button = false;
-      sittingOut = false;
-      leaving = false;
+      status = SeatStatus.PlayOn;
     }
 
     public Seat(int position, Player player, int chips)
     {
       Position = position;
       Hand = null;
+      PlayerId = player.Id;
       Player = player;
       Chips = chips;
       Button = false;
-      sittingOut = (chips == 0);
-      leaving = false;
+      status = (chips == 0) ? SeatStatus.SittingOut : SeatStatus.PlayOn;
     }
 
     public event Action StateHasChangedDelegate;

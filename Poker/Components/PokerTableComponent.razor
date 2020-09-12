@@ -1,230 +1,243 @@
-﻿@inject IJSRuntime JSRuntime
+﻿@using Microsoft.AspNetCore.Identity;
+
+@inject IJSRuntime JSRuntime
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@using Microsoft.AspNetCore.Identity;
 @inject UserManager<Player> UserManager;
 
+@implements IDisposable
+
 @{
-    @if (Table != null)
-    {
-        <h1>Poker Table: @Table.Id</h1>
-        var tHand = playersSeat?.Hand as TaiwaneseHand;
-        if (tHand != null && !tHand.HandsLaidOut && tHand.CardsNeeded == 0 && !playersSeat.Player.Computer)
+    <CascadingValue Value="@Table">
+        @if (Table != null)
         {
-            <div class="poker-table-holder">
-                <div id="poker_table" class="poker-table handed-@(Table.TotalSeats) @(Table.DisplayPhase) @(Table.DisplayPhase)">
-                    <div class="layout-location">
-                        <PokerHandLayoutComponent Seat=@playersSeat Deck=@Table.SampleDeck Chips="@(playersSeat.Chips)" />
+            <h1>Poker Table: @Table.Id</h1>
+            var tHand = playersSeat?.Hand as TaiwaneseHand;
+            if (tHand != null && !tHand.HandsLaidOut && tHand.CardsNeeded == 0 && !playersSeat.Player.Computer)
+            {
+                <div class="poker-table-holder">
+                    <div id="poker_table" class="poker-table handed-@(Table.TotalSeats) @(Table.DisplayPhase)">
+                        <div class="layout-location">
+                            <PokerHandLayoutComponent Seat=@playersSeat Deck=@Table.SampleDeck Chips="@(playersSeat.Chips)" />
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-        else
-        {
-            <div class="poker-table-holder">
-                <div id="poker_table" class="poker-table handed-@(Table.TotalSeats) @(Table.DisplayPhase) @(Table.PhaseTitle.Classify())">
-                    <div>@(Table.PhaseTitle)</div>
-                    <div>@(Table.PhaseMessage)</div>
-                    @foreach (var seat in Table.Seats)
-                    {
-                        <div id="player@((seat.Position + (Table.TotalSeats - FromSeat)) % Table.TotalSeats)">
-                            <div class="seat-location">
-                                <div class="seat @(seat.ChipsIn > 0 ? "winner" : "")">
-                                    <div class="cards">
-                                        @if (seat.Hand != null)
-                                        {
-                                            <PokerHandComponent Hand=@seat.Hand Deck=@Table.SampleDeck ShowBlanks=@true PlayersSeat=@(seat == playersSeat) />
+            }
+            else
+            {
+                <div class="poker-table-holder">
+                    <div id="poker_table" class="poker-table handed-@(Table.TotalSeats) @(Table.DisplayPhase) @(Table.PhaseTitle.Classify())">
+                        <div class="phase-location">
+                            <div>@(Table.PhaseTitle)</div>
+                            <div>@(Table.PhaseMessage)</div>
+                        </div>
+                        @foreach (var seat in Table.Seats)
+                        {
+                            <div id="player@((seat.Position + (Table.TotalSeats - FromSeat)) % Table.TotalSeats)">
+                                <div class="seat-location">
+                                    <div class="seat @(seat.ChipsIn > 0 ? "winner" : "")">
+                                        <div class="cards">
+                                            @if (seat.Hand != null)
+                                            {
+                                                <PokerHandComponent Hand=@seat.Hand ShowBlanks=@true PlayersSeat=@(seat == playersSeat) />
+                                            }
+                                        </div>
+                                        <div class="player-name">@(seat.Player.Computer ? "Computer" : seat.Player.ScreenName)</div>
+                                        <div class="chips">@(seat.Chips)</div>
+                                        @{
+                                            var cd = seat.ChipDelta;
+                                            @if (cd != 0)
+                                            {
+                                                <div class="delta @(cd > 0 ? "text-success" : "text-danger")">@(cd)</div>
+                                            }
+                                        }
+                                        @{
+                                            var icon = Icon.SeatStatus(seat.Status);
+                                            @if (icon != null)
+                                            {
+                                                <i class="icon @(icon)"></i>
+                                            }
                                         }
                                     </div>
-                                    <div class="player-name">@(seat.Player.Computer ? "Computer" : seat.Player.ScreenName)</div>
-                                    <div class="chips">@(seat.Chips)</div>
-                                    @{
-                                        var cd = seat.ChipDelta;
-                                        @if (cd != 0)
-                                        {
-                                            <div class="delta @(cd > 0 ? "text-success" : "text-danger")">@(cd)</div>
-                                        }
-                                    }
+                                </div>
+                                @if (seat.Button)
+                                {
+                                    <div class="button-location"><div class="button"></div></div>
+                                }
+                                <div class="bet-location">
+                                    <div class="bet"><PokerChipStackComponent Chips=@seat.ChipsMoving /></div>
                                 </div>
                             </div>
-                            @if (seat.Button)
-                            {
-                                <div class="button-location"><div class="button"></div></div>
-                            }
-                            <div class="bet-location">
-                                <div class="bet"><PokerChipStackComponent Chips=@seat.ChipsMoving /></div>
+                        }
+                        @if (Table.OldBoard != null)
+                        {
+                            <div id="oldboard-location">
+                                <div id="board">
+                                    <PokerHandComponent Hand=@Table.OldBoard ShowBlanks=@true />
+                                </div>
+                            </div>
+                        }
+                        @if (Table.Board != null)
+                        {
+                            <div id="board-location">
+                                <div id="board">
+                                    <PokerHandComponent Hand=@Table.Board ShowBlanks=@true />
+                                </div>
+                            </div>
+                        }
+                        <div id="current-pot-location">
+                            <div id="current-pot"><PokerChipStackComponent Chips=@Table.Pot /></div>
+                        </div>
+                        @if (@Table.Pot != 0)
+                        {
+                            <div id="total-pot-location">
+                                <div id="total-pot">
+                                    <div class="d-flex mx-auto">Total Pot: @Table.Pot</div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (playersSeat != null)
+                        {
+                            <div class="player-controls-1">
+                                <div class="row mb-1 justify-content-end">
+                                    <label for="addChips" class="col-auto h2 col-form-label">Chips :</label>
+                                    <input class="form-control col-3" name="addChips" @bind="addChips" />
+                                    <button class="btn btn-primary ml-3 col-auto" @onclick="AddChips">
+                                        <span class="oi oi-plus"></span>
+                                    </button>
+                                </div>
+                                <div class="row mb-1 justify-content-end">
+                                    <button class="btn btn-primary col-auto" @onclick="AddComputer">
+                                        <span class="oi oi-plus"></span>
+                                        <span class="oi oi-monitor"></span>
+                                    </button>
+                                    <button class="btn btn-primary ml-3 col-auto" @onclick="RemoveComputer">
+                                        <span class="oi oi-minus"></span>
+                                        <span class="oi oi-monitor"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="player-controls-2">
+                                <div class="row mb-1 justify-content-start">
+                                    <select class="form-control" @onchange=@PlayerStatus>
+                                        <option value="@SeatStatus.PlayOn" selected="@(initStatus == SeatStatus.PlayOn)">Play On</option>
+                                        <option value="@SeatStatus.PlayOne" selected="@(initStatus == SeatStatus.PlayOne)">Play One Hand</option>
+                                        <option value="@SeatStatus.PleasePause" selected="@(initStatus == SeatStatus.PleasePause)">Please Pause</option>
+                                        <option value="@SeatStatus.SittingOut" selected="@(initStatus == SeatStatus.SittingOut)">Sitting Out</option>
+                                        <option value="@SeatStatus.Leaving" selected="@(initStatus == SeatStatus.Leaving)">Leaving</option>
+                                    </select>
+                                </div>
+                            </div>
+                        }
+                        <div class="row mt-2 no-gutters justify-content-center">
+                            <div id="hand-review-countdown" class="progress col-8 hidden">
+                                <div class="progress-bar bg-success hidden" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
-                    }
-                    @if (Table.OldBoard != null)
-                    {
-                        <div id="oldboard-location">
-                            <div id="board">
-                                <PokerHandComponent Hand=@Table.OldBoard Deck=@Table.SampleDeck ShowBlanks=@true />
-                            </div>
-                        </div>
-                    }
-                    @if (Table.Board != null)
-                    {
-                        <div id="board-location">
-                            <div id="board">
-                                <PokerHandComponent Hand=@Table.Board Deck=@Table.SampleDeck ShowBlanks=@true />
-                            </div>
-                        </div>
-                    }
-                    <div id="current-pot-location">
-                        <div id="current-pot"><PokerChipStackComponent Chips=@Table.Pot /></div>
                     </div>
-                    @if (@Table.Pot != 0)
-                    {
-                        <div id="total-pot-location">
-                            <div id="total-pot">
-                                <div class="d-flex mx-auto">Total Pot: @Table.Pot</div>
-                            </div>
-                        </div>
-                    }
-
-                    @if (playersSeat != null)
-                    {
-                        <div class="player-controls-1">
-                            <div class="row mb-1 justify-content-end">
-                                <label for="addChips" class="col-auto h2 col-form-label">Chips :</label>
-                                <input class="form-control col-3" name="addChips" @bind="addChips" />
-                                <button class="btn btn-primary ml-3 col-auto" @onclick="AddChips">
-                                    <span class="oi oi-plus"></span>
-                                </button>
-                            </div>
-                            <div class="row mb-1 justify-content-end">
-                                <button class="btn btn-primary col-auto" @onclick="AddComputer">
-                                    <span class="oi oi-plus"></span>
-                                    <span class="oi oi-monitor"></span>
-                                </button>
-                                <button class="btn btn-primary ml-3 col-auto" @onclick="RemoveComputer">
-                                    <span class="oi oi-minus"></span>
-                                    <span class="oi oi-monitor"></span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="player-controls-2">
-                            <div class="row mb-1 justify-content-start">
-                                <select class="form-control" @onchange=@PlayerStatus>
-                                    <option value="Ready" selected="@(initStatus == "Ready")">Deal Me In</option>
-                                    <option value="Sitting Out" selected="@(initStatus == "Sitting Out")">Sitting Out</option>
-                                    <option value="Leaving" selected="@(initStatus == "Leaving")">Leaving</option>
-                                </select>
-                            </div>
-                            <div class="row mb-1 justify-content-start">
-                                <select class="form-control" @onchange=@PlayerWaitStatus>
-                                    <option value="Pause" selected="@(initWaitStatus == "Pause")">Please Pause</option>
-                                    <option value="Play On" selected="@(initWaitStatus == "Play On")">Play On</option>
-                                    <option value="Play One Hand">Play One Hand</option>
-                                </select>
-                            </div>
-                        </div>
-                    }
                 </div>
-            </div>
+            }
         }
-    }
-}
+    </CascadingValue>
+ }
 
 
-@code {
-  [CascadingParameter]
-  private Task<AuthenticationState> authenticationStateTask { get; set; }
+        @code {
+          [CascadingParameter]
+          private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-  [Parameter]
-  public Table Table { get; set; }
-  [Parameter]
-  public int FromSeat { get; set; }
+          [Parameter]
+          public Table Table { get; set; }
 
-  private Player player;
-  private Seat playersSeat;
+          [Parameter]
+          public int FromSeat { get; set; }
 
-  private int addChips;
-  private string initStatus;
-  private string initWaitStatus;
+          private Player player;
+          private Seat playersSeat;
 
-  protected async override Task OnParametersSetAsync()
-  {
-      if (Table != null)
-      {
-          var authState = await authenticationStateTask;
-          var user = authState.User;
-          if (user.Identity.IsAuthenticated)
+          private int addChips;
+          private SeatStatus initStatus;
+
+          // Sample component lifecycle events
+          public override async Task SetParametersAsync(ParameterView parameters)
           {
-              player = await UserManager.GetUserAsync(user);
-              playersSeat = Table.PlayerSeat(player);
-              if (playersSeat != null)
+              await base.SetParametersAsync(parameters);
+          }
+
+          // Called twice when using prerender
+          // Once when the component is initially rendered statically as part of the page.
+          // A second time when the browser establishes a connection back to the server.
+          protected async override Task OnInitializedAsync()
+          {
+              await base.OnInitializedAsync();
+          }
+
+          protected async override Task OnParametersSetAsync()
+          {
+              if (Table != null)
               {
-                  FromSeat = playersSeat.Position;
-
-                  if (playersSeat.Leaving)
-                      initStatus = "Leaving";
-                  else if (playersSeat.SittingOut)
-                      initStatus = "Sitting Out";
-                  else
-                      initStatus = "Ready";
-
-                  if (playersSeat.PleasePause == 0)
-                      initWaitStatus = "Play On";
-                  else
-                      initWaitStatus = "Pause";
+                  var authState = await authenticationStateTask;
+                  var user = authState.User;
+                  if (user.Identity.IsAuthenticated)
+                  {
+                      player = await UserManager.GetUserAsync(user);
+                      playersSeat = Table.PlayerSeat(player);
+                      if (playersSeat != null)
+                      {
+                          FromSeat = playersSeat.Position;
+                          initStatus = playersSeat.Status;
+                      }
+                  }
               }
           }
-      }
-  }
 
-  private void AddChips(MouseEventArgs e)
-  {
-      addChips = Math.Min(addChips, player.Bankroll);
-      player.Bankroll = player.Bankroll - addChips;
-      playersSeat.Chips = playersSeat.Chips + addChips;
-      addChips = 0;
-  }
-
-  void PlayerStatus(ChangeEventArgs e)
-  {
-      var status = e.Value.ToString();
-      playersSeat.SittingOut = status == "Sitting Out";
-      playersSeat.Leaving = status == "Leaving";
-      if (playersSeat.SittingOut || playersSeat.Leaving)
-          playersSeat.PleasePause = 0;
-  }
-
-  void PlayerWaitStatus(ChangeEventArgs e)
-  {
-      var status = e.Value.ToString();
-      if (status == "Play On")
-          playersSeat.PleasePause = 0;
-      else if (status == "Play One Hand")
-          playersSeat.PleasePause = -1;
-      else
-          playersSeat.PleasePause = 1;
-  }
-
-  private void AddComputer(MouseEventArgs e)
-  {
-      Table.OccupySeat(null);
-  }
-
-  private void RemoveComputer(MouseEventArgs e)
-  {
-      var rnd = new Random();
-      int count = Table.OccupiedSeats().Where(s => s.Player.Computer).Count();
-      foreach (var computerSeat in Table.OccupiedSeats().Where(s => s.Player.Computer))
-      {
-          if (rnd.Next(count) == 0)
+          protected async override Task OnAfterRenderAsync(bool firstRender)
           {
-              computerSeat.Leaving = true;
-              return;
+              if (firstRender)
+              {
+                  await JSRuntime.InvokeVoidAsync("setTableSize");
+              }
           }
-          count--;
-      }
-      return;
-  }
 
-  protected override async Task OnAfterRenderAsync(bool firstRender)
-  {
-      await JSRuntime.InvokeVoidAsync("setTableSize");
-  }
-}
+          private void TimedOut()
+          {
+              if (playersSeat.Status == SeatStatus.PleasePause)
+                  playersSeat.Status = SeatStatus.PlayOne;
+          }
+
+          private void AddChips(MouseEventArgs e)
+          {
+              // Can't take chips off table
+              addChips = Math.Max(0, addChips);
+              //Can't add more than bankroll
+              //addChips = Math.Min(addChips, player.GetBankroll(_dbContext));
+
+              //player.RemoveFromBankroll(_dbContext, addChips);
+              playersSeat.Chips = playersSeat.Chips + addChips;
+              addChips = 0;
+          }
+
+          void PlayerStatus(ChangeEventArgs e)
+          {
+              playersSeat.Status = (SeatStatus)Enum.Parse(typeof(SeatStatus), (string)(e.Value));
+          }
+
+          private void AddComputer(MouseEventArgs e)
+          {
+              Table.Dealer.AddComputer();
+          }
+
+          private void RemoveComputer(MouseEventArgs e)
+          {
+              Table.Dealer.RemoveComputer();
+          }
+
+          public void Dispose()
+          {
+              // If we are closing the browser page of an active player at a table, then mark them as leaving.
+              if (playersSeat != null && playersSeat.Table != null)
+              {
+                  playersSeat.Status = SeatStatus.Leaving;
+              }
+          }
+        }

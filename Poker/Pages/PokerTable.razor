@@ -13,17 +13,14 @@
 
   protected async override Task OnInitializedAsync()
   {
-      table = await PokerDbContext.Tables
-                        .Include(table => table.Seats)
-                            .ThenInclude(s => s.Player)
-                        .SingleOrDefaultAsync(t => t.Id == TableId);
-
-      if (table != null)
+      var dealer = Dealers.DealerForTable(TableId);
+      if (dealer != null)
       {
+          table = dealer.Table;
           table.StateHasChangedDelegate += MyChangeHandler;
-          var dealer = Dealers.DealerForTable(table);
           fromSeat = new Random().Next(table.TotalSeats - 1) + 1;
       }
+      await base.OnInitializedAsync();
   }
 
 
