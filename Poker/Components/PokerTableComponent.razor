@@ -34,7 +34,7 @@
                         {
                             <div id="player@((seat.Position + (Table.TotalSeats - FromSeat)) % Table.TotalSeats)">
                                 <div class="seat-location">
-                                    <div class="seat @(seat.ChipsIn > 0 ? "winner" : "")">
+                                    <div class="seat @(seat.StatusClass())">
                                         <div class="cards">
                                             @if (seat.Hand != null)
                                             {
@@ -127,14 +127,30 @@
                                         <option value="@SeatStatus.Leaving" selected="@(initStatus == SeatStatus.Leaving)">Leaving</option>
                                     </select>
                                 </div>
+                                <div class="row mb-1 justify-content-start">
+                                    <input type="range"
+                                           min="-9"
+                                           max="9"
+                                           step="1"
+                                           class="column slider"
+                                           @bind="SliderValue"
+                                           @bind:event="oninput" />
+                                </div>
+
+                                    @if (true || playersSeat.ActionOn)
+                                    {
+                                        <div class="row mb-1 justify-content-start">
+                                            <input id="betSlider" type="text" data-slider-ticks="[0, 100, 200, 300, 400]" data-slider-ticks-snap-bounds="30" data-slider-ticks-labels='["$0", "$100", "$200", "$300", "$400"]' data-slider-ticks-positions="[0, 30, 70, 90, 100]" />
+                                        </div>
+                                    }
+                                </div>
+                                }
+                                <div class="row mt-2 no-gutters justify-content-center">
+                                    <div id="action-countdown" class="progress col-8 hidden">
+                                        <div class="progress-bar bg-success hidden" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
                             </div>
-                        }
-                        <div class="row mt-2 no-gutters justify-content-center">
-                            <div id="hand-review-countdown" class="progress col-8 hidden">
-                                <div class="progress-bar bg-success hidden" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             }
         }
@@ -157,6 +173,9 @@
 
           private int addChips;
           private SeatStatus initStatus;
+          private int SliderValue;
+
+          private System.Threading.CancellationTokenSource giveThemTime;
 
           // Sample component lifecycle events
           public override async Task SetParametersAsync(ParameterView parameters)
@@ -197,12 +216,28 @@
               {
                   await JSRuntime.InvokeVoidAsync("setTableSize");
               }
+              if (playersSeat != null && playersSeat.ActionOn && giveThemTime == null)
+              {
+                  giveThemTime = new System.Threading.CancellationTokenSource();
+                  await JSRuntime.InvokeVoidAsync("startSlider", "betSlider", 3000);
+
+                  await JSRuntime.InvokeVoidAsync("startTimer", "action-countdown", 30);
+                  Task WaitTask = Task.Delay(Convert.ToInt32(30 * 1000.0), giveThemTime.Token);
+                  await WaitTask.ContinueWith(t => TimedOut(), TaskContinuationOptions.OnlyOnRanToCompletion);
+              }
+              await base.OnInitializedAsync();
           }
 
           private void TimedOut()
           {
-              if (playersSeat.Status == SeatStatus.PleasePause)
-                  playersSeat.Status = SeatStatus.PlayOne;
+              if (giveThemTime != null)
+              {
+                  giveThemTime.Cancel();
+                  giveThemTime.Dispose();
+                  giveThemTime = null;
+              }
+              // switch to bet timeout
+              //playersSeat.CheckOrFold();
           }
 
           private void AddChips(MouseEventArgs e)

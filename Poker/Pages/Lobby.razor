@@ -72,6 +72,9 @@
                     <div class="offest-2 col-4">
                         <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Taiwanese")">Taiwanese Poker</button>
                     </div>
+                    <div class="offest-1 col-4">
+                        <button type="submit" class="btn btn-primary col" @onclick="@(() => button = "Texas")">Texas Hold'em</button>
+                    </div>
                 </div>
             </div>
         </form>
@@ -141,7 +144,7 @@
       switch (button)
       {
           case "Single":
-              await StartTable(new OneCardHoldem());
+              await StartTable(new OneCardHoldem(), 9);
               break;
           case "Texas":
               await StartTable(new TexasHoldem(), 6);

@@ -46,7 +46,7 @@ namespace Poker.Models
       OldBoard = null;
       SampleDeck = Game.GetDeck();
 
-      HighlightCards = (0x1UL << 51) + 0x1UL;
+      HighlightCards = 0x1UL;
     }
 
     // Creating a new table
@@ -326,6 +326,13 @@ namespace Poker.Models
         return standardTime / 4;
       };
 
+      _displayActions[DisplayStage.SeatAction] = () =>
+      {
+        Table.DisplayPhase = "action";
+        NotifyStateChanged();
+        return 1.0;
+      };
+
     }
 
     private void NotifyStateChanged()
@@ -355,7 +362,18 @@ namespace Poker.Models
         positions.Remove(seat.Position);
       }
 
-      var openPosition = positions.FirstOrDefault();
+      int? openPosition = null;
+      var rnd = new Random();
+      int count = positions.Count();
+      foreach (var p in positions)
+      {
+        if (rnd.Next(count) == 0)
+        {
+          openPosition = p.Value;
+          break;
+        }
+        count--;
+      }
 
       if (openPosition != null)
       {
@@ -391,6 +409,37 @@ namespace Poker.Models
           return;
         }
         count--;
+      }
+      return;
+    }
+
+    public void SetButton()
+    {
+      if (!Table.OccupiedSeats().Any(s => s.Button))
+      {
+        // Random button
+        var rnd = new Random();
+        int count = Table.OccupiedSeats().Count();
+        foreach (var seat in Table.OccupiedSeats())
+        {
+          if (rnd.Next(count) == 0)
+          {
+            seat.Button = true;
+            return;
+          }
+          count--;
+        }
+      } else
+      {
+        // Move button
+        var seatsAroundTheTable = Table.OccupiedSeats().OrderBy(s => s.Position).ToArray();
+        var players = seatsAroundTheTable.Count();
+        var buttonSeat = Array.FindIndex<Seat>(seatsAroundTheTable, 0, seatsAroundTheTable.Count(), s => s.Button);
+
+        var newButtonSeat = buttonSeat + 1;
+        if (newButtonSeat == players) newButtonSeat = 0;
+        seatsAroundTheTable[newButtonSeat].Button = true;
+        seatsAroundTheTable[buttonSeat].Button = false;
       }
       return;
     }
@@ -463,7 +512,7 @@ namespace Poker.Models
 
           _waiting_for_something = true;
           giveThemTime = new CancellationTokenSource();
-          Task WaitTask = Task.Delay(Convert.ToInt32(30 * 1000.0), giveThemTime.Token);
+          Task WaitTask = Task.Delay(Convert.ToInt32(3000 * 1000.0), giveThemTime.Token);
           WaitTask.ContinueWith(t =>
           {
             // Reset Pause request for all seats.
@@ -496,19 +545,6 @@ namespace Poker.Models
 
       // Execute the next game step
       _displayStages = Table.Game.ExecutePhase(_gamePhase, this);
-
-      // Check Chips 
-      var inC = 0;
-      var outC = 0;
-      foreach (var seat in Table.SeatsWithHands())
-      {
-        inC += seat.ChipsIn;
-        outC += seat.ChipsOut;
-      }
-      if (inC != outC)
-      {
-        throw new Exception("Chips are out of balance!!");
-      }
 
       _transitioning = false;
 
@@ -599,6 +635,7 @@ namespace Poker.Models
         if (seat != null)
         {
           seat.Hand = null;
+          seat.ActionOn = false;
         }
       }
 

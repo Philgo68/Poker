@@ -10,12 +10,11 @@ namespace Poker.Models
 {
   public class Taiwanese : PokerGame
   {
-    public Taiwanese()
+    public Taiwanese() : base()
     {
-      SetupPhases();
     }
 
-    public void SetupPhases()
+    public override void SetupPhases()
     {
       PhaseActions = new List<Func<TableDealer, DisplayStage[]>>();
 
@@ -199,22 +198,6 @@ namespace Poker.Models
       });
     }
 
-    [OnDeserialized()]
-    internal void OnDeserializedMethod(StreamingContext context)
-    {
-      SetupPhases();
-    }
-    public void LogTable(Table table, string description)
-    {
-      // Logging:
-      Console.WriteLine($"--- {description} ---");
-      Console.WriteLine($"  Board: {table.Board.CardDescriptions}");
-      foreach (var seat in table.SeatsWithHands())
-      {
-        Console.WriteLine($"  Seat: {seat.Player.ScreenName}  Cards: {seat.Hand.CardDescriptions}  Out: {seat.ChipsOut}  In: {seat.ChipsIn}");
-      }
-    }
-
     public override string Name { get { return "Taiwanese"; } }
 
     public override BaseDeck GetDeck(ulong dealtCards = 0)
@@ -225,11 +208,6 @@ namespace Poker.Models
     public override BaseHand GetHand()
     {
       return new TaiwaneseHand();
-    }
-
-    public override DisplayStage[] ExecutePhase(int game_phase, TableDealer tableDealer)
-    {
-      return PhaseActions[game_phase](tableDealer);
     }
 
     public static int PointTopHand(HandTypes handType)

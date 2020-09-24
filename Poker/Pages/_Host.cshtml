@@ -13,9 +13,11 @@
     <title>Poker</title>
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link href="css/site.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/bootstrap-slider/bootstrap-slider.css" />
+    <link rel="stylesheet" href="css/site.css" />
     <script src="_content/BlazorStrap/blazorStrap.js"></script>
     <script src="https://kit.fontawesome.com/8a6c01421f.js" crossorigin="anonymous"></script>
+    <script src="js/bootstrap-slider.js"></script>
     <script>
         // for resizing chips to match table
         function setTableSize() {
@@ -26,7 +28,7 @@
         }
 
         // for displaying timers
-        function startTimer(seconds, elementId) {
+        function startTimer(elementId, seconds) {
             var start_time = new Date().getTime();
             var x = setInterval(function () {
                 var bar = document.getElementById(elementId);
@@ -52,6 +54,17 @@
                     clearInterval(x);
                 }
             }, 200);
+        }
+
+        function startSlider(elementId, max) {
+            var slider = document.getElementById(elementId);
+            if (slider) {
+                var slider = new Slider('#' + elementId, {
+                    ticks: [0, 100, 200, 300, 400],
+                    ticks_labels: ['$0', '$100', '$200', '$300', '$400'],
+                    ticks_snap_bounds: 30
+                });
+            }
         }
     </script>
     <!--  For Generating Chips
@@ -80,13 +93,6 @@
     </script>
     <link rel='stylesheet' type='text/css' href='https://www.x3dom.org/release/x3dom.css' />
     -->
-    <style>
-        .blurred {
-            filter: url(#blurred);
-            -webkit-filter: url(#blurred);
-            opacity: 0.95;
-        }
-    </style>
     <link href="css/TableStyle.css" rel="stylesheet" />
 
 </head>
@@ -108,11 +114,4 @@
 
     <script src="_framework/blazor.server.js"></script>
 </body>
-<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
-    <defs>
-        <filter id="blurred">
-            <feGaussianBlur stdDeviation="1.4" />
-        </filter>
-    </defs>
-</svg>
 </html>

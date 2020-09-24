@@ -50,6 +50,9 @@ namespace Poker.Models
     }
 
     [NotMapped]
+    public bool ActionOn { get; set; }
+
+    [NotMapped]
     public int ChipsMoving { get; set; }
 
     // Pre - calculated from display actions
@@ -81,6 +84,14 @@ namespace Poker.Models
       Chips = chips;
       Button = false;
       status = (chips == 0) ? SeatStatus.SittingOut : SeatStatus.PlayOn;
+    }
+
+    public string StatusClass()
+    {
+      var classes = "";
+      if (ChipsIn > 0) classes += "winner";
+      if (ActionOn) classes += " action";
+      return classes;
     }
 
     public event Action StateHasChangedDelegate;

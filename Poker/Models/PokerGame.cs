@@ -1,6 +1,7 @@
-﻿using Poker.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Poker.Helpers;
 
 namespace Poker.Models
 {
@@ -10,12 +11,57 @@ namespace Poker.Models
   {
     public PokerGame()
     {
+      SetupPhases();
     }
 
-    protected List<Func<TableDealer, DisplayStage[]>> PhaseActions;
-    public override int PhaseCount => PhaseActions.Count;
-
     public override string Name { get { return "Generic Base Poker Evaluation"; } }
+
+    public void LogTable(Table table, string description)
+    {
+      // Logging:
+      Console.WriteLine($"--- {description} ---");
+      Console.WriteLine($"  Board: {table.Board.CardDescriptions}");
+      foreach (var seat in table.SeatsWithHands())
+      {
+        Console.WriteLine($"  Seat: {seat.Player.ScreenName}  Cards: {seat.Hand.CardDescriptions}  Out: {seat.ChipsOut}  In: {seat.ChipsIn}");
+      }
+    }
+
+    public virtual void SetupPhases()
+    {
+      PhaseActions = new List<Func<TableDealer, DisplayStage[]>>();
+    }
+
+    public DisplayStage[] StartNewHand(TableDealer tableDealer)
+    {
+      tableDealer.CleanTableForNewHand();
+      // See if there are enough players to start a hand
+      // more than one player and at least one non-computer
+      if (tableDealer.Table.OccupiedSeats().Count() > 1 && tableDealer.Table.OccupiedSeats().Any(s => !s.Player.Computer))
+      {
+        // Reset Pause request for all seats.
+        foreach (var s in tableDealer.Table.AllSeats())
+        {
+          if (s.Status == SeatStatus.PlayOne) s.Status = SeatStatus.PleasePause;
+        }
+        return new DisplayStage[] { };
+      }
+      else
+      {
+        tableDealer.Table.PhaseTitle = "Waiting for Player(s)";
+        tableDealer.Table.PhaseMessage = "";
+        return null;
+      }
+    }
+
+    public DisplayStage[] HandsDealt(TableDealer tableDealer)
+    {
+      tableDealer.Table.PhaseTitle = "Hands Dealt";
+      tableDealer.Table.PhaseMessage = "";
+      tableDealer.DealHands();
+      return new DisplayStage[] { DisplayStage.DealtCards };
+    }
+
     public override HandEvaluation Evaluate(ulong cards)
     {
       return EvaluateHand(cards);
@@ -55,13 +101,13 @@ namespace Poker.Models
           else
             ret = new HandEvaluation(cards, HandTypes.Flush, HANDTYPE_VALUE_FLUSH + Bits.topFiveCardsTable[ss]);
         }
-        else if (Bits.nBitsTable[sc] >= 5)
+        else if (Bits.nBitsTable[sh] >= 5)
         {
           uint st = Bits.straightTable[sh];
           if (st != 0)
             return new HandEvaluation(cards, HandTypes.StraightFlush, HANDTYPE_VALUE_STRAIGHTFLUSH + (st << TOP_CARD_SHIFT));
           else
-            ret = new HandEvaluation(cards, HandTypes.Flush, HANDTYPE_VALUE_FLUSH + Bits.topFiveCardsTable[sc]);
+            ret = new HandEvaluation(cards, HandTypes.Flush, HANDTYPE_VALUE_FLUSH + Bits.topFiveCardsTable[sh]);
         }
         else if (Bits.nBitsTable[sd] >= 5)
         {
@@ -71,13 +117,13 @@ namespace Poker.Models
           else
             ret = new HandEvaluation(cards, HandTypes.Flush, HANDTYPE_VALUE_FLUSH + Bits.topFiveCardsTable[sd]);
         }
-        else if (Bits.nBitsTable[sh] >= 5)
+        else if (Bits.nBitsTable[sc] >= 5)
         {
           uint st = Bits.straightTable[sc];
           if (st != 0)
-            return new HandEvaluation(cards,HandTypes.StraightFlush, HANDTYPE_VALUE_STRAIGHTFLUSH + (st << TOP_CARD_SHIFT));
+            return new HandEvaluation(cards, HandTypes.StraightFlush, HANDTYPE_VALUE_STRAIGHTFLUSH + (st << TOP_CARD_SHIFT));
           else
-            ret = new HandEvaluation(cards,HandTypes.Flush, HANDTYPE_VALUE_FLUSH + Bits.topFiveCardsTable[sh]);
+            ret = new HandEvaluation(cards, HandTypes.Flush, HANDTYPE_VALUE_FLUSH + Bits.topFiveCardsTable[sc]);
         }
         else
         {

@@ -60,7 +60,16 @@
 
     .seat.winner {
         box-shadow: 0px 0px 30px 10px #ffdb00;
-        background-color: #ffdb00BB;
+        background-color: #ffdb00bb;
+    }
+
+    .seat.action {
+        box-shadow: 0px 0px 30px 10px #e1e1e1;
+        background-color: #e1e1e1bb;
+    }
+
+    .blurred {
+        filter: blur(1.5px) grayscale(70%) contrast(50%);
     }
 
     .bet-location {
@@ -654,7 +663,7 @@
             margin-right: 4px;
             height: 20%;
             color: yellow;
-            float: right; 
+            float: right;
         }
 
         .chips {

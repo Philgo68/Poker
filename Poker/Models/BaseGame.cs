@@ -50,12 +50,13 @@ namespace Poker.Models
       };
     }
 
+    protected System.Collections.Generic.List<Func<TableDealer, DisplayStage[]>> PhaseActions { get; set; }
+    public int PhaseCount => PhaseActions.Count;
+
     public virtual DisplayStage[] ExecutePhase(int game_phase, TableDealer tableDealer)
     {
-      return new DisplayStage[] { };
+      return PhaseActions[game_phase](tableDealer);
     }
-
-    public abstract int PhaseCount { get; }
 
     public virtual HandEvaluation Evaluate(BaseHand hand)
     {
